@@ -1,10 +1,25 @@
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
+plugins {
+    id("java-library")
+    id("kotlin")
+}
+
+apply(from: "../dependencies.gradle")
+apply(from: "../project.gradle")
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+test {
+    useJUnitPlatform()
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+    implementation projectDependencies.kotlinStdlib
+    implementation projectDependencies.koin
+    implementation projectDependencies.rxJava
+
+    testImplementation testDependencies.mockk
+    testImplementation testDependencies.junit
+}
