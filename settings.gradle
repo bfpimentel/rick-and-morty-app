@@ -1,2 +1,4 @@
-include ':app'
 rootProject.name = "rick-and-morty-app"
+include ":app"
+include ":data"
+include ":domain"

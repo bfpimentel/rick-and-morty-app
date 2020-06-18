@@ -1,0 +1,27 @@
+ext.projectDependencies = [
+        kotlinStdlib      : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+        kotlinReflect     : "org.jetbrains.kotlin:kotlin-reflect:1.3.71",
+        appCompat         : "androidx.appcompat:appcompat:1.1.0",
+        materialDesign    : "com.google.android.material:material:1.2.0-alpha03",
+        navigationFragment: "androidx.navigation:navigation-fragment-ktx:2.3.0-alpha04",
+        navigationUI      : "androidx.navigation:navigation-ui-ktx:2.3.0-alpha04",
+        rxJava            : "io.reactivex.rxjava2:rxjava:2.2.19",
+        rxAndroid         : "io.reactivex.rxjava2:rxandroid:2.1.1",
+        retrofit          : "com.squareup.retrofit2:retrofit:2.6.2",
+        retrofitRxAdapter : "com.squareup.retrofit2:adapter-rxjava2:2.6.2",
+        retrofitGson      : "com.squareup.retrofit2:converter-gson:2.6.1",
+        loggingInterceptor: "com.squareup.okhttp3:logging-interceptor:4.2.2",
+        roomRuntime       : "androidx.room:room-runtime:2.2.5",
+        roomCompiler      : "androidx.room:room-compiler:2.2.5",
+        roomRxJavaAdapter : "androidx.room:room-rxjava2:2.2.5",
+        koin              : "org.koin:koin-androidx-viewmodel:2.1.5",
+        lifecycleRuntime  : "androidx.lifecycle:lifecycle-runtime:2.2.0",
+        lifecycleCommon   : "androidx.lifecycle:lifecycle-common-java8:2.2.0",
+        lifecycleViewModel: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0",
+        lifecycleLiveData : "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+]
+
+ext.testDependencies = [
+        androidTestCore: "androidx.arch.core:core-testing:2.1.0",
+        mockk          : "io.mockk:mockk:1.9.3",
+]

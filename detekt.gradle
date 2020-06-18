@@ -1,0 +1,12 @@
+subprojects {
+    apply(plugin: "io.gitlab.arturbosch.detekt")
+
+    detekt {
+        buildUponDefaultConfig = true
+
+        reports {
+            html.enabled = true
+            xml.enabled = true
+        }
+    }
+}
