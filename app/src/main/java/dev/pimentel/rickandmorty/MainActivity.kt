@@ -3,6 +3,7 @@ package dev.pimentel.rickandmorty
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import dev.pimentel.rickandmorty.databinding.MainActivityBinding
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorBinder
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         val navController = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment)!!
             .findNavController()
+
+        NavigationUI.setupWithNavController(binding.navigationView, navController)
 
         navigator.bind(navController)
     }

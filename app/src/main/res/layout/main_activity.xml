@@ -14,4 +14,12 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/main_navigation_graph" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemIconTint="@null"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/main" />
+
 </LinearLayout>

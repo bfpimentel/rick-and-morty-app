@@ -22,7 +22,7 @@ class NavigatorTest {
     @Test
     fun `should bind navigator and navigate`() {
         val navController = mockk<NavController>(relaxed = true)
-        val destinationId = R.id.blank_fragment
+        val destinationId = R.id.characters
 
         every { navController.navigate(destinationId) } just runs
 
@@ -36,7 +36,7 @@ class NavigatorTest {
     @Test
     fun `should unbind navigator and do nothing when trying to navigate`() {
         val navController = mockk<NavController>(relaxed = true)
-        val destinationId = R.id.blank_fragment
+        val destinationId = R.id.characters
 
         navigator.bind(navController)
         navigator.unbind()
