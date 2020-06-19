@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-android-extensions")
     id("kotlin-kapt")
+    id("de.mannodermaus.android-junit5")
 }
 
 apply(from: "../dependencies.gradle")
@@ -17,7 +18,7 @@ android {
 
     buildTypes {
         final apiUrlResName = "api_url"
-        final apiUrl = "https://api.chucknorris.io/"
+        final apiUrl = "https://api.io/"
 
         release {
             resValue("string", apiUrlResName, apiUrl)
@@ -45,5 +46,6 @@ dependencies {
     kapt projectDependencies.roomCompiler
 
     testImplementation testDependencies.mockk
-    testImplementation testDependencies.junit
+    testImplementation testDependencies.junitAPI
+    testRuntimeOnly testDependencies.junitEngine
 }

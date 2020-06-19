@@ -6,10 +6,10 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.IOException
 
 class GetErrorMessageTest {
@@ -17,7 +17,7 @@ class GetErrorMessageTest {
     private val context = mockk<Context>(relaxed = true)
     private lateinit var useCase: GetErrorMessage
 
-    @Before
+    @BeforeEach
     @Test
     fun `should setup subject and it must not be null`() {
         useCase = GetErrorMessage(context)

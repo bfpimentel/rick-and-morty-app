@@ -3,15 +3,15 @@ package dev.pimentel.rickandmorty.shared.navigator
 import androidx.navigation.NavController
 import dev.pimentel.rickandmorty.R
 import io.mockk.*
-import org.junit.Assert.assertNotNull
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class NavigatorTest {
 
     private lateinit var navigator: Navigator
 
-    @Before
+    @BeforeEach
     @Test
     fun setupSubject() {
         navigator = NavigatorImpl()

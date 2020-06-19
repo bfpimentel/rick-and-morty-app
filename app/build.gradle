@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-android-extensions")
+    id("de.mannodermaus.android-junit5")
 }
 
 apply(from: "../dependencies.gradle")
@@ -68,6 +69,8 @@ dependencies {
     implementation projectDependencies.rxAndroid
     implementation projectDependencies.lifecycleCommon
 
+    testImplementation testDependencies.androidTestCore
     testImplementation testDependencies.mockk
-    testImplementation testDependencies.junit
+    testImplementation testDependencies.junitAPI
+    testRuntimeOnly testDependencies.junitEngine
 }
