@@ -1,4 +1,4 @@
-package dev.pimentel.domain
+package dev.pimentel.data
 
 class MyClass {
 
