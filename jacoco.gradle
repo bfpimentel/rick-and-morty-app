@@ -25,8 +25,13 @@ task jacocoTestReport(type: JacocoReport, dependsOn: [
             '**/*Activity*.*',
             '**/*Fragment*.*',
             '**/*Application*.*',
-            '**/DisposablesHolder.*',
-            '**/SchedulerProvider**.*'
+            '**/DisposablesHolder*.*',
+            '**/SchedulerProvider*.*'
+    ]
+
+    final domainFileExclusions = [
+            '**/UseCase.*',
+            '**/NoParams.*'
     ]
 
     final dataFileExclusions = [
@@ -35,7 +40,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: [
 
     final classDirectoriesTrees = [
             fileTree(dir: "${project.rootDir}/app/build/tmp/kotlin-classes/debug", excludes: appFileExclusions + commonFileExclusions),
-            fileTree(dir: "${project.rootDir}/domain/build/classes/kotlin/main", excludes: commonFileExclusions),
+            fileTree(dir: "${project.rootDir}/domain/build/classes/kotlin/main", excludes: commonFileExclusions + domainFileExclusions),
             fileTree(dir: "${project.rootDir}/data/build/tmp/kotlin-classes/debug", excludes: dataFileExclusions + commonFileExclusions)
     ]
 
