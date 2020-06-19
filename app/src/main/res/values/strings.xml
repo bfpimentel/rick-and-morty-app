@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">rick-and-morty-app</string>
+
+    <string name="app_name">Rick &amp; Morty</string>
+
+    <!-- Error Messages -->
+    <string name="error_message_no_connection">Failed to connect to the server. Check your internet connection!</string>
+    <string name="error_message_default">An unexpected problem happened on the server!</string>
+    <!-- Error Messages -->
+
 </resources>
