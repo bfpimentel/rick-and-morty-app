@@ -1,17 +1,22 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+}
+
+apply(from: "../dependencies.gradle")
+apply(from: "../project.gradle")
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion projectConfig.compileSdkVersion
+    buildToolsVersion projectConfig.buildToolsVersion
 
     defaultConfig {
-        applicationId "dev.pimentel.rickandmorty"
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        applicationId projectConfig.applicationId
+        minSdkVersion projectConfig.minSdkVersion
+        targetSdkVersion projectConfig.targetSdkVersion
+        versionCode projectVersion.major * 10000 + projectVersion.minor * 100 + projectVersion.minor
+        versionName "${projectVersion.major}.${projectVersion.minor}.${projectVersion.patch}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -20,17 +25,49 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            testCoverageEnabled = false
+        }
+
+        debug {
+            testCoverageEnabled = true
+        }
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation project(":domain")
+    implementation project(":data")
+
+    implementation projectDependencies.kotlinStdlib
+    implementation projectDependencies.kotlinReflect
+    implementation projectDependencies.materialDesign
+    implementation projectDependencies.appCompat
+    implementation projectDependencies.koin
+    implementation projectDependencies.navigationFragment
+    implementation projectDependencies.navigationUI
+    implementation projectDependencies.rxJava
+    implementation projectDependencies.rxAndroid
+    implementation projectDependencies.lifecycleCommon
+
+    testImplementation testDependencies.mockk
+    testImplementation testDependencies.junit
 }

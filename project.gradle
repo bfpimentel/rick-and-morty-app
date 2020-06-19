@@ -1,0 +1,13 @@
+ext.projectConfig = [
+        compileSdkVersion: 30,
+        targetSdkVersion : 30,
+        buildToolsVersion: "29.0.3",
+        minSdkVersion    : 21,
+        applicationId    : "dev.pimentel.rickandmorty"
+]
+
+ext.projectVersion = [
+        major: 0,
+        minor: 1,
+        patch: 0
+]
