@@ -66,10 +66,7 @@ dependencies {
     implementation projectDependencies.navigationUI
     implementation projectDependencies.rxJava
     implementation projectDependencies.rxAndroid
-    implementation projectDependencies.lifecycleRuntime
     implementation projectDependencies.lifecycleCommon
-    implementation projectDependencies.lifecycleViewModel
-    implementation projectDependencies.lifecycleLiveData
 
     testImplementation testDependencies.mockk
     testImplementation testDependencies.junit
