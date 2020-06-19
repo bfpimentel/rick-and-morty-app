@@ -3,12 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation_graph"
-    app:startDestination="@id/blank_fragment">
+    app:startDestination="@id/characters">
 
     <fragment
-        android:id="@+id/blank_fragment"
-        android:name="dev.pimentel.rickandmorty.presentation.blank.BlankFragment"
-        android:label="BlankFragment"
-        tools:layout="@layout/blank_fragment" />
+        android:id="@+id/characters"
+        android:name="dev.pimentel.rickandmorty.presentation.characters.CharactersFragment"
+        android:label="CharactersFragment"
+        tools:layout="@layout/characters_fragment" />
+
+    <fragment
+        android:id="@+id/locations"
+        android:name="dev.pimentel.rickandmorty.presentation.locations.LocationsFragment"
+        android:label="LocationsFragment"
+        tools:layout="@layout/locations_fragment" />
+
+    <fragment
+        android:id="@+id/episodes"
+        android:name="dev.pimentel.rickandmorty.presentation.episodes.EpisodesFragment"
+        android:label="EpisodesFragment"
+        tools:layout="@layout/episodes_fragment" />
 
 </navigation>
