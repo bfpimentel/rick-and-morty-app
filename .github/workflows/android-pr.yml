@@ -1,0 +1,33 @@
+name: Android Pull Request CI
+
+on:
+  pull_request:
+    branches:
+      - 'develop'
+      - 'master'
+
+jobs:
+  code-analysis:
+    name: Run Detekt for static code analysis
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Run Detekt
+        run: bash ./gradlew detekt
+  test:
+    name: Run all module unit tests and check test coverage
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Generate Jacoco test report
+        run: bash ./gradlew jacocoTestReport
+      - name: Check code coverage
+        run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }} -f build/reports/jacoco/jacocoTestReport.xml
