@@ -1,5 +1,12 @@
 package dev.pimentel.domain
 
-import org.koin.core.module.Module
+import dev.pimentel.domain.usecases.GetCharacters
+import org.koin.dsl.module
 
-val domainModules = listOf<Module>()
+private val useCaseModule = module {
+    factory { GetCharacters(get()) }
+}
+
+val domainModules = listOf(
+    useCaseModule
+)

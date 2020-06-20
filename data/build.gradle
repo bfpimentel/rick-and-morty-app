@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         final apiUrlResName = "api_url"
-        final apiUrl = "https://api.io/"
+        final apiUrl = "https://rickandmortyapi.com/api/"
 
         release {
             resValue("string", apiUrlResName, apiUrl)
@@ -39,11 +39,8 @@ dependencies {
     implementation projectDependencies.koin
     implementation projectDependencies.rxJava
     implementation projectDependencies.retrofitRxAdapter
-    implementation projectDependencies.retrofitGson
+    implementation projectDependencies.retrofitMoshi
     implementation projectDependencies.loggingInterceptor
-    implementation projectDependencies.roomRuntime
-    implementation projectDependencies.roomRxJavaAdapter
-    kapt projectDependencies.roomCompiler
 
     testImplementation testDependencies.mockk
     testImplementation testDependencies.junitAPI

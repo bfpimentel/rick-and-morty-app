@@ -1,5 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.pimentel.data">
-
-    /
-</manifest>
+<manifest package="dev.pimentel.data" />

@@ -68,6 +68,7 @@ dependencies {
     implementation projectDependencies.rxJava
     implementation projectDependencies.rxAndroid
     implementation projectDependencies.lifecycleCommon
+    implementation projectDependencies.timber
 
     testImplementation testDependencies.androidTestCore
     testImplementation testDependencies.mockk
