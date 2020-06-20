@@ -11,9 +11,6 @@ ext.projectDependencies = [
         retrofitRxAdapter : "com.squareup.retrofit2:adapter-rxjava3:2.9.0",
         retrofitGson      : "com.squareup.retrofit2:converter-gson:2.6.1",
         loggingInterceptor: "com.squareup.okhttp3:logging-interceptor:4.2.2",
-        roomRuntime       : "androidx.room:room-runtime:2.2.5",
-        roomCompiler      : "androidx.room:room-compiler:2.2.5",
-        roomRxJavaAdapter : "androidx.room:room-rxjava2:2.2.5",
         koin              : "org.koin:koin-androidx-viewmodel:2.1.5",
         lifecycleCommon   : "androidx.lifecycle:lifecycle-common-java8:2.2.0",
 ]
