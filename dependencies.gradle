@@ -7,12 +7,12 @@ ext.projectDependencies = [
         navigationUI      : "androidx.navigation:navigation-ui-ktx:2.3.0-alpha04",
         rxJava            : "io.reactivex.rxjava3:rxjava:3.0.4",
         rxAndroid         : "io.reactivex.rxjava3:rxandroid:3.0.0",
-        retrofit          : "com.squareup.retrofit2:retrofit:2.6.2",
+        retrofit          : "com.squareup.retrofit2:retrofit:2.9.0",
         retrofitRxAdapter : "com.squareup.retrofit2:adapter-rxjava3:2.9.0",
-        retrofitGson      : "com.squareup.retrofit2:converter-gson:2.6.1",
+        retrofitMoshi     : "com.squareup.retrofit2:converter-moshi:2.4.0",
         loggingInterceptor: "com.squareup.okhttp3:logging-interceptor:4.2.2",
-        koin              : "org.koin:koin-androidx-viewmodel:2.1.5",
-        lifecycleCommon   : "androidx.lifecycle:lifecycle-common-java8:2.2.0",
+        koin              : "org.koin:koin-androidx-viewmodel:2.1.6",
+        lifecycleCommon   : "androidx.lifecycle:lifecycle-common-java8:2.2.0"
 ]
 
 ext.testDependencies = [

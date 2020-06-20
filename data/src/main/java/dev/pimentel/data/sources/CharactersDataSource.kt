@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface CharactersDataSource {
 
-    @GET("/character/")
+    @GET("character/")
     fun getCharacters(
         @Query("page") page: Int
     ): Single<PagedResponse<CharacterModel>>
