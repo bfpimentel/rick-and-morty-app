@@ -12,7 +12,8 @@ ext.projectDependencies = [
         retrofitMoshi     : "com.squareup.retrofit2:converter-moshi:2.4.0",
         loggingInterceptor: "com.squareup.okhttp3:logging-interceptor:4.2.2",
         koin              : "org.koin:koin-androidx-viewmodel:2.1.6",
-        lifecycleCommon   : "androidx.lifecycle:lifecycle-common-java8:2.2.0"
+        lifecycleCommon   : "androidx.lifecycle:lifecycle-common-java8:2.2.0",
+        timber            : "com.jakewharton.timber:timber:4.7.1"
 ]
 
 ext.testDependencies = [
