@@ -1,6 +1,6 @@
 package dev.pimentel.domain.models
 
-open class CharacterModel(
+data class CharacterModel(
     val id: Int,
     val name: String,
     val status: String,
@@ -12,12 +12,12 @@ open class CharacterModel(
     val image: String
 ) {
 
-    open class Origin(
+    data class Origin(
         val name: String,
         val url: String
     )
 
-    open class Location(
+    data class Location(
         val name: String,
         val url: String
     )

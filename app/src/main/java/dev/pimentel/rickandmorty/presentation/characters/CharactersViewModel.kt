@@ -1,11 +1,11 @@
 package dev.pimentel.rickandmorty.presentation.characters
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import dev.pimentel.data.sources.CharactersDataSource
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
+import timber.log.Timber
 
 class CharactersViewModel(
     private val getCharacters: CharactersDataSource,
@@ -22,6 +22,6 @@ class CharactersViewModel(
     override fun getCharacters() {
         getCharacters.getCharacters(0)
             .compose(observeOnUIAfterSingleResult())
-            .handle({}, { Log.e("teste", "", it) })
+            .handle({}, Timber::e)
     }
 }

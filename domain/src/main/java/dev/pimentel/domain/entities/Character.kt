@@ -1,6 +1,6 @@
 package dev.pimentel.domain.entities
 
-open class Character(
+data class Character(
     val id: Int,
     val name: String,
     val status: String,
@@ -12,12 +12,12 @@ open class Character(
     val image: String
 ) {
 
-    open class Origin(
+    data class Origin(
         val name: String,
         val url: String
     )
 
-    open class Location(
+    data class Location(
         val name: String,
         val url: String
     )
