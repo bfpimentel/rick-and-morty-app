@@ -18,12 +18,25 @@
             android:layout_height="@dimen/characters_item_image_height" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/image"
             android:layout_marginHorizontal="@dimen/spacing_normal"
             android:layout_marginTop="@dimen/spacing_small"
-            tools:text="Rick" />
+            android:theme="@style/Caption"
+            tools:text="Alive" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/status"
+            android:layout_marginHorizontal="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:textColor="@color/black"
+            android:theme="@style/Subtitle1"
+            tools:text="Alive" />
 
     </RelativeLayout>
 
