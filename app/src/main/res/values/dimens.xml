@@ -17,4 +17,9 @@
     <dimen name="text_huge">32sp</dimen>
     <!-- Text Defaults -->
 
+    <!-- Characters Fragment -->
+    <dimen name="characters_item_height">222dp</dimen>
+    <dimen name="characters_item_image_height">140dp</dimen>
+    <!-- Characters Fragment -->
+
 </resources>
