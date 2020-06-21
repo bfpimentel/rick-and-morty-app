@@ -8,7 +8,7 @@ data class CharacterModel(
     val gender: String,
     val origin: Origin,
     val location: Location,
-    val episodes: List<String>,
+    val episode: List<String>,
     val image: String
 ) {
 

@@ -31,7 +31,7 @@ class GetCharacters(
                             locationModel.url
                         )
                     },
-                    characterModel.episodes,
+                    characterModel.episode,
                     characterModel.image
                 )
             }
