@@ -20,6 +20,8 @@
     <!-- Characters Fragment -->
     <dimen name="characters_item_height">222dp</dimen>
     <dimen name="characters_item_image_height">140dp</dimen>
+    <dimen name="characters_item_smaller_margin">10dp</dimen>
+    <dimen name="characters_item_bigger_margin">20dp</dimen>
     <!-- Characters Fragment -->
 
 </resources>

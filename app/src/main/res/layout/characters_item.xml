@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_medium"
+    android:layout_marginTop="@dimen/spacing_medium"
     android:orientation="vertical"
     app:cardCornerRadius="@dimen/spacing_small">
 
@@ -15,7 +15,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/characters_item_image_height" />
+            android:layout_height="@dimen/characters_item_image_height"
+            android:scaleType="centerCrop" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/status"
@@ -36,7 +37,7 @@
             android:layout_marginTop="@dimen/spacing_small"
             android:textColor="@color/black"
             android:theme="@style/Subtitle1"
-            tools:text="Alive" />
+            tools:text="Rick" />
 
     </RelativeLayout>
 

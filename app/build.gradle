@@ -43,6 +43,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
     testOptions {
         unitTests.all {
             jacoco {
@@ -69,6 +73,7 @@ dependencies {
     implementation projectDependencies.rxAndroid
     implementation projectDependencies.lifecycleCommon
     implementation projectDependencies.timber
+    implementation projectDependencies.coil
 
     testImplementation testDependencies.androidTestCore
     testImplementation testDependencies.mockk

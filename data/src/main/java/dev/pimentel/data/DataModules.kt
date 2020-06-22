@@ -1,5 +1,7 @@
 package dev.pimentel.data
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dev.pimentel.data.repositories.CharactersRepositoryImpl
 import dev.pimentel.data.sources.CharactersDataSource
 import dev.pimentel.domain.repositories.CharactersRepository
@@ -27,10 +29,14 @@ private val networkModule = module {
             })
             .build()
 
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
         return@single Retrofit.Builder()
             .baseUrl(apiUrl)
             .client(client)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
     }
