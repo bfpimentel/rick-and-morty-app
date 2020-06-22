@@ -9,4 +9,6 @@ sealed class CharactersState(
     ) : CharactersState(
         list = list
     )
+
+    class Empty: CharactersState()
 }

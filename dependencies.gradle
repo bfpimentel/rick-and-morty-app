@@ -7,6 +7,7 @@ ext.projectDependencies = [
         navigationUI      : "androidx.navigation:navigation-ui-ktx:2.3.0-alpha04",
         rxJava            : "io.reactivex.rxjava3:rxjava:3.0.4",
         rxAndroid         : "io.reactivex.rxjava3:rxandroid:3.0.0",
+        moshi             : "com.squareup.moshi:moshi-kotlin:1.9.3",
         retrofit          : "com.squareup.retrofit2:retrofit:2.9.0",
         retrofitRxAdapter : "com.squareup.retrofit2:adapter-rxjava3:2.9.0",
         retrofitMoshi     : "com.squareup.retrofit2:converter-moshi:2.4.0",

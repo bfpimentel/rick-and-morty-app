@@ -38,6 +38,7 @@ dependencies {
     implementation projectDependencies.kotlinStdlib
     implementation projectDependencies.koin
     implementation projectDependencies.rxJava
+    implementation projectDependencies.moshi
     implementation projectDependencies.retrofitRxAdapter
     implementation projectDependencies.retrofitMoshi
     implementation projectDependencies.loggingInterceptor

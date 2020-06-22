@@ -50,8 +50,8 @@ class CharactersAdapter : ListAdapter<CharacterDisplay, CharactersAdapter.ViewHo
                     layoutParams.marginStart = biggerMargin
                     layoutParams.marginEnd = smallerMargin
                 } else {
-                    layoutParams.marginStart = biggerMargin
-                    layoutParams.marginEnd = smallerMargin
+                    layoutParams.marginStart = smallerMargin
+                    layoutParams.marginEnd = biggerMargin
                 }
             }
         }

@@ -4,6 +4,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 class EndOfScrollListener<T : RecyclerView.LayoutManager> constructor(
     private val layoutManager: T,
@@ -11,6 +14,11 @@ class EndOfScrollListener<T : RecyclerView.LayoutManager> constructor(
     private val isLastPage: () -> Boolean,
     private val loadMoreItems: () -> Unit
 ) : RecyclerView.OnScrollListener() {
+
+    private val loadMoreItemsPublisher = PublishSubject.create<Unit>()
+    private val disposable: Disposable = loadMoreItemsPublisher
+        .throttleFirst(1000, TimeUnit.MILLISECONDS)
+        .subscribe { loadMoreItems() }
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -30,7 +38,13 @@ class EndOfScrollListener<T : RecyclerView.LayoutManager> constructor(
         if (visibleItemCount + firstVisibleItemPosition >= totalItemCount &&
             firstVisibleItemPosition >= 0
         ) {
-            loadMoreItems()
+            loadMoreItemsPublisher.onNext(Unit)
+        }
+    }
+
+    fun dispose() {
+        if (!disposable.isDisposed) {
+            disposable.dispose()
         }
     }
 }

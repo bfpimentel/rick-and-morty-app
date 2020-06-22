@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersFragmentBinding
+import dev.pimentel.rickandmorty.presentation.characters.data.CharactersFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
 import org.koin.android.ext.android.inject
@@ -22,6 +23,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     private val viewModel: CharactersContract.ViewModel by viewModel<CharactersViewModel>()
     private val adapter: CharactersAdapter by inject()
 
+    private lateinit var endOfScrollListener: EndOfScrollListener<StaggeredGridLayoutManager>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadKoinModules(charactersModule)
@@ -32,15 +35,19 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     override fun onDestroy() {
         super.onDestroy()
         unloadKoinModules(charactersModule)
+        endOfScrollListener.dispose()
     }
 
     private fun bindViewModel() {
         val layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
-        val endOfScrollListener = EndOfScrollListener(
+        endOfScrollListener = EndOfScrollListener(
             layoutManager,
             { false },
             { false },
-            { Timber.d("Teste de scroll listener") }
+            {
+                Timber.d("Teste de scroll listener")
+                viewModel.getCharacters(CharactersFilter.BLANK)
+            }
         )
 
         binding.apply {
@@ -55,6 +62,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             })
         }
 
-        viewModel.getCharacters()
+        viewModel.getCharacters(
+            CharactersFilter.BLANK
+        )
     }
 }
