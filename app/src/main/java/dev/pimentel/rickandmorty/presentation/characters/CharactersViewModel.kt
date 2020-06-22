@@ -68,6 +68,10 @@ class CharactersViewModel(
             }, Timber::e)
     }
 
+    override fun getMoreCharacters() {
+        getCharacters(lastFilter)
+    }
+
     override fun charactersState(): LiveData<CharactersState> = charactersState
 
     private companion object {

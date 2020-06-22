@@ -8,6 +8,7 @@ interface CharactersContract {
 
     interface ViewModel {
         fun getCharacters(filter: CharactersFilter)
+        fun getMoreCharacters()
 
         fun charactersState(): LiveData<CharactersState>
     }
