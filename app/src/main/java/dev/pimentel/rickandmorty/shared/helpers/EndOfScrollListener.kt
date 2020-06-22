@@ -17,6 +17,7 @@ class EndOfScrollListener<T : RecyclerView.LayoutManager> constructor(
 
     private val loadMoreItemsPublisher = PublishSubject.create<Unit>()
     private val disposable: Disposable = loadMoreItemsPublisher
+        .filter { !isLoading() && !isLastPage() }
         .throttleFirst(1000, TimeUnit.MILLISECONDS)
         .subscribe { loadMoreItems() }
 
@@ -30,9 +31,6 @@ class EndOfScrollListener<T : RecyclerView.LayoutManager> constructor(
             is GridLayoutManager -> layoutManager.findFirstVisibleItemPosition()
             is LinearLayoutManager -> layoutManager.findFirstVisibleItemPosition()
             else -> throw IllegalArgumentException()
-        }
-        if (isLoading() || isLastPage()) {
-            return
         }
 
         if (visibleItemCount + firstVisibleItemPosition >= totalItemCount &&

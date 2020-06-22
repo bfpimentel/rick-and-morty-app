@@ -15,7 +15,6 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
-import timber.log.Timber
 
 class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
@@ -39,15 +38,15 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     }
 
     private fun bindViewModel() {
-        val layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
+        val layoutManager = StaggeredGridLayoutManager(
+            CHARACTERS_ROW_COUNT,
+            RecyclerView.VERTICAL
+        )
         endOfScrollListener = EndOfScrollListener(
             layoutManager,
             { false },
             { false },
-            {
-                Timber.d("Teste de scroll listener")
-                viewModel.getCharacters(CharactersFilter.BLANK)
-            }
+            viewModel::getMoreCharacters
         )
 
         binding.apply {
@@ -65,5 +64,9 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         viewModel.getCharacters(
             CharactersFilter.BLANK
         )
+    }
+
+    private companion object {
+        const val CHARACTERS_ROW_COUNT = 2
     }
 }
