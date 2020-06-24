@@ -7,6 +7,8 @@ import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
+import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterContract
+import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterViewModel
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDisplayMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
@@ -22,6 +24,7 @@ class CharactersViewModel(
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
+    CharactersFilterContract.ViewModel by CharactersFilterViewModel(),
     CharactersContract.ViewModel {
 
     private var page: Int = DEFAULT_PAGE
@@ -77,7 +80,7 @@ class CharactersViewModel(
     }
 
     override fun openFilters() {
-        navigator.navigate(R.id.characters_to_characters_filter)
+        navigator.navigate(R.id.characters_to_characters_filter, Pair("filter", lastFilter))
     }
 
     override fun charactersState(): LiveData<CharactersState> = charactersState
