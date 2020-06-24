@@ -21,7 +21,7 @@
         android:label="CharactersFilterFragment"
         tools:layout="@layout/characters_filter_fragment">
         <argument
-            android:name="filter"
+            android:name="CHARACTERS_FILTER_ARGUMENT"
             app:argType="dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter" />
     </dialog>
 

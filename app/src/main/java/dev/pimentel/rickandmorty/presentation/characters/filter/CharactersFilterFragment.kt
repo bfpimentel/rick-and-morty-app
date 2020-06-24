@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersFilterFragmentBinding
+import dev.pimentel.rickandmorty.presentation.characters.CharactersFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -50,7 +51,10 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
             })
 
             viewModel.filteringResult().observe(viewLifecycleOwner, Observer { filter ->
-                setFragmentResult("characters", bundleOf("filter" to filter))
+                setFragmentResult(
+                    CharactersFragment.RESULT_LISTENER_KEY,
+                    bundleOf(CharactersFilter.RESULT_KEY to filter)
+                )
             })
         }
     }

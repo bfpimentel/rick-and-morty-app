@@ -28,7 +28,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadKoinModules(charactersModule)
-        bindViewModel()
+        bindViewModelOutputs()
+        bindViewModelInputs()
         bindResultListener()
     }
 
@@ -38,7 +39,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         endOfScrollListener.dispose()
     }
 
-    private fun bindViewModel() {
+    private fun bindViewModelOutputs() {
         val layoutManager = StaggeredGridLayoutManager(
             CHARACTERS_ROW_COUNT,
             RecyclerView.VERTICAL
@@ -57,29 +58,33 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 list.addOnScrollListener(endOfScrollListener)
             }
 
-            toolbar.setOnMenuItemClickListener {
-                if (it.itemId == R.id.filter) viewModel.openFilters()
-                return@setOnMenuItemClickListener true
-            }
-
             viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
                 adapter.submitList(state.list)
             })
         }
+    }
 
-        viewModel.getCharacters(
-            CharactersFilter.BLANK
-        )
+    private fun bindViewModelInputs() {
+        binding.apply {
+            toolbar.setOnMenuItemClickListener {
+                if (it.itemId == R.id.filter) viewModel.openFilters()
+                return@setOnMenuItemClickListener true
+            }
+        }
+
+        viewModel.getCharacters(CharactersFilter.BLANK)
     }
 
     private fun bindResultListener() {
-        setFragmentResultListener("characters") { _, bundle ->
-            val result = bundle.get("filter") as CharactersFilter
-            viewModel.getCharacters(result)
+        setFragmentResultListener(RESULT_LISTENER_KEY) { _, bundle ->
+            val filter = bundle.get(CharactersFilter.RESULT_KEY) as CharactersFilter
+            viewModel.getCharacters(filter)
         }
     }
 
-    private companion object {
-        const val CHARACTERS_ROW_COUNT = 2
+    companion object {
+        const val RESULT_LISTENER_KEY = "CHARACTERS_RESULT_LISTENER"
+
+        private const val CHARACTERS_ROW_COUNT = 2
     }
 }
