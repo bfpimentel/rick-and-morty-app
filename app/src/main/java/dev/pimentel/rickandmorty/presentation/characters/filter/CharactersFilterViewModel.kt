@@ -50,7 +50,7 @@ class CharactersFilterViewModel(
     }
 
     override fun clearFilter() {
-        this.currentFilter = CharactersFilter.BLANK
+        this.currentFilter = CharactersFilter.NO_FILTER
         buildFilterState()
     }
 
@@ -63,17 +63,13 @@ class CharactersFilterViewModel(
         charactersFilterState.postValue(
             CharactersFilterState(
                 lastFilter != currentFilter,
-                canClear(),
+                currentFilter != CharactersFilter.NO_FILTER,
                 currentFilter.name,
                 STATUS_MAP.firstOrNull { pair -> pair.first == currentFilter.status }?.second,
                 GENDER_MAP.firstOrNull { pair -> pair.first == currentFilter.gender }?.second
             )
         )
     }
-
-    private fun canClear() = currentFilter.name != null ||
-            currentFilter.gender != null ||
-            currentFilter.status != null
 
     private companion object {
         val STATUS_MAP = setOf(

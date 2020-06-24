@@ -3,11 +3,11 @@ package dev.pimentel.rickandmorty.presentation.characters.mappers
 import dev.pimentel.domain.entities.Character
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
 
-interface CharacterDisplayMapper {
+interface CharactersItemMapper {
     fun get(character: Character): CharactersItem
 }
 
-class CharacterDisplayMapperImpl : CharacterDisplayMapper {
+class CharactersItemMapperImpl : CharactersItemMapper {
 
     override fun get(character: Character): CharactersItem =
         CharactersItem(

@@ -5,7 +5,7 @@
     <item
         android:id="@+id/filter"
         android:checkable="false"
-        android:icon="@drawable/ic_filter_selector"
+        android:icon="@drawable/ic_filter_default"
         android:title="@string/top_filter"
         app:showAsAction="always" />
 

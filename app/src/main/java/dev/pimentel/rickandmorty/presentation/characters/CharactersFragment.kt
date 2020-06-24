@@ -61,18 +61,22 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
                 adapter.submitList(state.list)
             })
+
+            viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
+                toolbar.menu.findItem(R.id.filter).setIcon(icon)
+            })
         }
     }
 
     private fun bindViewModelInputs() {
         binding.apply {
-            toolbar.setOnMenuItemClickListener {
-                if (it.itemId == R.id.filter) viewModel.openFilters()
+            toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
+                viewModel.openFilters()
                 return@setOnMenuItemClickListener true
             }
         }
 
-        viewModel.getCharacters(CharactersFilter.BLANK)
+        viewModel.getCharacters(CharactersFilter.NO_FILTER)
     }
 
     private fun bindResultListener() {

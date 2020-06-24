@@ -12,5 +12,6 @@ interface CharactersContract {
         fun openFilters()
 
         fun charactersState(): LiveData<CharactersState>
+        fun filterIcon(): LiveData<Int>
     }
 }

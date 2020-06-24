@@ -11,7 +11,7 @@ data class CharactersFilter(
 ) : Parcelable {
 
     companion object {
-        val BLANK = CharactersFilter()
+        val NO_FILTER = CharactersFilter()
 
         const val RESULT_KEY = "CHARACTERS_FILTER_REQUEST"
 
