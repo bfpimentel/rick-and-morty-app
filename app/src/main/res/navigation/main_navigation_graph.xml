@@ -9,7 +9,17 @@
         android:id="@+id/characters"
         android:name="dev.pimentel.rickandmorty.presentation.characters.CharactersFragment"
         android:label="CharactersFragment"
-        tools:layout="@layout/characters_fragment" />
+        tools:layout="@layout/characters_fragment">
+        <action
+            android:id="@+id/characters_to_characters_filter"
+            app:destination="@id/characters_filter" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/characters_filter"
+        android:name="dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment"
+        android:label="CharactersFilterFragment"
+        tools:layout="@layout/characters_filter_fragment" />
 
     <fragment
         android:id="@+id/locations"

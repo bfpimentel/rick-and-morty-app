@@ -1,10 +1,26 @@
 <resources>
 
+    <!-- Default -->
     <string name="app_name">Rick &amp; Morty</string>
+    <!-- Default -->
 
     <!-- Error Messages -->
     <string name="error_message_no_connection">Failed to connect to the server. Check your internet connection!</string>
     <string name="error_message_default">An unexpected problem happened on the server!</string>
     <!-- Error Messages -->
+
+    <!-- Bottom Menu -->
+    <string name="bottom_characters">Characters</string>
+    <string name="bottom_locations">Locations</string>
+    <string name="bottom_episodes">Episodes</string>
+    <!-- Bottom Menu -->
+
+    <!-- Top Menu -->
+    <string name="top_filter">Filter</string>
+    <!-- Top Menu -->
+
+    <!-- Filter Menu -->
+    <string name="filter_clear">CLEAR</string>
+    <!-- Filter Menu -->
 
 </resources>

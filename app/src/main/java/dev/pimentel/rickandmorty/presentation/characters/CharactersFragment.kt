@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersFragmentBinding
-import dev.pimentel.rickandmorty.presentation.characters.data.CharactersFilter
+import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
 import org.koin.android.ext.android.inject
@@ -27,7 +27,6 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadKoinModules(charactersModule)
-
         bindViewModel()
     }
 
@@ -54,6 +53,11 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 list.adapter = adapter
                 list.layoutManager = layoutManager
                 list.addOnScrollListener(endOfScrollListener)
+            }
+
+            toolbar.setOnMenuItemClickListener {
+                if (it.itemId == R.id.filter) viewModel.openFilters()
+                return@setOnMenuItemClickListener true
             }
 
             viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->

@@ -5,17 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.usecases.GetCharacters
-import dev.pimentel.rickandmorty.presentation.characters.data.CharactersFilter
-import dev.pimentel.rickandmorty.presentation.characters.data.CharactersState
+import dev.pimentel.rickandmorty.R
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
+import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDisplayMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
+import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 import timber.log.Timber
 
 class CharactersViewModel(
     private val getCharacters: GetCharacters,
     private val characterDisplayMapper: CharacterDisplayMapper,
+    private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
@@ -26,6 +29,7 @@ class CharactersViewModel(
 
     private var lastFilter = CharactersFilter.BLANK
     private var characters: MutableList<Character> = mutableListOf()
+
     private val charactersState = MutableLiveData<CharactersState>()
 
     override fun onCleared() {
@@ -46,8 +50,6 @@ class CharactersViewModel(
             if (page == lastPage) {
                 return
             }
-
-            page++
         }
 
         getCharacters(
@@ -57,6 +59,8 @@ class CharactersViewModel(
             )
         ).compose(observeOnUIAfterSingleResult())
             .handle({ response ->
+                page++
+
                 this.characters.addAll(response.characters)
                 this.lastPage = response.pages
 
@@ -72,10 +76,14 @@ class CharactersViewModel(
         getCharacters(lastFilter)
     }
 
+    override fun openFilters() {
+        navigator.navigate(R.id.characters_to_characters_filter)
+    }
+
     override fun charactersState(): LiveData<CharactersState> = charactersState
 
     private companion object {
-        const val DEFAULT_PAGE = 0
+        const val DEFAULT_PAGE = 1
         const val FIRST_PAGE = 1
         const val DEFAULT_LAST_PAGE = -1
     }

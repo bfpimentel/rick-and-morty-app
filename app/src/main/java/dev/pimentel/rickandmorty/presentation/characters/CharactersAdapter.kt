@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersItemBinding
-import dev.pimentel.rickandmorty.presentation.characters.data.CharacterDisplay
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
 
-class CharactersAdapter : ListAdapter<CharacterDisplay, CharactersAdapter.ViewHolder>(
+class CharactersAdapter : ListAdapter<CharactersItem, CharactersAdapter.ViewHolder>(
     DIFF_CALLBACK
 ) {
 
@@ -31,7 +31,7 @@ class CharactersAdapter : ListAdapter<CharacterDisplay, CharactersAdapter.ViewHo
         private val binding: CharactersItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(character: CharacterDisplay, position: Int) {
+        fun bind(character: CharactersItem, position: Int) {
             binding.apply {
                 image.load(character.image)
                 status.text = character.status
@@ -58,15 +58,15 @@ class CharactersAdapter : ListAdapter<CharacterDisplay, CharactersAdapter.ViewHo
     }
 
     private companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CharacterDisplay>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CharactersItem>() {
             override fun areItemsTheSame(
-                oldItem: CharacterDisplay,
-                newItem: CharacterDisplay
+                oldItem: CharactersItem,
+                newItem: CharactersItem
             ) = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: CharacterDisplay,
-                newItem: CharacterDisplay
+                oldItem: CharactersItem,
+                newItem: CharactersItem
             ) = oldItem.id == newItem.id
         }
     }
