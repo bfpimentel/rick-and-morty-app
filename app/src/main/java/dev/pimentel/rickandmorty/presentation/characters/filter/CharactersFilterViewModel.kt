@@ -2,17 +2,25 @@ package dev.pimentel.rickandmorty.presentation.characters.filter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilterState
+import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 
-class CharactersFilterViewModel : CharactersFilterContract.ViewModel {
+class CharactersFilterViewModel(
+    private val navigator: NavigatorRouter
+) : ViewModel(), CharactersFilterContract.ViewModel {
 
     private lateinit var lastFilter: CharactersFilter
     private lateinit var currentFilter: CharactersFilter
+
     private val charactersFilterState = MutableLiveData<CharactersFilterState>()
+    private val filteringResult = MutableLiveData<CharactersFilter>()
 
     override fun charactersFilterState(): LiveData<CharactersFilterState> = charactersFilterState
+
+    override fun filteringResult(): LiveData<CharactersFilter> = filteringResult
 
     override fun initializeWithFilter(charactersFilter: CharactersFilter) {
         this.lastFilter = charactersFilter
@@ -44,6 +52,11 @@ class CharactersFilterViewModel : CharactersFilterContract.ViewModel {
     override fun clearFilter() {
         this.currentFilter = CharactersFilter.BLANK
         buildFilterState()
+    }
+
+    override fun applyFilter() {
+        filteringResult.postValue(currentFilter)
+        navigator.pop()
     }
 
     private fun buildFilterState() {

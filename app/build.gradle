@@ -66,6 +66,7 @@ dependencies {
     implementation projectDependencies.kotlinReflect
     implementation projectDependencies.materialDesign
     implementation projectDependencies.appCompat
+    implementation projectDependencies.fragment
     implementation projectDependencies.koin
     implementation projectDependencies.navigationFragment
     implementation projectDependencies.navigationUI

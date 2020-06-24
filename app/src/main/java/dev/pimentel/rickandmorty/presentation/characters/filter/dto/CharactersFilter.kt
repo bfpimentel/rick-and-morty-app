@@ -12,5 +12,7 @@ data class CharactersFilter(
 
     companion object {
         val BLANK = CharactersFilter()
+
+        const val ARGUMENT_NAME = "filter"
     }
 }

@@ -3,6 +3,7 @@ package dev.pimentel.rickandmorty.presentation.characters
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -28,6 +29,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         super.onViewCreated(view, savedInstanceState)
         loadKoinModules(charactersModule)
         bindViewModel()
+        bindResultListener()
     }
 
     override fun onDestroy() {
@@ -68,6 +70,13 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         viewModel.getCharacters(
             CharactersFilter.BLANK
         )
+    }
+
+    private fun bindResultListener() {
+        setFragmentResultListener("characters") { _, bundle ->
+            val result = bundle.get("filter") as CharactersFilter
+            viewModel.getCharacters(result)
+        }
     }
 
     private companion object {
