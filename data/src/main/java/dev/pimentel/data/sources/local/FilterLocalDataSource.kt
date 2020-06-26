@@ -7,21 +7,19 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
 interface FilterLocalDataSource {
-
     fun saveFilter(filter: FilterModel): Completable
-
     fun getFilters(type: FilterModel.Type): Single<List<FilterModel>>
 }
 
 class FilterLocalDataSourceImpl(
     private val sharedPreferences: SharedPreferences,
-    private val filterListJsonAdapter: JsonAdapter<List<FilterModel>>
+    private val jsonAdapter: JsonAdapter<List<FilterModel>>
 ) : FilterLocalDataSource {
 
     private val allFilters: List<FilterModel>
         get() {
             val filterListJson = sharedPreferences.getString(FILTER_KEY, null)!!
-            return filterListJsonAdapter.fromJson(filterListJson)!!
+            return jsonAdapter.fromJson(filterListJson)!!
         }
 
     override fun saveFilter(filter: FilterModel): Completable =
@@ -30,15 +28,16 @@ class FilterLocalDataSourceImpl(
                 if (sharedPreferences.contains(FILTER_KEY)) {
                     allFilters.toMutableList().apply {
                         remove(filter)
+                        add(filter)
                         toList()
                     }
                 } else {
-                    listOf()
+                    listOf(filter)
                 }
 
             sharedPreferences
                 .edit()
-                .putString(FILTER_KEY, filterListJsonAdapter.toJson(newFilterList))
+                .putString(FILTER_KEY, jsonAdapter.toJson(newFilterList))
                 .apply()
         }
 
@@ -52,6 +51,6 @@ class FilterLocalDataSourceImpl(
         }
 
     private companion object {
-        const val FILTER_KEY = "TYPE"
+        const val FILTER_KEY = "FILTER"
     }
 }

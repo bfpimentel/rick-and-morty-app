@@ -10,5 +10,5 @@ class TestGet(
 ) : UseCase<NoParams, Completable> {
 
     override fun invoke(params: NoParams): Completable =
-        Completable.fromSingle(characterNamesRepository.getAllNames())
+        Completable.fromSingle(characterNamesRepository.getAllCharacterFilters())
 }

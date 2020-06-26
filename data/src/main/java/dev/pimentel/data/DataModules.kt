@@ -24,9 +24,11 @@ import java.util.concurrent.TimeUnit
 private const val REQUEST_TIMEOUT = 60L
 
 private val moshiModule = module {
-    Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
+    single {
+        Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
 }
 
 private val networkModule = module {

@@ -5,5 +5,5 @@ import io.reactivex.rxjava3.core.Single
 
 interface CharacterNamesRepository {
 
-    fun getAllNames(): Single<List<FilterModel>>
+    fun getAllCharacterFilters(): Single<List<FilterModel>>
 }
