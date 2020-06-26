@@ -28,22 +28,34 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadKoinModules(charactersModule)
-        bindViewModelOutputs()
-        bindViewModelInputs()
-        bindResultListener()
+        bindOutputs()
+        bindInputs()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         unloadKoinModules(charactersModule)
         endOfScrollListener.dispose()
     }
 
-    private fun bindViewModelOutputs() {
+    private fun bindOutputs() {
+        binding.apply {
+            viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
+                adapter.submitList(state.list)
+            })
+
+            viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
+                toolbar.menu.findItem(R.id.filter).setIcon(icon)
+            })
+        }
+    }
+
+    private fun bindInputs() {
         val layoutManager = StaggeredGridLayoutManager(
             CHARACTERS_ROW_COUNT,
             RecyclerView.VERTICAL
         )
+
         endOfScrollListener = EndOfScrollListener(
             layoutManager,
             { false },
@@ -58,32 +70,20 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 list.addOnScrollListener(endOfScrollListener)
             }
 
-            viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
-                adapter.submitList(state.list)
-            })
-
-            viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
-                toolbar.menu.findItem(R.id.filter).setIcon(icon)
-            })
-        }
-    }
-
-    private fun bindViewModelInputs() {
-        binding.apply {
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()
                 return@setOnMenuItemClickListener true
             }
         }
 
-        viewModel.getCharacters(CharactersFilter.NO_FILTER)
-    }
-
-    private fun bindResultListener() {
-        setFragmentResultListener(RESULT_LISTENER_KEY) { _, bundle ->
-            val filter = bundle.get(CharactersFilter.RESULT_KEY) as CharactersFilter
-            viewModel.getCharacters(filter)
+        parentFragmentManager.setFragmentResultListener(
+            RESULT_LISTENER_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            viewModel.getCharacters(bundle[CharactersFilter.RESULT_KEY] as CharactersFilter)
         }
+
+        viewModel.getCharacters(CharactersFilter.NO_FILTER)
     }
 
     companion object {

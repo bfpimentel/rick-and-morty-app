@@ -11,7 +11,11 @@ class GetCharacters(
 
     override fun invoke(params: Params): Single<Response> =
         charactersRepository.getCharacters(
-            params.page
+            params.page,
+            params.name,
+            params.species,
+            params.status,
+            params.gender
         ).map { pagedResponse ->
             pagedResponse.results.map { characterModel ->
                 Character(
@@ -45,7 +49,10 @@ class GetCharacters(
 
     data class Params(
         val page: Int,
-        val name: String? = null
+        val name: String? = null,
+        val species: String? = null,
+        val status: String? = null,
+        val gender: String? = null
     )
 
     data class Response(

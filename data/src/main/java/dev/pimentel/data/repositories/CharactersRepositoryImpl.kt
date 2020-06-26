@@ -11,8 +11,20 @@ class CharactersRepositoryImpl(
     private val charactersDataSource: CharactersDataSource
 ) : CharactersRepository {
 
-    override fun getCharacters(page: Int): Single<DomainPagedResponse<DomainCharacterModel>> =
-        charactersDataSource.getCharacters(page).map { response ->
+    override fun getCharacters(
+        page: Int,
+        name: String?,
+        species: String?,
+        status: String?,
+        gender: String?
+    ): Single<DomainPagedResponse<DomainCharacterModel>> =
+        charactersDataSource.getCharacters(
+            page,
+            name,
+            species,
+            status,
+            gender
+        ).map { response ->
             DomainPagedResponse(
                 response.info.pages,
                 response.results.map(CharacterModel::toDomain)

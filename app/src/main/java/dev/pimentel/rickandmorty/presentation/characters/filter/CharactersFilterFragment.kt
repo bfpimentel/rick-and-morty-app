@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.pimentel.rickandmorty.R
@@ -42,16 +41,18 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
 
     private fun bindOutputs() {
         binding.apply {
-            viewModel.charactersFilterState().observe(viewLifecycleOwner, Observer { state ->
-                name.text = state.name
-                toolbar.menu.findItem(R.id.clear).isVisible = state.canClear
-                state.statusId?.also(statusGroup::check) ?: statusGroup.clearCheck()
-                state.genderId?.also(genderGroup::check) ?: genderGroup.clearCheck()
-                apply.isEnabled = state.canApplyFilter
-            })
+            viewModel.charactersFilterState().observe(
+                viewLifecycleOwner,
+                Observer { state ->
+                    name.text = state.name
+                    toolbar.menu.findItem(R.id.clear).isVisible = state.canClear
+                    state.statusId?.also(statusGroup::check) ?: statusGroup.clearCheck()
+                    state.genderId?.also(genderGroup::check) ?: genderGroup.clearCheck()
+                    apply.isEnabled = state.canApplyFilter
+                })
 
             viewModel.filteringResult().observe(viewLifecycleOwner, Observer { filter ->
-                setFragmentResult(
+                parentFragmentManager.setFragmentResult(
                     CharactersFragment.RESULT_LISTENER_KEY,
                     bundleOf(CharactersFilter.RESULT_KEY to filter)
                 )
@@ -61,16 +62,20 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
 
     private fun bindInputs() {
         binding.apply {
-            statusGroup.setOnCheckedChangeListener { _, checkedId -> viewModel.setStatus(checkedId) }
+            statusGroup.setOnCheckedChangeListener { _, checkedId ->
+                viewModel.setStatus(checkedId)
+            }
 
-            genderGroup.setOnCheckedChangeListener { _, checkedId -> viewModel.setGender(checkedId) }
+            genderGroup.setOnCheckedChangeListener { _, checkedId ->
+                viewModel.setGender(checkedId)
+            }
 
             toolbar.menu.findItem(R.id.clear).setOnMenuItemClickListener {
                 viewModel.clearFilter()
                 return@setOnMenuItemClickListener true
             }
 
-            apply.setOnClickListener { viewModel.applyFilter() }
+            apply.setOnClickListener { viewModel.getFilter() }
         }
 
         viewModel.initializeWithFilter(

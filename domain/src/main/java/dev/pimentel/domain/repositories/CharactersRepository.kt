@@ -5,5 +5,11 @@ import dev.pimentel.domain.models.PagedResponse
 import io.reactivex.rxjava3.core.Single
 
 interface CharactersRepository {
-    fun getCharacters(page: Int): Single<PagedResponse<CharacterModel>>
+    fun getCharacters(
+        page: Int,
+        name: String?,
+        species: String?,
+        status: String?,
+        gender: String?
+    ): Single<PagedResponse<CharacterModel>>
 }

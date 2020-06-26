@@ -10,7 +10,8 @@ import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 
 class CharactersFilterViewModel(
     private val navigator: NavigatorRouter
-) : ViewModel(), CharactersFilterContract.ViewModel {
+) : ViewModel(),
+    CharactersFilterContract.ViewModel {
 
     private lateinit var lastFilter: CharactersFilter
     private lateinit var currentFilter: CharactersFilter
@@ -19,7 +20,6 @@ class CharactersFilterViewModel(
     private val filteringResult = MutableLiveData<CharactersFilter>()
 
     override fun charactersFilterState(): LiveData<CharactersFilterState> = charactersFilterState
-
     override fun filteringResult(): LiveData<CharactersFilter> = filteringResult
 
     override fun initializeWithFilter(charactersFilter: CharactersFilter) {
@@ -54,7 +54,7 @@ class CharactersFilterViewModel(
         buildFilterState()
     }
 
-    override fun applyFilter() {
+    override fun getFilter() {
         filteringResult.postValue(currentFilter)
         navigator.pop()
     }

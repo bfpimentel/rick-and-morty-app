@@ -35,7 +35,6 @@ class CharactersViewModel(
     private val filterIcon = MutableLiveData<Int>()
 
     override fun charactersState(): LiveData<CharactersState> = charactersState
-
     override fun filterIcon(): LiveData<Int> = filterIcon
 
     override fun onCleared() {
@@ -55,6 +54,8 @@ class CharactersViewModel(
             if (page == lastPage) {
                 return
             }
+
+            page++
         }
 
         handleFilterIconChange()
@@ -62,12 +63,13 @@ class CharactersViewModel(
         getCharacters(
             GetCharacters.Params(
                 page,
-                filter.name
+                filter.name,
+                filter.species,
+                filter.status,
+                filter.gender
             )
         ).compose(observeOnUIAfterSingleResult())
             .handle({ response ->
-                page++
-
                 this.characters.addAll(response.characters)
                 this.lastPage = response.pages
 
@@ -98,7 +100,7 @@ class CharactersViewModel(
     }
 
     private companion object {
-        const val DEFAULT_PAGE = 1
+        const val DEFAULT_PAGE = 0
         const val FIRST_PAGE = 1
         const val DEFAULT_LAST_PAGE = -1
     }

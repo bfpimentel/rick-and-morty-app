@@ -6,6 +6,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class CharactersFilter(
     val name: String? = null,
+    val species: String? = null,
     val status: String? = null,
     val gender: String? = null
 ) : Parcelable {

@@ -13,7 +13,7 @@ interface CharactersFilterContract {
         fun setStatus(@IdRes selectedOptionId: Int)
         fun setGender(@IdRes selectedOptionId: Int)
         fun clearFilter()
-        fun applyFilter()
+        fun getFilter()
 
         fun charactersFilterState(): LiveData<CharactersFilterState>
         fun filteringResult(): LiveData<CharactersFilter>

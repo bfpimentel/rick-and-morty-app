@@ -10,6 +10,10 @@ interface CharactersDataSource {
 
     @GET("character/")
     fun getCharacters(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("name") name: String?,
+        @Query("species") species: String?,
+        @Query("status") status: String?,
+        @Query("gender") gender: String?
     ): Single<PagedResponse<CharacterModel>>
 }
