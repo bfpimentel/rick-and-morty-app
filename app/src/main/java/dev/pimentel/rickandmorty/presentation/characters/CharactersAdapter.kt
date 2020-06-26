@@ -53,6 +53,14 @@ class CharactersAdapter : ListAdapter<CharactersItem, CharactersAdapter.ViewHold
                     layoutParams.marginStart = smallerMargin
                     layoutParams.marginEnd = biggerMargin
                 }
+
+                layoutParams.topMargin = biggerMargin
+
+                if (position >= itemCount - 2) {
+                    layoutParams.bottomMargin = biggerMargin
+                } else {
+                    layoutParams.bottomMargin = 0
+                }
             }
         }
     }
