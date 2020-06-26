@@ -1,14 +1,14 @@
 package dev.pimentel.data.repositories
 
 import dev.pimentel.data.models.CharacterModel
-import dev.pimentel.data.sources.CharactersDataSource
+import dev.pimentel.data.sources.remote.CharactersRemoteDataSource
 import dev.pimentel.domain.repositories.CharactersRepository
 import io.reactivex.rxjava3.core.Single
 import dev.pimentel.domain.models.CharacterModel as DomainCharacterModel
 import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
 
 class CharactersRepositoryImpl(
-    private val charactersDataSource: CharactersDataSource
+    private val charactersDataSource: CharactersRemoteDataSource
 ) : CharactersRepository {
 
     override fun getCharacters(

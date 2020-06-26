@@ -52,7 +52,8 @@
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Give a name" />
+                    android:hint="Give a name"
+                    android:textColorHint="@color/gray1" />
 
                 <View
                     android:layout_width="match_parent"
@@ -81,7 +82,8 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Select one" />
+                    android:hint="Give a species"
+                    android:textColorHint="@color/gray1" />
 
                 <View
                     android:layout_width="match_parent"

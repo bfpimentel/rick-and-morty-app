@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.usecases.GetCharacters
+import dev.pimentel.domain.usecases.TestGet
+import dev.pimentel.domain.usecases.shared.NoParams
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
@@ -17,6 +19,7 @@ import timber.log.Timber
 
 class CharactersViewModel(
     private val getCharacters: GetCharacters,
+    private val testGet: TestGet,
     private val itemMapper: CharactersItemMapper,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
@@ -60,25 +63,29 @@ class CharactersViewModel(
 
         handleFilterIconChange()
 
-        getCharacters(
-            GetCharacters.Params(
-                page,
-                filter.name,
-                filter.species,
-                filter.status,
-                filter.gender
-            )
-        ).compose(observeOnUIAfterSingleResult())
-            .handle({ response ->
-                this.characters.addAll(response.characters)
-                this.lastPage = response.pages
+        testGet(NoParams)
+            .compose(observeOnUIAfterCompletableResult())
+            .handle({ Timber.d("Test Completable") }, Timber::d)
 
-                charactersState.postValue(
-                    CharactersState.Success(
-                        this.characters.map(itemMapper::get)
-                    )
-                )
-            }, Timber::e)
+//        getCharacters(
+//            GetCharacters.Params(
+//                page,
+//                filter.name,
+//                filter.species,
+//                filter.status,
+//                filter.gender
+//            )
+//        ).compose(observeOnUIAfterSingleResult())
+//            .handle({ response ->
+//                this.characters.addAll(response.characters)
+//                this.lastPage = response.pages
+//
+//                charactersState.postValue(
+//                    CharactersState.Success(
+//                        this.characters.map(itemMapper::get)
+//                    )
+//                )
+//            }, Timber::e)
     }
 
     override fun getMoreCharacters() {

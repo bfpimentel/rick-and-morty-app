@@ -1,4 +1,4 @@
-package dev.pimentel.data.sources
+package dev.pimentel.data.sources.remote
 
 import dev.pimentel.data.models.CharacterModel
 import dev.pimentel.data.models.PagedResponse
@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface CharactersDataSource {
+interface CharactersRemoteDataSource {
 
     @GET("character/")
     fun getCharacters(

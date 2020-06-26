@@ -1,9 +1,16 @@
 package dev.pimentel.data
 
+import android.content.Context
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dev.pimentel.data.models.FilterModel
+import dev.pimentel.data.repositories.CharacterNamesRepositoryImpl
 import dev.pimentel.data.repositories.CharactersRepositoryImpl
-import dev.pimentel.data.sources.CharactersDataSource
+import dev.pimentel.data.sources.local.FilterLocalDataSource
+import dev.pimentel.data.sources.local.FilterLocalDataSourceImpl
+import dev.pimentel.data.sources.remote.CharactersRemoteDataSource
+import dev.pimentel.domain.repositories.CharacterNamesRepository
 import dev.pimentel.domain.repositories.CharactersRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,6 +22,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 private const val REQUEST_TIMEOUT = 60L
+
+private val moshiModule = module {
+    Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
+}
 
 private val networkModule = module {
     single {
@@ -29,29 +42,49 @@ private val networkModule = module {
             })
             .build()
 
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
         return@single Retrofit.Builder()
             .baseUrl(apiUrl)
             .client(client)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(MoshiConverterFactory.create(get()))
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
     }
 }
 
-private val sourceModule = module {
-    single { get<Retrofit>().create(CharactersDataSource::class.java) }
+private val remoteDataSourceModule = module {
+    single { get<Retrofit>().create(CharactersRemoteDataSource::class.java) }
+}
+
+private val sharedPreferencesModule = module {
+    single {
+        androidContext().getSharedPreferences(
+            androidContext().packageName,
+            Context.MODE_PRIVATE
+        )
+    }
+}
+
+private val localDataSourceModule = module {
+    single<FilterLocalDataSource> {
+        val filterListType = Types.newParameterizedType(List::class.java, FilterModel::class.java)
+
+        FilterLocalDataSourceImpl(
+            get(),
+            get<Moshi>().adapter(filterListType)
+        )
+    }
 }
 
 private val repositoryModule = module {
     single<CharactersRepository> { CharactersRepositoryImpl(get()) }
+    single<CharacterNamesRepository> { CharacterNamesRepositoryImpl(get()) }
 }
 
 val dataModules = listOf(
+    moshiModule,
     networkModule,
-    sourceModule,
+    remoteDataSourceModule,
+    sharedPreferencesModule,
+    localDataSourceModule,
     repositoryModule
 )
