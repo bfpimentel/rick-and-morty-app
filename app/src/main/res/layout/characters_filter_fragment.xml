@@ -37,6 +37,7 @@
                 android:id="@+id/name_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -68,6 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView

@@ -23,6 +23,9 @@
         <argument
             android:name="CHARACTERS_FILTER_ARGUMENT"
             app:argType="dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter" />
+        <action
+            android:id="@+id/characters_filter_to_filter"
+            app:destination="@id/filter" />
     </dialog>
 
     <fragment
@@ -36,5 +39,11 @@
         android:name="dev.pimentel.rickandmorty.presentation.episodes.EpisodesFragment"
         android:label="EpisodesFragment"
         tools:layout="@layout/episodes_fragment" />
+
+    <dialog
+        android:id="@+id/filter"
+        android:name="dev.pimentel.rickandmorty.presentation.filter.FilterDialog"
+        android:label="FilterDialog"
+        tools:layout="@layout/filter_dialog" />
 
 </navigation>

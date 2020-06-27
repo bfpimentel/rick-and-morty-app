@@ -9,7 +9,6 @@ val charactersModule = module {
     viewModel {
         CharactersViewModel(
             get(),
-            get(),
             CharactersItemMapperImpl(),
             get<Navigator>(),
             get()

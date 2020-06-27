@@ -59,6 +59,10 @@ class CharactersFilterViewModel(
         navigator.pop()
     }
 
+    override fun openNameFilter() {
+        navigator.navigate(R.id.characters_filter_to_filter)
+    }
+
     private fun buildFilterState() {
         charactersFilterState.postValue(
             CharactersFilterState(

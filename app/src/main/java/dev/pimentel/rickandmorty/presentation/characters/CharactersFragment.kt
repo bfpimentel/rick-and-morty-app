@@ -32,8 +32,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         bindInputs()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         unloadKoinModules(charactersModule)
         endOfScrollListener.dispose()
     }

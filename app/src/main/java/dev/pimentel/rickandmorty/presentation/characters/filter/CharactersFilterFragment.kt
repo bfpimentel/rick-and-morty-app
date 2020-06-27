@@ -70,6 +70,10 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
                 viewModel.setGender(checkedId)
             }
 
+            nameContainer.setOnClickListener {
+                viewModel.openNameFilter()
+            }
+
             toolbar.menu.findItem(R.id.clear).setOnMenuItemClickListener {
                 viewModel.clearFilter()
                 return@setOnMenuItemClickListener true
