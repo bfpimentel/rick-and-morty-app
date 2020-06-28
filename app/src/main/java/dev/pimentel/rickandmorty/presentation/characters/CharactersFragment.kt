@@ -3,12 +3,15 @@ package dev.pimentel.rickandmorty.presentation.characters
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersFragmentBinding
-import dev.pimentel.rickandmorty.presentation.characters.data.CharactersFilter
+import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
+import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment.Companion.CHARACTERS_FILTER_RESULT_KEY
+import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
 import org.koin.android.ext.android.inject
@@ -27,8 +30,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadKoinModules(charactersModule)
-
-        bindViewModel()
+        bindOutputs()
+        bindInputs()
     }
 
     override fun onDestroy() {
@@ -37,11 +40,24 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         endOfScrollListener.dispose()
     }
 
-    private fun bindViewModel() {
+    private fun bindOutputs() {
+        binding.apply {
+            viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
+                adapter.submitList(state.list)
+            })
+
+            viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
+                toolbar.menu.findItem(R.id.filter).setIcon(icon)
+            })
+        }
+    }
+
+    private fun bindInputs() {
         val layoutManager = StaggeredGridLayoutManager(
             CHARACTERS_ROW_COUNT,
             RecyclerView.VERTICAL
         )
+
         endOfScrollListener = EndOfScrollListener(
             layoutManager,
             { false },
@@ -56,17 +72,23 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 list.addOnScrollListener(endOfScrollListener)
             }
 
-            viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
-                adapter.submitList(state.list)
-            })
+            toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
+                viewModel.openFilters()
+                return@setOnMenuItemClickListener true
+            }
         }
 
-        viewModel.getCharacters(
-            CharactersFilter.BLANK
-        )
+        parentFragmentManager.setFragmentResultListener(
+            CharactersFilterFragment.CHARACTERS_RESULT_LISTENER_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            viewModel.getCharacters(bundle[CHARACTERS_FILTER_RESULT_KEY] as CharactersFilter)
+        }
+
+        viewModel.getCharacters(CharactersFilter.NO_FILTER)
     }
 
-    private companion object {
-        const val CHARACTERS_ROW_COUNT = 2
+    companion object {
+        private const val CHARACTERS_ROW_COUNT = 2
     }
 }

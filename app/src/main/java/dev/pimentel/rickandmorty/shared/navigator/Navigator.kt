@@ -1,6 +1,7 @@
 package dev.pimentel.rickandmorty.shared.navigator
 
 import androidx.annotation.IdRes
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 
 interface NavigatorBinder {
@@ -10,6 +11,7 @@ interface NavigatorBinder {
 
 interface NavigatorRouter {
     fun navigate(@IdRes destinationId: Int)
+    fun <T> navigate(@IdRes destinationId: Int, argument: Pair<String, T>)
     fun pop()
 }
 
@@ -29,6 +31,10 @@ class NavigatorImpl : Navigator {
 
     override fun navigate(@IdRes destinationId: Int) {
         navController?.navigate(destinationId)
+    }
+
+    override fun <T> navigate(destinationId: Int, argument: Pair<String, T>) {
+        navController?.navigate(destinationId, bundleOf(argument))
     }
 
     override fun pop() {

@@ -18,7 +18,7 @@ class EndOfScrollListener<T : RecyclerView.LayoutManager> constructor(
     private val loadMoreItemsPublisher = PublishSubject.create<Unit>()
     private val disposable: Disposable = loadMoreItemsPublisher
         .filter { !isLoading() && !isLastPage() }
-        .throttleFirst(1000, TimeUnit.MILLISECONDS)
+        .throttleFirst(THROTTLE_DURATION, TimeUnit.MILLISECONDS)
         .subscribe { loadMoreItems() }
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -44,5 +44,9 @@ class EndOfScrollListener<T : RecyclerView.LayoutManager> constructor(
         if (!disposable.isDisposed) {
             disposable.dispose()
         }
+    }
+
+    private companion object {
+        const val THROTTLE_DURATION = 750L
     }
 }

@@ -4,16 +4,16 @@
     <item
         android:id="@+id/characters"
         android:icon="@drawable/ic_characters_selector"
-        android:title="Characters" />
-
-    <item
-        android:id="@+id/episodes"
-        android:icon="@drawable/ic_episodes_selector"
-        android:title="Episodes" />
+        android:title="@string/bottom_characters" />
 
     <item
         android:id="@+id/locations"
         android:icon="@drawable/ic_locations_selector"
-        android:title="Locations" />
+        android:title="@string/bottom_locations" />
+
+    <item
+        android:id="@+id/episodes"
+        android:icon="@drawable/ic_episodes_selector"
+        android:title="@string/bottom_episodes" />
 
 </menu>

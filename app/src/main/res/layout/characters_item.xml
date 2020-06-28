@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_medium"
     android:orientation="vertical"
     app:cardCornerRadius="@dimen/spacing_small">
 
@@ -35,6 +34,8 @@
             android:layout_below="@id/status"
             android:layout_marginHorizontal="@dimen/spacing_normal"
             android:layout_marginTop="@dimen/spacing_small"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@color/black"
             android:theme="@style/Subtitle1"
             tools:text="Rick" />

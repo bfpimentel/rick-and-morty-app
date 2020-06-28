@@ -2,6 +2,9 @@
 <resources>
 
     <!-- Spacing Defaults -->
+    <dimen name="spacing_divider">0.5dp</dimen>
+    <dimen name="spacing_nano">1dp</dimen>
+    <dimen name="spacing_micro">2dp</dimen>
     <dimen name="spacing_tiny">4dp</dimen>
     <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_normal">12dp</dimen>
@@ -16,6 +19,14 @@
     <dimen name="text_large">24sp</dimen>
     <dimen name="text_huge">32sp</dimen>
     <!-- Text Defaults -->
+
+    <!-- Common -->
+    <dimen name="common_radio_button_height">48dp</dimen>
+    <!-- Common -->
+
+    <!-- Filter Dialog -->
+    <dimen name="filter_height">400dp</dimen>
+    <!-- Filter Dialog -->
 
     <!-- Characters Fragment -->
     <dimen name="characters_item_height">222dp</dimen>

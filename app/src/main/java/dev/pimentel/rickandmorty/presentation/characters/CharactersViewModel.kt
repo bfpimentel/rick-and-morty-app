@@ -5,17 +5,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.usecases.GetCharacters
-import dev.pimentel.rickandmorty.presentation.characters.data.CharactersFilter
-import dev.pimentel.rickandmorty.presentation.characters.data.CharactersState
-import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDisplayMapper
+import dev.pimentel.rickandmorty.R
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
+import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
+import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
+import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
+import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 import timber.log.Timber
 
 class CharactersViewModel(
     private val getCharacters: GetCharacters,
-    private val characterDisplayMapper: CharacterDisplayMapper,
+    private val itemMapper: CharactersItemMapper,
+    private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
@@ -23,10 +27,16 @@ class CharactersViewModel(
 
     private var page: Int = DEFAULT_PAGE
     private var lastPage: Int = DEFAULT_LAST_PAGE
+    private var lastFilter = CharactersFilter.NO_FILTER
 
-    private var lastFilter = CharactersFilter.BLANK
+    // going to be needed later
     private var characters: MutableList<Character> = mutableListOf()
+
     private val charactersState = MutableLiveData<CharactersState>()
+    private val filterIcon = MutableLiveData<Int>()
+
+    override fun charactersState(): LiveData<CharactersState> = charactersState
+    override fun filterIcon(): LiveData<Int> = filterIcon
 
     override fun onCleared() {
         super.onCleared()
@@ -34,10 +44,9 @@ class CharactersViewModel(
     }
 
     override fun getCharacters(filter: CharactersFilter) {
-        if (filter != lastFilter) {
+        if (lastFilter != filter) {
             page = FIRST_PAGE
             lastPage = DEFAULT_LAST_PAGE
-
             lastFilter = filter
 
             this.characters = mutableListOf()
@@ -50,10 +59,15 @@ class CharactersViewModel(
             page++
         }
 
+        handleFilterIconChange()
+
         getCharacters(
             GetCharacters.Params(
                 page,
-                filter.name
+                filter.name,
+                filter.species,
+                filter.status,
+                filter.gender
             )
         ).compose(observeOnUIAfterSingleResult())
             .handle({ response ->
@@ -62,7 +76,7 @@ class CharactersViewModel(
 
                 charactersState.postValue(
                     CharactersState.Success(
-                        this.characters.map(characterDisplayMapper::get)
+                        this.characters.map(itemMapper::get)
                     )
                 )
             }, Timber::e)
@@ -72,7 +86,19 @@ class CharactersViewModel(
         getCharacters(lastFilter)
     }
 
-    override fun charactersState(): LiveData<CharactersState> = charactersState
+    override fun openFilters() {
+        navigator.navigate(
+            R.id.characters_to_characters_filter,
+            CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
+        )
+    }
+
+    private fun handleFilterIconChange() {
+        filterIcon.postValue(
+            if (lastFilter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
+            else R.drawable.ic_filter_default
+        )
+    }
 
     private companion object {
         const val DEFAULT_PAGE = 0

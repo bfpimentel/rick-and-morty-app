@@ -20,6 +20,6 @@
         android:layout_height="wrap_content"
         app:itemIconTint="@null"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/main" />
+        app:menu="@menu/bottom" />
 
 </LinearLayout>
