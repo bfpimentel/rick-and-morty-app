@@ -3,13 +3,24 @@ package dev.pimentel.rickandmorty.presentation.filter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dev.pimentel.domain.usecases.GetFilters
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
+import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapper
+import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
+import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
+import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
+import timber.log.Timber
 
 class FilterViewModel(
-    private val navigator: NavigatorRouter
-) : ViewModel(), FilterContract.ViewModel {
+    private val filterTypeMapper: FilterTypeMapper,
+    private val getFilters: GetFilters,
+    private val navigator: NavigatorRouter,
+    schedulerProvider: SchedulerProvider
+) : ViewModel(),
+    DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
+    FilterContract.ViewModel {
 
     private lateinit var filterType: FilterType
     private var filterValue: String? = null
@@ -24,10 +35,11 @@ class FilterViewModel(
 
     override fun initializeWithFilterType(filterType: FilterType) {
         this.filterType = filterType
-
         titleRes.postValue(filterType.nameRes)
 
-        // need to fetch filters on data source by type
+        getFilters(GetFilters.Params(filterTypeMapper.mapToDomain(filterType)))
+            .compose(observeOnUIAfterSingleResult())
+            .handle(filterList::postValue, Timber::d)
     }
 
     override fun getFilter() {

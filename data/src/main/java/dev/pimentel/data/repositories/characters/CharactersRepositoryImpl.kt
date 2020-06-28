@@ -1,4 +1,4 @@
-package dev.pimentel.data.repositories
+package dev.pimentel.data.repositories.characters
 
 import dev.pimentel.data.models.CharacterModel
 import dev.pimentel.data.sources.remote.CharactersRemoteDataSource

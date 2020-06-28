@@ -5,13 +5,15 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dev.pimentel.data.models.FilterModel
-import dev.pimentel.data.repositories.FilterRepositoryImpl
-import dev.pimentel.data.repositories.CharactersRepositoryImpl
+import dev.pimentel.data.repositories.characters.CharactersRepositoryImpl
+import dev.pimentel.data.repositories.filter.FilterRepositoryImpl
+import dev.pimentel.data.repositories.filter.FilterTypeModelMapper
+import dev.pimentel.data.repositories.filter.FilterTypeModelMapperImpl
 import dev.pimentel.data.sources.local.FilterLocalDataSource
 import dev.pimentel.data.sources.local.FilterLocalDataSourceImpl
 import dev.pimentel.data.sources.remote.CharactersRemoteDataSource
-import dev.pimentel.domain.repositories.FilterRepository
 import dev.pimentel.domain.repositories.CharactersRepository
+import dev.pimentel.domain.repositories.FilterRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -78,8 +80,19 @@ private val localDataSourceModule = module {
 }
 
 private val repositoryModule = module {
-    single<CharactersRepository> { CharactersRepositoryImpl(get()) }
-    single<FilterRepository> { FilterRepositoryImpl(get()) }
+    single<CharactersRepository> {
+        CharactersRepositoryImpl(
+            get()
+        )
+    }
+
+    single<FilterTypeModelMapper> { FilterTypeModelMapperImpl() }
+    single<FilterRepository> {
+        FilterRepositoryImpl(
+            get(),
+            get()
+        )
+    }
 }
 
 val dataModules = listOf(

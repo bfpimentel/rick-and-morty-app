@@ -1,7 +1,6 @@
-package dev.pimentel.data.repositories
+package dev.pimentel.data.repositories.filter
 
 import dev.pimentel.data.models.FilterModel
-import dev.pimentel.data.repositories.mappers.FilterTypeModelMapper
 import dev.pimentel.data.sources.local.FilterLocalDataSource
 import dev.pimentel.domain.repositories.FilterRepository
 import io.reactivex.rxjava3.core.Single

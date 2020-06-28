@@ -1,4 +1,4 @@
-package dev.pimentel.data.repositories.mappers
+package dev.pimentel.data.repositories.filter
 
 import dev.pimentel.data.models.FilterModel
 import dev.pimentel.domain.models.FilterModel as DomainFilterModel
@@ -7,7 +7,8 @@ interface FilterTypeModelMapper {
     fun mapToData(type: DomainFilterModel.Type): FilterModel.Type
 }
 
-class FilterTypeModelMapperImpl : FilterTypeModelMapper {
+class FilterTypeModelMapperImpl :
+    FilterTypeModelMapper {
 
     override fun mapToData(type: dev.pimentel.domain.models.FilterModel.Type): FilterModel.Type =
         when (type) {
