@@ -96,7 +96,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
             android:background="?android:attr/selectableItemBackground"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/spacing_medium">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -114,13 +115,14 @@
                 android:hint="@string/locations_filter_dimension_hint"
                 android:textColorHint="@color/gray1" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_divider"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:background="@color/gray1" />
-
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/apply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/locations_filter_apply"
+            android:theme="@style/PrimaryButton" />
 
     </LinearLayout>
 

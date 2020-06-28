@@ -3,6 +3,8 @@ package dev.pimentel.rickandmorty.presentation.locations.filter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dev.pimentel.rickandmorty.R
+import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
@@ -40,12 +42,24 @@ class LocationsFilterViewModel(
     }
 
     override fun openNameFilter() {
+        navigator.navigate(
+            R.id.locations_filter_to_filter,
+            FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.LOCATION_NAME
+        )
     }
 
     override fun openTypeFilter() {
+        navigator.navigate(
+            R.id.locations_filter_to_filter,
+            FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.LOCATION_TYPE
+        )
     }
 
     override fun openDimensionFilter() {
+        navigator.navigate(
+            R.id.locations_filter_to_filter,
+            FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.LOCATION_DIMENSION
+        )
     }
 
     override fun clearFilter() {
@@ -59,21 +73,21 @@ class LocationsFilterViewModel(
     }
 
     private fun setName(name: String) {
-        this.currentFilter.copy(
+        this.currentFilter = this.currentFilter.copy(
             name = name
         )
         buildFilterState()
     }
 
     private fun setType(type: String) {
-        this.currentFilter.copy(
+        this.currentFilter = this.currentFilter.copy(
             type = type
         )
         buildFilterState()
     }
 
     private fun setDimension(dimension: String) {
-        this.currentFilter.copy(
+        this.currentFilter = this.currentFilter.copy(
             dimension = dimension
         )
         buildFilterState()

@@ -38,18 +38,18 @@
             app:destination="@id/locations_filter" />
     </fragment>
 
-    <fragment
+    <dialog
         android:id="@+id/locations_filter"
         android:name="dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment"
         android:label="LocationsFilterFragment"
         tools:layout="@layout/locations_filter_fragment">
         <argument
             android:name="LOCATIONS_FILTER_ARGUMENT"
-            app:argType="dev.pimentel.rickandmorty.presentation.locations.filter.dto.CharactersFilter" />
+            app:argType="dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter" />
         <action
             android:id="@+id/locations_filter_to_filter"
             app:destination="@id/filter" />
-    </fragment>
+    </dialog>
 
     <fragment
         android:id="@+id/episodes"

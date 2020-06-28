@@ -3,11 +3,13 @@ package dev.pimentel.rickandmorty.presentation.locations
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.LocationsFragmentBinding
+import dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
@@ -71,6 +73,15 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
                 viewModel.openFilters()
                 return@setOnMenuItemClickListener true
             }
+        }
+
+        parentFragmentManager.setFragmentResultListener(
+            LocationsFilterFragment.LOCATIONS_RESULT_LISTENER_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            viewModel.getLocations(
+                bundle[LocationsFilterFragment.LOCATIONS_FILTER_RESULT_KEY] as LocationsFilter
+            )
         }
 
         viewModel.getLocations(LocationsFilter.NO_FILTER)

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersFragmentBinding
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
-import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment.Companion.CHARACTERS_FILTER_RESULT_KEY
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
@@ -80,7 +79,9 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             CharactersFilterFragment.CHARACTERS_RESULT_LISTENER_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
-            viewModel.getCharacters(bundle[CHARACTERS_FILTER_RESULT_KEY] as CharactersFilter)
+            viewModel.getCharacters(
+                bundle[CharactersFilterFragment.CHARACTERS_FILTER_RESULT_KEY] as CharactersFilter
+            )
         }
 
         viewModel.getCharacters(CharactersFilter.NO_FILTER)

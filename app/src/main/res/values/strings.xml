@@ -71,6 +71,7 @@
     <string name="locations_filter_type_hint">Give a type</string>
     <string name="locations_filter_dimension_label">Dimension</string>
     <string name="locations_filter_dimension_hint">Give a dimension</string>
+    <string name="locations_filter_apply">Apply</string>
     <!-- Locations Filter Fragment -->
 
 </resources>
