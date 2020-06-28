@@ -5,12 +5,12 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dev.pimentel.data.models.FilterModel
-import dev.pimentel.data.repositories.CharacterNamesRepositoryImpl
+import dev.pimentel.data.repositories.FilterRepositoryImpl
 import dev.pimentel.data.repositories.CharactersRepositoryImpl
 import dev.pimentel.data.sources.local.FilterLocalDataSource
 import dev.pimentel.data.sources.local.FilterLocalDataSourceImpl
 import dev.pimentel.data.sources.remote.CharactersRemoteDataSource
-import dev.pimentel.domain.repositories.CharacterNamesRepository
+import dev.pimentel.domain.repositories.FilterRepository
 import dev.pimentel.domain.repositories.CharactersRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -79,7 +79,7 @@ private val localDataSourceModule = module {
 
 private val repositoryModule = module {
     single<CharactersRepository> { CharactersRepositoryImpl(get()) }
-    single<CharacterNamesRepository> { CharacterNamesRepositoryImpl(get()) }
+    single<FilterRepository> { FilterRepositoryImpl(get()) }
 }
 
 val dataModules = listOf(
