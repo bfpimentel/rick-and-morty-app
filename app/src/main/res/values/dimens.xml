@@ -20,6 +20,10 @@
     <dimen name="text_huge">32sp</dimen>
     <!-- Text Defaults -->
 
+    <!-- Filter Dialog -->
+    <dimen name="filter_height">400dp</dimen>
+    <!-- Filter Dialog -->
+
     <!-- Characters Fragment -->
     <dimen name="characters_item_height">222dp</dimen>
     <dimen name="characters_item_image_height">140dp</dimen>

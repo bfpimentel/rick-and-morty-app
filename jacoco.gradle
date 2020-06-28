@@ -25,9 +25,9 @@ task jacocoTestReport(type: JacocoReport, dependsOn: [
             '**/*Activity*.*',
             '**/*Fragment*.*',
             '**/*Application*.*',
-            '**/DisposablesHolder*.*',
             '**/SchedulerProvider*.*',
-            '**/presentation/**/data/*.*'
+            '**/helpers/*.*',
+            '**/presentation/**/dto/*.*'
     ]
 
     final domainFileExclusions = [

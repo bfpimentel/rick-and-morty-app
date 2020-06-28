@@ -3,6 +3,7 @@ package dev.pimentel.rickandmorty.presentation.filter
 import android.os.Bundle
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.core.os.bundleOf
 import androidx.core.view.get
@@ -32,6 +33,13 @@ class FilterDialog : DialogFragment(R.layout.filter_dialog) {
             STYLE_NO_TITLE,
             android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth
         )
+
+//        dialog?.window?.attributes?.also { params ->
+//            params.width = ViewGroup.LayoutParams.MATCH_PARENT
+//            params.height = resources.getDimensionPixelSize(R.dimen.filter_height)
+//        }.also { params ->
+//            dialog?.window?.attributes = params
+//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
