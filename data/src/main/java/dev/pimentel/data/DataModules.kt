@@ -6,6 +6,7 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dev.pimentel.data.models.FilterModel
 import dev.pimentel.data.repositories.characters.CharactersRepositoryImpl
+import dev.pimentel.data.repositories.episodes.EpisodesRepositoryImpl
 import dev.pimentel.data.repositories.filter.FilterRepositoryImpl
 import dev.pimentel.data.repositories.filter.FilterTypeModelMapper
 import dev.pimentel.data.repositories.filter.FilterTypeModelMapperImpl
@@ -13,8 +14,10 @@ import dev.pimentel.data.repositories.locations.LocationsRepositoryImpl
 import dev.pimentel.data.sources.local.FilterLocalDataSource
 import dev.pimentel.data.sources.local.FilterLocalDataSourceImpl
 import dev.pimentel.data.sources.remote.CharactersRemoteDataSource
+import dev.pimentel.data.sources.remote.EpisodesRemoteDataSource
 import dev.pimentel.data.sources.remote.LocationsRemoteDataSource
 import dev.pimentel.domain.repositories.CharactersRepository
+import dev.pimentel.domain.repositories.EpisodesRepository
 import dev.pimentel.domain.repositories.FilterRepository
 import dev.pimentel.domain.repositories.LocationsRepository
 import okhttp3.OkHttpClient
@@ -61,6 +64,7 @@ private val networkModule = module {
 private val remoteDataSourceModule = module {
     single { get<Retrofit>().create(CharactersRemoteDataSource::class.java) }
     single { get<Retrofit>().create(LocationsRemoteDataSource::class.java) }
+    single { get<Retrofit>().create(EpisodesRemoteDataSource::class.java) }
 }
 
 private val sharedPreferencesModule = module {
@@ -87,6 +91,8 @@ private val repositoryModule = module {
     single<CharactersRepository> { CharactersRepositoryImpl(get()) }
 
     single<LocationsRepository> { LocationsRepositoryImpl(get()) }
+
+    single<EpisodesRepository> { EpisodesRepositoryImpl(get()) }
 
     single<FilterTypeModelMapper> { FilterTypeModelMapperImpl() }
     single<FilterRepository> { FilterRepositoryImpl(get(), get()) }

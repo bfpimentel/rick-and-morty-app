@@ -29,7 +29,6 @@ class CharactersViewModel(
     private var lastPage: Int = DEFAULT_LAST_PAGE
     private var lastFilter = CharactersFilter.NO_FILTER
 
-    // going to be needed later
     private var characters: MutableList<Character> = mutableListOf()
 
     private val charactersItems = MutableLiveData<List<CharactersItem>>()
