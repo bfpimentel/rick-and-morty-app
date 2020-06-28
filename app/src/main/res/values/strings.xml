@@ -23,7 +23,7 @@
     <string name="filter_clear">CLEAR</string>
     <!-- Filter Menu -->
 
-    <!-- Filter Dialog -->
+    <!-- Filter Type -->
     <string name="filter_character_name">Name</string>
     <string name="filter_character_species">Species</string>
     <string name="filter_location_name">Name</string>
@@ -31,6 +31,29 @@
     <string name="filter_location_dimension">Dimension</string>
     <string name="filter_episode_name">Name</string>
     <string name="filter_episode_number">Episode</string>
+    <!-- Filter Type -->
+
     <!-- Filter Dialog -->
+    <string name="filter_dialog_search_hint">Search</string>
+    <string name="filter_dialog_cancel">Cancel</string>
+    <string name="filter_dialog_ok">OK</string>
+    <!-- Filter Dialog -->
+
+    <!-- Characters Filter Fragment -->
+    <string name="characters_filter_name_label">Name</string>
+    <string name="characters_filter_name_hint">Give a name</string>
+    <string name="characters_filter_species_label">Species</string>
+    <string name="characters_filter_species_hint">Give a species</string>
+    <string name="characters_filter_status_label">Status</string>
+    <string name="characters_filter_status_alive">Alive</string>
+    <string name="characters_filter_status_dead">Dead</string>
+    <string name="characters_filter_status_unknown">Unknown</string>
+    <string name="characters_filter_gender_label">Gender</string>
+    <string name="characters_filter_gender_female">Female</string>
+    <string name="characters_filter_gender_male">Male</string>
+    <string name="characters_filter_gender_genderless">Genderless</string>
+    <string name="characters_filter_gender_unknown">Unknown</string>
+    <string name="characters_filter_apply">Apply</string>
+    <!-- Characters Filter Fragment -->
 
 </resources>

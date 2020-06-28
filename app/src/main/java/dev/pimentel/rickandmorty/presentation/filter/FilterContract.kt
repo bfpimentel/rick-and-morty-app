@@ -12,6 +12,7 @@ interface FilterContract {
         fun setFilterFromText(text: String)
         fun setFilterFromSelection(index: Int)
         fun getFilter()
+        fun close()
 
         fun filterState(): LiveData<FilterState>
         fun filterResult(): LiveData<FilterResult>

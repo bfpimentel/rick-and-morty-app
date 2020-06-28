@@ -95,4 +95,8 @@ class FilterViewModel(
                 navigator.pop()
             }, Timber::d)
     }
+
+    override fun close() {
+        navigator.pop()
+    }
 }

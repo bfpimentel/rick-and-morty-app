@@ -76,9 +76,9 @@ class FilterDialog : DialogFragment(R.layout.filter_dialog) {
 
     private fun bindInputs() {
         binding.apply {
-            ok.setOnClickListener {
-                viewModel.getFilter()
-            }
+            cancel.setOnClickListener { viewModel.close() }
+
+            ok.setOnClickListener { viewModel.getFilter() }
 
             searchFieldListener = searchField.doAfterTextChanged { text ->
                 viewModel.setFilterFromText(text.toString())

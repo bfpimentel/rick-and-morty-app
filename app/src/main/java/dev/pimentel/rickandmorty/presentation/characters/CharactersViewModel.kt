@@ -7,6 +7,7 @@ import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
+import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
@@ -88,7 +89,7 @@ class CharactersViewModel(
     override fun openFilters() {
         navigator.navigate(
             R.id.characters_to_characters_filter,
-            CharactersFilter.FILTER_ARGUMENT_KEY to lastFilter
+            CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
         )
     }
 
