@@ -2,6 +2,7 @@ package dev.pimentel.rickandmorty.presentation.filter
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import dev.pimentel.rickandmorty.R
@@ -41,19 +42,31 @@ class FilterDialog : DialogFragment(R.layout.filter_dialog) {
         binding.apply {
             viewModel.title().observe(viewLifecycleOwner, Observer(title::setText))
         }
+
+        viewModel.filterResult().observe(viewLifecycleOwner, Observer { result ->
+            parentFragmentManager.setFragmentResult(
+                FILTER_RESULT_LISTENER_KEY,
+                bundleOf(FILTER_RESULT_KEY to result)
+            )
+        })
     }
 
     private fun bindInputs() {
         binding.apply {
+            ok.setOnClickListener {
+                viewModel.getFilter()
+            }
         }
 
         viewModel.initializeWithFilterType(
-            requireArguments()[FILTER_TYPE_KEY] as FilterType
+            requireArguments()[FILTER_TYPE_ARGUMENT_KEY] as FilterType
         )
     }
 
     companion object {
+        const val FILTER_TYPE_ARGUMENT_KEY = "FILTER_TYPE_ARGUMENT"
 
-        const val FILTER_TYPE_KEY = "FILTER_TYPE_ARGUMENT"
+        const val FILTER_RESULT_LISTENER_KEY = "FILTER_RESULT_LISTENER"
+        const val FILTER_RESULT_KEY = "FILTER_RESULT"
     }
 }

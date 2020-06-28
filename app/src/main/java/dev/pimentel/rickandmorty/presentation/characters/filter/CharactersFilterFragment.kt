@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersFilterFragmentBinding
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
+import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
+import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.loadKoinModules
@@ -79,6 +82,14 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
             }
 
             apply.setOnClickListener { viewModel.getFilter() }
+        }
+
+        parentFragmentManager.setFragmentResultListener(
+            FilterDialog.FILTER_RESULT_LISTENER_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val result = bundle[FilterDialog.FILTER_RESULT_KEY] as FilterResult
+            viewModel.setName(result.value)
         }
 
         viewModel.initializeWithFilter(

@@ -64,7 +64,7 @@ class CharactersFilterViewModel(
     override fun openNameFilter() {
         navigator.navigate(
             R.id.characters_filter_to_filter,
-            FilterDialog.FILTER_TYPE_KEY to FilterType.CHARACTER_NAME
+            FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.CHARACTER_NAME
         )
     }
 
