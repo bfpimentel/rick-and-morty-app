@@ -4,14 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Location
+import dev.pimentel.domain.usecases.GetLocations
 import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsItem
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
+import dev.pimentel.rickandmorty.presentation.locations.mappers.LocationsItemMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
+import timber.log.Timber
 
 class LocationsViewModel(
+    private val getLocations: GetLocations,
+    private val itemMapper: LocationsItemMapper,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
@@ -37,15 +42,42 @@ class LocationsViewModel(
     }
 
     override fun getLocations(filter: LocationsFilter) {
-        TODO("Not yet implemented")
+        if (lastFilter != filter) {
+            page = FIRST_PAGE
+            lastPage = DEFAULT_LAST_PAGE
+            lastFilter = filter
+
+            this.locations = mutableListOf()
+            locationsItems.postValue(listOf())
+        } else {
+            if (page == lastPage) {
+                return
+            }
+
+            page++
+        }
+
+        getLocations(
+            GetLocations.Params(
+                page,
+                filter.name,
+                filter.type,
+                filter.dimension
+            )
+        ).compose(observeOnUIAfterSingleResult())
+            .handle({ response ->
+                this.locations.addAll(response.locations)
+                this.lastPage = response.pages
+
+                locationsItems.postValue(this.locations.map(itemMapper::get))
+            }, Timber::e)
     }
 
     override fun getMoreLocations() {
-        TODO("Not yet implemented")
+        getLocations(lastFilter)
     }
 
     override fun openFilters() {
-        TODO("Not yet implemented")
     }
 
     private companion object {

@@ -8,7 +8,7 @@ import dev.pimentel.domain.models.CharacterModel as DomainCharacterModel
 import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
 
 class CharactersRepositoryImpl(
-    private val charactersDataSource: CharactersRemoteDataSource
+    private val remoteDataSource: CharactersRemoteDataSource
 ) : CharactersRepository {
 
     override fun getCharacters(
@@ -18,7 +18,7 @@ class CharactersRepositoryImpl(
         status: String?,
         gender: String?
     ): Single<DomainPagedResponse<DomainCharacterModel>> =
-        charactersDataSource.getCharacters(
+        remoteDataSource.getCharacters(
             page,
             name,
             species,
