@@ -69,7 +69,7 @@ class EpisodesViewModel(
                 this.episodes.addAll(response.episodes)
                 this.lastPage = response.pages
 
-                episodesItems.postValue(this.episodes.map(itemMapper::get))
+                episodesItems.postValue(itemMapper.getAll(episodes))
             }, Timber::e)
     }
 
