@@ -36,6 +36,11 @@ class FilterViewModel(
     override fun filterState(): LiveData<FilterState> = filterState
     override fun filterResult(): LiveData<FilterResult> = filterResult
 
+    override fun onCleared() {
+        super.onCleared()
+        dispose()
+    }
+
     override fun initializeWithFilterType(filterType: FilterType) {
         this.filterType = filterType
         filterState.postValue(

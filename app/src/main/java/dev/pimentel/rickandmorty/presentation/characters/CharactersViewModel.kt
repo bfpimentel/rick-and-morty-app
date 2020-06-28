@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
-import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemMapper
@@ -32,10 +32,10 @@ class CharactersViewModel(
     // going to be needed later
     private var characters: MutableList<Character> = mutableListOf()
 
-    private val charactersState = MutableLiveData<CharactersState>()
+    private val charactersItems = MutableLiveData<List<CharactersItem>>()
     private val filterIcon = MutableLiveData<Int>()
 
-    override fun charactersState(): LiveData<CharactersState> = charactersState
+    override fun characters(): LiveData<List<CharactersItem>> = charactersItems
     override fun filterIcon(): LiveData<Int> = filterIcon
 
     override fun onCleared() {
@@ -50,7 +50,7 @@ class CharactersViewModel(
             lastFilter = filter
 
             this.characters = mutableListOf()
-            charactersState.postValue(CharactersState.Empty())
+            charactersItems.postValue(listOf())
         } else {
             if (page == lastPage) {
                 return
@@ -74,11 +74,7 @@ class CharactersViewModel(
                 this.characters.addAll(response.characters)
                 this.lastPage = response.pages
 
-                charactersState.postValue(
-                    CharactersState.Success(
-                        this.characters.map(itemMapper::get)
-                    )
-                )
+                charactersItems.postValue(this.characters.map(itemMapper::get))
             }, Timber::e)
     }
 

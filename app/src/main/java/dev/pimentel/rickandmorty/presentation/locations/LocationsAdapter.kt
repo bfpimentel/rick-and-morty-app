@@ -1,22 +1,21 @@
-package dev.pimentel.rickandmorty.presentation.characters
+package dev.pimentel.rickandmorty.presentation.locations
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.api.load
 import dev.pimentel.rickandmorty.R
-import dev.pimentel.rickandmorty.databinding.CharactersItemBinding
-import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
+import dev.pimentel.rickandmorty.databinding.LocationsItemBinding
+import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsItem
 
-class CharactersAdapter : ListAdapter<CharactersItem, CharactersAdapter.ViewHolder>(
+class LocationsAdapter : ListAdapter<LocationsItem, LocationsAdapter.ViewHolder>(
     DIFF_CALLBACK
 ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
-            CharactersItemBinding.inflate(
+            LocationsItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -28,14 +27,13 @@ class CharactersAdapter : ListAdapter<CharactersItem, CharactersAdapter.ViewHold
     }
 
     inner class ViewHolder(
-        private val binding: CharactersItemBinding
+        private val binding: LocationsItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(character: CharactersItem, position: Int) {
+        fun bind(location: LocationsItem, position: Int) {
             binding.apply {
-                image.load(character.image)
-                status.text = character.status
-                name.text = character.name
+                type.text = location.type
+                name.text = location.name
 
                 val layoutParams = root.layoutParams as ViewGroup.MarginLayoutParams
 
@@ -66,15 +64,15 @@ class CharactersAdapter : ListAdapter<CharactersItem, CharactersAdapter.ViewHold
     }
 
     private companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CharactersItem>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<LocationsItem>() {
             override fun areItemsTheSame(
-                oldItem: CharactersItem,
-                newItem: CharactersItem
+                oldItem: LocationsItem,
+                newItem: LocationsItem
             ) = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: CharactersItem,
-                newItem: CharactersItem
+                oldItem: LocationsItem,
+                newItem: LocationsItem
             ) = oldItem.id == newItem.id
         }
     }

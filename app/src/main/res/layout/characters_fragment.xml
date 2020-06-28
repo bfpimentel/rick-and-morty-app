@@ -16,15 +16,15 @@
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
             app:menu="@menu/top"
-            app:title="Characters" />
+            app:title="@string/characters_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:overScrollMode="never"
         android:id="@+id/characters_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:itemCount="10"
         tools:listitem="@layout/characters_item" />
