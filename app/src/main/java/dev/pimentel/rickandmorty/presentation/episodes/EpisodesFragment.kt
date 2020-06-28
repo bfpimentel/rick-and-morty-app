@@ -3,10 +3,12 @@ package dev.pimentel.rickandmorty.presentation.episodes
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.EpisodesFragmentBinding
+import dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
@@ -69,14 +71,14 @@ class EpisodesFragment : Fragment(R.layout.episodes_fragment) {
             }
         }
 
-//        parentFragmentManager.setFragmentResultListener(
-//            CharactersFilterFragment.CHARACTERS_RESULT_LISTENER_KEY,
-//            viewLifecycleOwner
-//        ) { _, bundle ->
-//            viewModel.getEpisodes(
-//                bundle[EpisodesFilterFragment.EPISODES_FILTER_RESULT_KEY] as CharactersFilter
-//            )
-//        }
+        parentFragmentManager.setFragmentResultListener(
+            EpisodesFilterFragment.EPISODES_RESULT_LISTENER_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            viewModel.getEpisodes(
+                bundle[EpisodesFilterFragment.EPISODES_FILTER_RESULT_KEY] as EpisodesFilter
+            )
+        }
 
         viewModel.getEpisodes(EpisodesFilter.NO_FILTER)
     }

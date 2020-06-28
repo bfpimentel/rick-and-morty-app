@@ -7,6 +7,7 @@ import dev.pimentel.domain.entities.Episode
 import dev.pimentel.domain.usecases.GetEpisodes
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesItem
+import dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.presentation.episodes.mappers.EpisodesItemMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
@@ -47,6 +48,7 @@ class EpisodesViewModel(
             lastPage = DEFAULT_LAST_PAGE
             lastFilter = filter
 
+            this.episodes = mutableListOf()
             episodesItems.postValue(listOf())
         } else {
             if (page == lastPage) {
@@ -69,7 +71,7 @@ class EpisodesViewModel(
                 this.episodes.addAll(response.episodes)
                 this.lastPage = response.pages
 
-                episodesItems.postValue(itemMapper.getAll(episodes))
+                episodesItems.postValue(itemMapper.getAll(this.episodes))
             }, Timber::e)
     }
 
@@ -78,7 +80,10 @@ class EpisodesViewModel(
     }
 
     override fun openFilters() {
-        // to be used
+        navigator.navigate(
+            R.id.episodes_to_episodes_filter,
+            EpisodesFilterFragment.EPISODES_FILTER_ARGUMENT_KEY to lastFilter
+        )
     }
 
     private fun handleFilterIconChange() {
