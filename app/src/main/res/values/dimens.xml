@@ -39,4 +39,8 @@
     <dimen name="locations_item_height">83dp</dimen>
     <!-- Locations Fragment -->
 
+    <!-- Episodes Fragment -->
+    <dimen name="episodes_item_arrow_size">24dp</dimen>
+    <!-- Episodes Fragment -->
+
 </resources>

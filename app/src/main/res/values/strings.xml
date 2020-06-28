@@ -73,5 +73,18 @@
     <string name="locations_filter_dimension_hint">Give a dimension</string>
     <string name="locations_filter_apply">Apply</string>
     <!-- Locations Filter Fragment -->
+    <!-- Characters Filter Fragment -->
+
+    <!-- Episodes Fragment -->
+    <string name="episodes_title">Episodes</string>
+    <!-- Locations Fragment -->
+
+    <!-- Locations Filter Fragment -->
+    <string name="episodes_filter_name_label">Name</string>
+    <string name="episodes_filter_name_hint">Give a name</string>
+    <string name="episodes_filter_number_label">Episode</string>
+    <string name="episodes_filter_number_hint">Give an episode</string>
+    <string name="episodes_filter_apply">Apply</string>
+    <!-- Locations Filter Fragment -->
 
 </resources>
