@@ -5,6 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class FilterResult(
-    val resultKey: String,
+    val type: FilterType,
     val value: String
 ) : Parcelable

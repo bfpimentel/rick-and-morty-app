@@ -33,7 +33,7 @@ class FilterViewModel(
     override fun getFilter() {
         filterResult.postValue(
             FilterResult(
-                filterType.resultKey,
+                filterType,
                 "TESTE"
             )
         )

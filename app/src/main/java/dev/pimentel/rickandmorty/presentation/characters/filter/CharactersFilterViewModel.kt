@@ -7,6 +7,7 @@ import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilterState
 import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
+import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 
@@ -30,11 +31,12 @@ class CharactersFilterViewModel(
         buildFilterState()
     }
 
-    override fun setName(name: String) {
-        this.currentFilter = this.currentFilter.copy(
-            name = name
-        )
-        buildFilterState()
+    override fun setTextFilter(filterResult: FilterResult) {
+        when (filterResult.type) {
+            FilterType.CHARACTER_NAME -> setName(filterResult.value)
+            FilterType.CHARACTER_SPECIES -> setSpecies(filterResult.value)
+            else -> throw IllegalArgumentException("Illegal Filter Type: ${filterResult.type}")
+        }
     }
 
     override fun setStatus(selectedOptionId: Int) {
@@ -68,12 +70,34 @@ class CharactersFilterViewModel(
         )
     }
 
+    override fun openSpeciesFilter() {
+        navigator.navigate(
+            R.id.characters_filter_to_filter,
+            FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.CHARACTER_SPECIES
+        )
+    }
+
+    private fun setName(name: String) {
+        this.currentFilter = this.currentFilter.copy(
+            name = name
+        )
+        buildFilterState()
+    }
+
+    private fun setSpecies(species: String) {
+        this.currentFilter = this.currentFilter.copy(
+            species = species
+        )
+        buildFilterState()
+    }
+
     private fun buildFilterState() {
         charactersFilterState.postValue(
             CharactersFilterState(
                 lastFilter != currentFilter,
                 currentFilter != CharactersFilter.NO_FILTER,
                 currentFilter.name,
+                currentFilter.species,
                 STATUS_MAP.firstOrNull { pair -> pair.first == currentFilter.status }?.second,
                 GENDER_MAP.firstOrNull { pair -> pair.first == currentFilter.gender }?.second
             )

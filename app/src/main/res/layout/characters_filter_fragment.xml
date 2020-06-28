@@ -82,6 +82,7 @@
                     android:theme="@style/Subtitle1" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/species"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Give a species"

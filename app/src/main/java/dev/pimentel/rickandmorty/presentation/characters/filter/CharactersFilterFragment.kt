@@ -47,6 +47,7 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
                 viewLifecycleOwner,
                 Observer { state ->
                     name.text = state.name
+                    species.text = state.species
                     toolbar.menu.findItem(R.id.clear).isVisible = state.canClear
                     state.statusId?.also(statusGroup::check) ?: statusGroup.clearCheck()
                     state.genderId?.also(genderGroup::check) ?: genderGroup.clearCheck()
@@ -64,16 +65,16 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
 
     private fun bindInputs() {
         binding.apply {
+            nameContainer.setOnClickListener { viewModel.openNameFilter() }
+
+            speciesContainer.setOnClickListener { viewModel.openSpeciesFilter() }
+
             statusGroup.setOnCheckedChangeListener { _, checkedId ->
                 viewModel.setStatus(checkedId)
             }
 
             genderGroup.setOnCheckedChangeListener { _, checkedId ->
                 viewModel.setGender(checkedId)
-            }
-
-            nameContainer.setOnClickListener {
-                viewModel.openNameFilter()
             }
 
             toolbar.menu.findItem(R.id.clear).setOnMenuItemClickListener {
@@ -88,8 +89,9 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
             FilterDialog.FILTER_RESULT_LISTENER_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
-            val result = bundle[FilterDialog.FILTER_RESULT_KEY] as FilterResult
-            viewModel.setName(result.value)
+            viewModel.setTextFilter(
+                bundle[FilterDialog.FILTER_RESULT_KEY] as FilterResult
+            )
         }
 
         viewModel.initializeWithFilter(
