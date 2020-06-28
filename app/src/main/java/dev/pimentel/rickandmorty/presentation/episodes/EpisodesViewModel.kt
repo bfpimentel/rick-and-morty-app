@@ -78,6 +78,7 @@ class EpisodesViewModel(
     }
 
     override fun openFilters() {
+        // to be used
     }
 
     private fun handleFilterIconChange() {
