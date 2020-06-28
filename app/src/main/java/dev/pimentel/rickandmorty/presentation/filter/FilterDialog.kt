@@ -3,8 +3,10 @@ package dev.pimentel.rickandmorty.presentation.filter
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.FilterDialogBinding
+import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.loadKoinModules
@@ -26,10 +28,32 @@ class FilterDialog : DialogFragment(R.layout.filter_dialog) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadKoinModules(filterModule)
+        bindOutputs()
+        bindInputs()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unloadKoinModules(filterModule)
+    }
+
+    private fun bindOutputs() {
+        binding.apply {
+            viewModel.title().observe(viewLifecycleOwner, Observer(title::setText))
+        }
+    }
+
+    private fun bindInputs() {
+        binding.apply {
+        }
+
+        viewModel.initializeWithFilterType(
+            requireArguments()[FILTER_TYPE_KEY] as FilterType
+        )
+    }
+
+    companion object {
+
+        const val FILTER_TYPE_KEY = "FILTER_TYPE_ARGUMENT"
     }
 }

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_medium"
         android:hint="Search"
-        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundColor="@android:color/transparent"
         app:startIconDrawable="@android:drawable/ic_menu_search">
 
         <com.google.android.material.textfield.TextInputEditText

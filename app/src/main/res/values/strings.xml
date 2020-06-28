@@ -23,4 +23,14 @@
     <string name="filter_clear">CLEAR</string>
     <!-- Filter Menu -->
 
+    <!-- Filter Dialog -->
+    <string name="filter_character_name">Name</string>
+    <string name="filter_character_species">Species</string>
+    <string name="filter_location_name">Name</string>
+    <string name="filter_location_type">Type</string>
+    <string name="filter_location_dimension">Dimension</string>
+    <string name="filter_episode_name">Name</string>
+    <string name="filter_episode_number">Episode</string>
+    <!-- Filter Dialog -->
+
 </resources>

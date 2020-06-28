@@ -44,6 +44,10 @@
         android:id="@+id/filter"
         android:name="dev.pimentel.rickandmorty.presentation.filter.FilterDialog"
         android:label="FilterDialog"
-        tools:layout="@layout/filter_dialog" />
+        tools:layout="@layout/filter_dialog" >
+        <argument
+            android:name="FILTER_TYPE_ARGUMENT"
+            app:argType="dev.pimentel.rickandmorty.presentation.filter.dto.FilterType" />
+    </dialog>
 
 </navigation>

@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilterState
+import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
+import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 
 class CharactersFilterViewModel(
@@ -60,7 +62,10 @@ class CharactersFilterViewModel(
     }
 
     override fun openNameFilter() {
-        navigator.navigate(R.id.characters_filter_to_filter)
+        navigator.navigate(
+            R.id.characters_filter_to_filter,
+            FilterDialog.FILTER_TYPE_KEY to FilterType.CHARACTER_NAME
+        )
     }
 
     private fun buildFilterState() {
