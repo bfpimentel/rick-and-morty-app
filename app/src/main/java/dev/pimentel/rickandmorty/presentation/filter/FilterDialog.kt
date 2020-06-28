@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.FilterDialogBinding
+import dev.pimentel.rickandmorty.databinding.FilterItemBinding
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,6 +42,14 @@ class FilterDialog : DialogFragment(R.layout.filter_dialog) {
     private fun bindOutputs() {
         binding.apply {
             viewModel.title().observe(viewLifecycleOwner, Observer(title::setText))
+
+            viewModel.filterList().observe(viewLifecycleOwner, Observer { filterList ->
+                filterList.map { filter ->
+                    val binding = FilterItemBinding.inflate(layoutInflater, oldFilters, false)
+                    binding.item.text = filter
+                    binding.root
+                }.forEach(oldFilters::addView)
+            })
         }
 
         viewModel.filterResult().observe(viewLifecycleOwner, Observer { result ->

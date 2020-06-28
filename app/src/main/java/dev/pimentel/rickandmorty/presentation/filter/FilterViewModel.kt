@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.usecases.GetFilters
+import dev.pimentel.domain.usecases.SaveFilter
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapper
@@ -16,6 +17,7 @@ import timber.log.Timber
 class FilterViewModel(
     private val filterTypeMapper: FilterTypeMapper,
     private val getFilters: GetFilters,
+    private val saveFilter: SaveFilter,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
@@ -43,12 +45,20 @@ class FilterViewModel(
     }
 
     override fun getFilter() {
-        filterResult.postValue(
-            FilterResult(
-                filterType,
-                "TESTE"
+        saveFilter(
+            SaveFilter.Params(
+                "filterTest",
+                filterTypeMapper.mapToDomain(filterType)
             )
-        )
-        navigator.pop()
+        ).compose(observeOnUIAfterCompletableResult())
+            .handle({
+                filterResult.postValue(
+                    FilterResult(
+                        filterType,
+                        "filterTest"
+                    )
+                )
+                navigator.pop()
+            }, Timber::d)
     }
 }
