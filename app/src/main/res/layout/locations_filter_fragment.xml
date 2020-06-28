@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            app:layout_scrollFlags="scroll|snap"
+            app:menu="@menu/filter"
+            app:title="@string/top_filter" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_medium"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/name_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/locations_filter_name_label"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium"
+                android:textStyle="bold"
+                android:theme="@style/Subtitle1" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/locations_filter_name_hint"
+                android:textColorHint="@color/gray1" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_divider"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:background="@color/gray1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/type_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/locations_filter_type_label"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium"
+                android:textStyle="bold"
+                android:theme="@style/Subtitle1" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/locations_filter_type_hint"
+                android:textColorHint="@color/gray1" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_divider"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:background="@color/gray1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dimension_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/locations_filter_dimension_label"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium"
+                android:textStyle="bold"
+                android:theme="@style/Subtitle1" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dimension"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/locations_filter_dimension_hint"
+                android:textColorHint="@color/gray1" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_divider"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:background="@color/gray1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

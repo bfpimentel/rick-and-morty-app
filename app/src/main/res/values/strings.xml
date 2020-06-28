@@ -64,4 +64,13 @@
     <string name="locations_title">Locations</string>
     <!-- Locations Fragment -->
 
+    <!-- Locations Filter Fragment -->
+    <string name="locations_filter_name_label">Name</string>
+    <string name="locations_filter_name_hint">Give a name</string>
+    <string name="locations_filter_type_label">Type</string>
+    <string name="locations_filter_type_hint">Give a type</string>
+    <string name="locations_filter_dimension_label">Dimension</string>
+    <string name="locations_filter_dimension_hint">Give a dimension</string>
+    <!-- Locations Filter Fragment -->
+
 </resources>
