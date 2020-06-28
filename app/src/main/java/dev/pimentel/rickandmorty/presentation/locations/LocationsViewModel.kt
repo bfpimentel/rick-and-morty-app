@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Location
 import dev.pimentel.domain.usecases.GetLocations
+import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsItem
+import dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
 import dev.pimentel.rickandmorty.presentation.locations.mappers.LocationsItemMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
@@ -78,6 +80,10 @@ class LocationsViewModel(
     }
 
     override fun openFilters() {
+        navigator.navigate(
+            R.id.locations_to_locations_filter,
+            LocationsFilterFragment.LOCATIONS_FILTER_ARGUMENT_KEY to lastFilter
+        )
     }
 
     private companion object {
