@@ -56,8 +56,8 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
 
             viewModel.filteringResult().observe(viewLifecycleOwner, Observer { filter ->
                 parentFragmentManager.setFragmentResult(
-                    RESULT_LISTENER_KEY,
-                    bundleOf(CharactersFilter.RESULT_KEY to filter)
+                    CHARACTERS_RESULT_LISTENER_KEY,
+                    bundleOf(CHARACTERS_FILTER_RESULT_KEY to filter)
                 )
             })
         }
@@ -95,11 +95,14 @@ class CharactersFilterFragment : BottomSheetDialogFragment() {
         }
 
         viewModel.initializeWithFilter(
-            requireArguments()[CharactersFilter.ARGUMENT_NAME] as CharactersFilter
+            requireArguments()[CHARACTERS_FILTER_ARGUMENT_KEY] as CharactersFilter
         )
     }
 
     companion object {
-        const val RESULT_LISTENER_KEY = "CHARACTERS_FILTER_RESULT_LISTENER"
+        const val CHARACTERS_FILTER_ARGUMENT_KEY = "CHARACTERS_FILTER_ARGUMENT"
+
+        const val CHARACTERS_RESULT_LISTENER_KEY = "CHARACTERS_FILTER_RESULT_LISTENER"
+        const val CHARACTERS_FILTER_RESULT_KEY = "CHARACTERS_FILTER_RESULT"
     }
 }

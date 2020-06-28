@@ -13,10 +13,5 @@ data class CharactersFilter(
 
     companion object {
         val NO_FILTER = CharactersFilter()
-
-        const val RESULT_KEY = "CHARACTERS_FILTER_REQUEST"
-
-        // must be equal to the one that is inside main_navigation_graph.xml
-        const val ARGUMENT_NAME = "CHARACTERS_FILTER_ARGUMENT"
     }
 }

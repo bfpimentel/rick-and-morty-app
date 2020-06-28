@@ -88,7 +88,7 @@ class CharactersViewModel(
     override fun openFilters() {
         navigator.navigate(
             R.id.characters_to_characters_filter,
-            CharactersFilter.ARGUMENT_NAME to lastFilter
+            CharactersFilter.FILTER_ARGUMENT_KEY to lastFilter
         )
     }
 
