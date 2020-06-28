@@ -11,6 +11,7 @@ import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 
+@Suppress("TooManyFunctions")
 class CharactersFilterViewModel(
     private val navigator: NavigatorRouter
 ) : ViewModel(),

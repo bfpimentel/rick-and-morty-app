@@ -74,6 +74,7 @@ class FilterDialog : DialogFragment(R.layout.filter_dialog) {
         })
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun bindInputs() {
         binding.apply {
             cancel.setOnClickListener { viewModel.close() }
