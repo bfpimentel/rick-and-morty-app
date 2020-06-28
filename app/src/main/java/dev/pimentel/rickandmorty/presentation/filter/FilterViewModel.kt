@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.usecases.GetFilters
 import dev.pimentel.domain.usecases.SaveFilter
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
+import dev.pimentel.rickandmorty.presentation.filter.dto.FilterState
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
@@ -25,29 +26,62 @@ class FilterViewModel(
     FilterContract.ViewModel {
 
     private lateinit var filterType: FilterType
+
+    private var list: List<String>? = null
     private var filterValue: String? = null
 
-    private val titleRes = MutableLiveData<Int>()
-    private val filterList = MutableLiveData<List<String>>()
+    private val filterState = MutableLiveData<FilterState>()
     private val filterResult = MutableLiveData<FilterResult>()
 
-    override fun title(): LiveData<Int> = titleRes
-    override fun filterList(): LiveData<List<String>> = filterList
+    override fun filterState(): LiveData<FilterState> = filterState
     override fun filterResult(): LiveData<FilterResult> = filterResult
 
     override fun initializeWithFilterType(filterType: FilterType) {
         this.filterType = filterType
-        titleRes.postValue(filterType.nameRes)
+        filterState.postValue(
+            FilterState.Title(
+                filterType.titleRes
+            )
+        )
 
         getFilters(GetFilters.Params(filterTypeMapper.mapToDomain(filterType)))
             .compose(observeOnUIAfterSingleResult())
-            .handle(filterList::postValue, Timber::d)
+            .handle({ list ->
+                this.list = list
+
+                filterState.postValue(
+                    FilterState.Listing(
+                        filterType.titleRes,
+                        list
+                    )
+                )
+            }, Timber::d)
+    }
+
+    override fun setFilterFromText(text: String) {
+        filterValue = text
+        filterState.postValue(
+            FilterState.ClearSelection(
+                filterType.titleRes,
+                !filterValue.isNullOrBlank()
+            )
+        )
+    }
+
+    override fun setFilterFromSelection(index: Int) {
+        filterValue = list?.getOrNull(index)
+        filterState.postValue(
+            FilterState.ClearText(
+                filterType.titleRes,
+                !filterValue.isNullOrBlank()
+            )
+        )
     }
 
     override fun getFilter() {
         saveFilter(
             SaveFilter.Params(
-                "filterTest",
+                filterValue!!,
                 filterTypeMapper.mapToDomain(filterType)
             )
         ).compose(observeOnUIAfterCompletableResult())
@@ -55,7 +89,7 @@ class FilterViewModel(
                 filterResult.postValue(
                     FilterResult(
                         filterType,
-                        "filterTest"
+                        filterValue!!
                     )
                 )
                 navigator.pop()

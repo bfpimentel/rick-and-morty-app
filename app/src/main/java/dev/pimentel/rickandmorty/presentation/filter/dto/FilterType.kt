@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 enum class FilterType(
-    @StringRes val nameRes: Int
+    @StringRes val titleRes: Int
 ) : Parcelable {
 
     CHARACTER_NAME(R.string.filter_character_name),

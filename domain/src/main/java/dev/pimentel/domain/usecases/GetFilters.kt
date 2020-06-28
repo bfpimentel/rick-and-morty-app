@@ -10,7 +10,7 @@ class GetFilters(
 ) : UseCase<GetFilters.Params, Single<List<String>>> {
 
     override fun invoke(params: Params): Single<List<String>> =
-        filterRepository.getFiltersByType(params.type)
+        filterRepository.getFiltersByType(params.type).map { it.asReversed() }
 
     data class Params(
         val type: FilterModel.Type
