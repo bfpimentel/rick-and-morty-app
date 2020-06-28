@@ -55,7 +55,24 @@
         android:id="@+id/episodes"
         android:name="dev.pimentel.rickandmorty.presentation.episodes.EpisodesFragment"
         android:label="EpisodesFragment"
-        tools:layout="@layout/episodes_fragment" />
+        tools:layout="@layout/episodes_fragment">
+        <action
+            android:id="@+id/episodes_to_episodes_filter"
+            app:destination="@id/episodes_filter_fragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/episodes_filter_fragment"
+        android:name="dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment"
+        android:label="EpisodesFilterFragment"
+        tools:layout="@layout/episodes_filter_fragment">
+        <argument
+            android:name="EPISODES_FILTER_ARGUMENT"
+            app:argType="dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter" />
+        <action
+            android:id="@+id/episodes_filter_to_filter"
+            app:destination="@id/filter" />
+    </dialog>
 
     <dialog
         android:id="@+id/filter"
