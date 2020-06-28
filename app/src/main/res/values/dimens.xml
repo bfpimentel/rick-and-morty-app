@@ -22,6 +22,8 @@
 
     <!-- Common -->
     <dimen name="common_radio_button_height">48dp</dimen>
+    <dimen name="common_item_smaller_margin">10dp</dimen>
+    <dimen name="common_item_bigger_margin">20dp</dimen>
     <!-- Common -->
 
     <!-- Filter Dialog -->
@@ -31,8 +33,10 @@
     <!-- Characters Fragment -->
     <dimen name="characters_item_height">222dp</dimen>
     <dimen name="characters_item_image_height">140dp</dimen>
-    <dimen name="characters_item_smaller_margin">10dp</dimen>
-    <dimen name="characters_item_bigger_margin">20dp</dimen>
     <!-- Characters Fragment -->
+
+    <!-- Locations Fragment -->
+    <dimen name="locations_item_height">83dp</dimen>
+    <!-- Locations Fragment -->
 
 </resources>

@@ -42,9 +42,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
     private fun bindOutputs() {
         binding.apply {
-            viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
-                adapter.submitList(state.list)
-            })
+            viewModel.characters().observe(viewLifecycleOwner, Observer(adapter::submitList))
 
             viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
                 toolbar.menu.findItem(R.id.filter).setIcon(icon)
@@ -88,7 +86,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         viewModel.getCharacters(CharactersFilter.NO_FILTER)
     }
 
-    companion object {
-        private const val CHARACTERS_ROW_COUNT = 2
+    private companion object {
+        const val CHARACTERS_ROW_COUNT = 2
     }
 }
