@@ -38,6 +38,6 @@ class GetEpisodes(
 
     data class Response(
         val pages: Int,
-        val characters: List<Episode>
+        val episodes: List<Episode>
     )
 }

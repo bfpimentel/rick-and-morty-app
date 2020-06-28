@@ -21,12 +21,12 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/locations_list"
+        android:id="@+id/episodes_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:itemCount="10"
-        tools:listitem="@layout/locations_item" />
+        tools:listitem="@layout/episodes_item" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
