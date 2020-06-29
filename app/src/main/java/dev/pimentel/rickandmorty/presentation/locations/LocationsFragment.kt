@@ -41,7 +41,17 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
 
     private fun bindOutputs() {
         binding.apply {
-            viewModel.locations().observe(viewLifecycleOwner, Observer(adapter::submitList))
+            viewModel.locationsState().observe(viewLifecycleOwner, Observer { state ->
+                adapter.submitList(state.locations)
+                state.errorMessage.also {
+                    errorContainer.visibility = View.VISIBLE
+                    errorMessage.text = state.errorMessage
+                    locationsList.visibility = View.GONE
+                } ?: run {
+                    errorContainer.visibility = View.GONE
+                    locationsList.visibility = View.VISIBLE
+                }
+            })
 
             viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
                 toolbar.menu.findItem(R.id.filter).setIcon(icon)
@@ -59,7 +69,7 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
             layoutManager,
             { false },
             { false },
-            viewModel::getMoreLocations
+            viewModel::getLocationsWithLastFilter
         )
 
         binding.apply {
@@ -68,6 +78,8 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
                 list.layoutManager = layoutManager
                 list.addOnScrollListener(endOfScrollListener)
             }
+
+            errorContainer.setOnClickListener { viewModel.getLocationsWithLastFilter() }
 
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()

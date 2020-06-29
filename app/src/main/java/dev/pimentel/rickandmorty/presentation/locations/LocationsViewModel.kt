@@ -6,19 +6,20 @@ import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Location
 import dev.pimentel.domain.usecases.GetLocations
 import dev.pimentel.rickandmorty.R
-import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsItem
+import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsState
 import dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
 import dev.pimentel.rickandmorty.presentation.locations.mappers.LocationsItemMapper
+import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
-import timber.log.Timber
 
 class LocationsViewModel(
     private val getLocations: GetLocations,
-    private val itemMapper: LocationsItemMapper,
+    private val locationsItemMapper: LocationsItemMapper,
+    private val getErrorMessage: GetErrorMessage,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
@@ -31,10 +32,10 @@ class LocationsViewModel(
 
     private var locations: MutableList<Location> = mutableListOf()
 
-    private val locationsItems = MutableLiveData<List<LocationsItem>>()
+    private val locationsState = MutableLiveData<LocationsState>()
     private val filterIcon = MutableLiveData<Int>()
 
-    override fun locations(): LiveData<List<LocationsItem>> = locationsItems
+    override fun locationsState(): LiveData<LocationsState> = locationsState
     override fun filterIcon(): LiveData<Int> = filterIcon
 
     override fun onCleared() {
@@ -49,12 +50,9 @@ class LocationsViewModel(
             lastFilter = filter
 
             this.locations = mutableListOf()
-            locationsItems.postValue(listOf())
+            locationsState.postValue(LocationsState.Empty())
         } else {
-            if (page == lastPage) {
-                return
-            }
-
+            if (page == lastPage) return
             page++
         }
 
@@ -72,11 +70,24 @@ class LocationsViewModel(
                 this.locations.addAll(response.locations)
                 this.lastPage = response.pages
 
-                locationsItems.postValue(this.locations.map(itemMapper::get))
-            }, Timber::e)
+                locationsState.postValue(
+                    LocationsState.Success(
+                        locations.map(locationsItemMapper::get)
+                    )
+                )
+            }, { throwable ->
+                page = DEFAULT_PAGE
+                lastPage = DEFAULT_LAST_PAGE
+
+                locationsState.postValue(
+                    LocationsState.Error(
+                        getErrorMessage(GetErrorMessage.Params(throwable))
+                    )
+                )
+            })
     }
 
-    override fun getMoreLocations() {
+    override fun getLocationsWithLastFilter() {
         getLocations(lastFilter)
     }
 

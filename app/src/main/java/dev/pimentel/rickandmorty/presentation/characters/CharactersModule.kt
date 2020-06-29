@@ -14,6 +14,7 @@ val charactersModule = module {
             get(),
             CharactersItemMapperImpl(),
             CharacterDetailsMapperImpl(androidContext()),
+            get(),
             get<Navigator>(),
             get()
         )

@@ -10,6 +10,7 @@ val locationsModule = module {
         LocationsViewModel(
             get(),
             LocationsItemMapperImpl(),
+            get(),
             get<Navigator>(),
             get()
         )

@@ -41,7 +41,17 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
     private fun bindOutputs() {
         binding.apply {
-            viewModel.characters().observe(viewLifecycleOwner, Observer(adapter::submitList))
+            viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
+                adapter.submitList(state.characters)
+                state.errorMessage.also {
+                    errorContainer.visibility = View.VISIBLE
+                    errorMessage.text = state.errorMessage
+                    charactersList.visibility = View.GONE
+                } ?: run {
+                    errorContainer.visibility = View.GONE
+                    charactersList.visibility = View.VISIBLE
+                }
+            })
 
             viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
                 toolbar.menu.findItem(R.id.filter).setIcon(icon)
@@ -59,7 +69,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             layoutManager,
             { false },
             { false },
-            viewModel::getMoreCharacters
+            viewModel::getCharactersWithLastFilter
         )
 
         adapter.onItemClick = viewModel::getDetails
@@ -70,6 +80,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 list.layoutManager = layoutManager
                 list.addOnScrollListener(endOfScrollListener)
             }
+
+            errorContainer.setOnClickListener { viewModel.getCharactersWithLastFilter() }
 
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()

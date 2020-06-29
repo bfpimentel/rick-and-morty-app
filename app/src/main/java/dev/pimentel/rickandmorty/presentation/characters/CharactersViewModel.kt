@@ -8,22 +8,25 @@ import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment
-import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
-import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
+import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemMapper
+import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 import timber.log.Timber
 
+@Suppress("LongParameterList")
 class CharactersViewModel(
     private val getCharacters: GetCharacters,
     private val getCharacterDetails: GetCharacterDetails,
     private val charactersItemMapper: CharactersItemMapper,
     private val characterDetailsMapper: CharacterDetailsMapper,
+    private val getErrorMessage: GetErrorMessage,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
@@ -36,10 +39,10 @@ class CharactersViewModel(
 
     private var characters: MutableList<Character> = mutableListOf()
 
-    private val charactersItems = MutableLiveData<List<CharactersItem>>()
+    private val charactersState = MutableLiveData<CharactersState>()
     private val filterIcon = MutableLiveData<Int>()
 
-    override fun characters(): LiveData<List<CharactersItem>> = charactersItems
+    override fun charactersState(): LiveData<CharactersState> = charactersState
     override fun filterIcon(): LiveData<Int> = filterIcon
 
     override fun onCleared() {
@@ -49,17 +52,15 @@ class CharactersViewModel(
 
     override fun getCharacters(filter: CharactersFilter) {
         if (lastFilter != filter) {
-            page = FIRST_PAGE
-            lastPage = DEFAULT_LAST_PAGE
             lastFilter = filter
 
-            this.characters = mutableListOf()
-            charactersItems.postValue(listOf())
-        } else {
-            if (page == lastPage) {
-                return
-            }
+            page = FIRST_PAGE
+            lastPage = DEFAULT_LAST_PAGE
 
+            this.characters = mutableListOf()
+            charactersState.postValue(CharactersState.Empty())
+        } else {
+            if (page == lastPage) return
             page++
         }
 
@@ -78,11 +79,24 @@ class CharactersViewModel(
                 this.characters.addAll(response.characters)
                 this.lastPage = response.pages
 
-                charactersItems.postValue(this.characters.map(charactersItemMapper::get))
-            }, Timber::e)
+                charactersState.postValue(
+                    CharactersState.Success(
+                        characters.map(charactersItemMapper::get)
+                    )
+                )
+            }, { throwable ->
+                page = DEFAULT_PAGE
+                lastPage = DEFAULT_LAST_PAGE
+
+                charactersState.postValue(
+                    CharactersState.Error(
+                        getErrorMessage(GetErrorMessage.Params(throwable))
+                    )
+                )
+            })
     }
 
-    override fun getMoreCharacters() {
+    override fun getCharactersWithLastFilter() {
         getCharacters(lastFilter)
     }
 
