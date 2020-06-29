@@ -1,0 +1,27 @@
+ext.projectDependencies = [
+        kotlinStdlib      : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72",
+        kotlinReflect     : "org.jetbrains.kotlin:kotlin-reflect:1.3.72",
+        appCompat         : "androidx.appcompat:appcompat:1.1.0",
+        fragment          : "androidx.fragment:fragment-ktx:1.3.0-alpha06",
+        materialDesign    : "com.google.android.material:material:1.2.0-alpha03",
+        navigationFragment: "androidx.navigation:navigation-fragment-ktx:2.3.0-alpha04",
+        navigationUI      : "androidx.navigation:navigation-ui-ktx:2.3.0-alpha04",
+        rxJava            : "io.reactivex.rxjava3:rxjava:3.0.4",
+        rxAndroid         : "io.reactivex.rxjava3:rxandroid:3.0.0",
+        moshi             : "com.squareup.moshi:moshi-kotlin:1.9.3",
+        retrofit          : "com.squareup.retrofit2:retrofit:2.9.0",
+        retrofitRxAdapter : "com.squareup.retrofit2:adapter-rxjava3:2.9.0",
+        retrofitMoshi     : "com.squareup.retrofit2:converter-moshi:2.4.0",
+        loggingInterceptor: "com.squareup.okhttp3:logging-interceptor:4.2.2",
+        koin              : "org.koin:koin-androidx-viewmodel:2.1.6",
+        lifecycleCommon   : "androidx.lifecycle:lifecycle-common-java8:2.2.0",
+        timber            : "com.jakewharton.timber:timber:4.7.1",
+        coil              : "io.coil-kt:coil:0.11.0"
+]
+
+ext.testDependencies = [
+        androidTestCore: "androidx.arch.core:core-testing:2.1.0",
+        mockk          : "io.mockk:mockk:1.9.3",
+        junitAPI       : "org.junit.jupiter:junit-jupiter-api:5.6.0",
+        junitEngine    : "org.junit.jupiter:junit-jupiter-engine:5.6.0"
+]

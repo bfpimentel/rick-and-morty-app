@@ -1,0 +1,94 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="AppToolbar" parent="AppTheme">
+        <item name="actionMenuTextColor">@color/colorPrimary</item>
+        <item name="android:actionMenuTextColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppRadioButton" parent="AppTheme">
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="android:theme">@style/Subtitle1</item>
+    </style>
+
+    <style name="PrimaryButton" parent="AppTheme">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="android:theme">@style/Button</item>
+    </style>
+
+    <style name="Headline1">
+        <item name="android:fontFamily">@font/roboto_regular_family</item>
+        <item name="android:textSize">96sp</item>
+    </style>
+
+    <style name="Headline2">
+        <item name="android:fontFamily">@font/roboto_light_family</item>
+        <item name="android:textSize">60sp</item>
+    </style>
+
+    <style name="Headline3">
+        <item name="android:fontFamily">@font/roboto_regular_family</item>
+        <item name="android:textSize">48sp</item>
+    </style>
+
+    <style name="Headline4">
+        <item name="android:fontFamily">@font/roboto_regular_family</item>
+        <item name="android:textSize">34sp</item>
+    </style>
+
+    <style name="Headline5">
+        <item name="android:fontFamily">@font/roboto_regular_family</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Headline6">
+        <item name="android:fontFamily">@font/roboto_medium_family</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Subtitle1">
+        <item name="android:fontFamily">@font/roboto_regular_family</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Subtitle2">
+        <item name="android:fontFamily">@font/roboto_medium_family</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Body1">
+        <item name="android:fontFamily">@font/roboto_regular_family</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Body2">
+        <item name="android:fontFamily">@font/roboto_regular_family</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:fontFamily">@font/roboto_medium_family</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Caption">
+        <item name="android:fontFamily">@font/roboto_regular_family</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="Overline">
+        <item name="android:fontFamily">@font/roboto_medium_family</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+
+</resources>

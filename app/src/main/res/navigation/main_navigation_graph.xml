@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation_graph"
+    app:startDestination="@id/characters">
+
+    <fragment
+        android:id="@+id/characters"
+        android:name="dev.pimentel.rickandmorty.presentation.characters.CharactersFragment"
+        android:label="CharactersFragment"
+        tools:layout="@layout/characters_fragment">
+        <action
+            android:id="@+id/characters_to_characters_filter"
+            app:destination="@id/characters_filter" />
+        <action
+            android:id="@+id/characters_to_characters_details"
+            app:destination="@id/characters_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/characters_details"
+        android:name="dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment"
+        android:label="CharactersDetailsFragment"
+        tools:layout="@layout/characters_details_fragment" >
+        <argument
+            android:name="CHARACTERS_DETAILS_ARGUMENT"
+            app:argType="dev.pimentel.rickandmorty.presentation.characters.details.dto.CharacterDetails" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/characters_filter"
+        android:name="dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment"
+        android:label="CharactersFilterFragment"
+        tools:layout="@layout/characters_filter_fragment">
+        <argument
+            android:name="CHARACTERS_FILTER_ARGUMENT"
+            app:argType="dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter" />
+        <action
+            android:id="@+id/characters_filter_to_filter"
+            app:destination="@id/filter" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/locations"
+        android:name="dev.pimentel.rickandmorty.presentation.locations.LocationsFragment"
+        android:label="LocationsFragment"
+        tools:layout="@layout/locations_fragment">
+        <action
+            android:id="@+id/locations_to_locations_filter"
+            app:destination="@id/locations_filter" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/locations_filter"
+        android:name="dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment"
+        android:label="LocationsFilterFragment"
+        tools:layout="@layout/locations_filter_fragment">
+        <argument
+            android:name="LOCATIONS_FILTER_ARGUMENT"
+            app:argType="dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter" />
+        <action
+            android:id="@+id/locations_filter_to_filter"
+            app:destination="@id/filter" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/episodes"
+        android:name="dev.pimentel.rickandmorty.presentation.episodes.EpisodesFragment"
+        android:label="EpisodesFragment"
+        tools:layout="@layout/episodes_fragment">
+        <action
+            android:id="@+id/episodes_to_episodes_filter"
+            app:destination="@id/episodes_filter_fragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/episodes_filter_fragment"
+        android:name="dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment"
+        android:label="EpisodesFilterFragment"
+        tools:layout="@layout/episodes_filter_fragment">
+        <argument
+            android:name="EPISODES_FILTER_ARGUMENT"
+            app:argType="dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter" />
+        <action
+            android:id="@+id/episodes_filter_to_filter"
+            app:destination="@id/filter" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/filter"
+        android:name="dev.pimentel.rickandmorty.presentation.filter.FilterDialog"
+        android:label="FilterDialog"
+        tools:layout="@layout/filter_dialog">
+        <argument
+            android:name="FILTER_TYPE_ARGUMENT"
+            app:argType="dev.pimentel.rickandmorty.presentation.filter.dto.FilterType" />
+    </dialog>
+
+</navigation>

@@ -1,0 +1,49 @@
+plugins {
+    id("com.android.library")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("de.mannodermaus.android-junit5")
+}
+
+apply(from: "../dependencies.gradle")
+apply(from: "../project.gradle")
+
+android {
+    compileSdkVersion projectConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion projectConfig.minSdkVersion
+    }
+
+    buildTypes {
+        final apiUrlResName = "api_url"
+        final apiUrl = "https://rickandmortyapi.com/api/"
+
+        release {
+            resValue("string", apiUrlResName, apiUrl)
+        }
+
+        debug {
+            resValue("string", apiUrlResName, apiUrl)
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(":domain")
+
+    implementation projectDependencies.kotlinStdlib
+    implementation projectDependencies.koin
+    implementation projectDependencies.rxJava
+    implementation projectDependencies.moshi
+    implementation projectDependencies.retrofitRxAdapter
+    implementation projectDependencies.retrofitMoshi
+    implementation projectDependencies.loggingInterceptor
+
+    testImplementation testDependencies.mockk
+    testImplementation testDependencies.junitAPI
+    testRuntimeOnly testDependencies.junitEngine
+}

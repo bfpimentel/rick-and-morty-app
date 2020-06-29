@@ -1,0 +1,100 @@
+<resources>
+
+    <!-- Default -->
+    <string name="app_name">Rick &amp; Morty</string>
+    <!-- Default -->
+
+    <!-- Error Messages -->
+    <string name="error_message_no_connection">Failed to connect to the server. Check your internet connection!</string>
+    <string name="error_message_default">An unexpected problem happened on the server!</string>
+    <!-- Error Messages -->
+
+    <!-- Bottom Menu -->
+    <string name="bottom_characters">Characters</string>
+    <string name="bottom_locations">Locations</string>
+    <string name="bottom_episodes">Episodes</string>
+    <!-- Bottom Menu -->
+
+    <!-- Top Menu -->
+    <string name="top_filter">Filter</string>
+    <!-- Top Menu -->
+
+    <!-- Filter Menu -->
+    <string name="filter_clear">CLEAR</string>
+    <!-- Filter Menu -->
+
+    <!-- Filter Type -->
+    <string name="filter_character_name">Name</string>
+    <string name="filter_character_species">Species</string>
+    <string name="filter_location_name">Name</string>
+    <string name="filter_location_type">Type</string>
+    <string name="filter_location_dimension">Dimension</string>
+    <string name="filter_episode_name">Name</string>
+    <string name="filter_episode_number">Episode</string>
+    <!-- Filter Type -->
+
+    <!-- Filter Dialog -->
+    <string name="filter_dialog_search_hint">Search</string>
+    <string name="filter_dialog_cancel">Cancel</string>
+    <string name="filter_dialog_ok">OK</string>
+    <!-- Filter Dialog -->
+
+    <!-- Characters Fragment -->
+    <string name="characters_title">Characters</string>
+    <!-- Characters Fragment -->
+
+    <!-- Characters Fragment -->
+    <string name="characters_details_unknown">Unknown</string>
+    <string name="characters_details_information">Information</string>
+    <string name="characters_details_gender">Gender</string>
+    <string name="characters_details_origin">Origin</string>
+    <string name="characters_details_type">Type</string>
+    <string name="characters_details_location">Location</string>
+    <string name="characters_details_episodes">Episodes</string>
+    <!-- Characters Fragment -->
+
+    <!-- Characters Filter Fragment -->
+    <string name="characters_filter_name_label">Name</string>
+    <string name="characters_filter_name_hint">Give a name</string>
+    <string name="characters_filter_species_label">Species</string>
+    <string name="characters_filter_species_hint">Give a species</string>
+    <string name="characters_filter_status_label">Status</string>
+    <string name="characters_filter_status_alive">Alive</string>
+    <string name="characters_filter_status_dead">Dead</string>
+    <string name="characters_filter_status_unknown">Unknown</string>
+    <string name="characters_filter_gender_label">Gender</string>
+    <string name="characters_filter_gender_female">Female</string>
+    <string name="characters_filter_gender_male">Male</string>
+    <string name="characters_filter_gender_genderless">Genderless</string>
+    <string name="characters_filter_gender_unknown">Unknown</string>
+    <string name="characters_filter_apply">Apply</string>
+    <!-- Characters Filter Fragment -->
+
+    <!-- Locations Fragment -->
+    <string name="locations_title">Locations</string>
+    <!-- Locations Fragment -->
+
+    <!-- Locations Filter Fragment -->
+    <string name="locations_filter_name_label">Name</string>
+    <string name="locations_filter_name_hint">Give a name</string>
+    <string name="locations_filter_type_label">Type</string>
+    <string name="locations_filter_type_hint">Give a type</string>
+    <string name="locations_filter_dimension_label">Dimension</string>
+    <string name="locations_filter_dimension_hint">Give a dimension</string>
+    <string name="locations_filter_apply">Apply</string>
+    <!-- Locations Filter Fragment -->
+
+    <!-- Episodes Fragment -->
+    <string name="episodes_title">Episodes</string>
+    <string name="episodes_item_group_title">Season %s</string>
+    <!-- Locations Fragment -->
+
+    <!-- Episodes Filter Fragment -->
+    <string name="episodes_filter_name_label">Name</string>
+    <string name="episodes_filter_name_hint">Give a name</string>
+    <string name="episodes_filter_number_label">Episode</string>
+    <string name="episodes_filter_number_hint">Give an episode</string>
+    <string name="episodes_filter_apply">Apply</string>
+    <!-- Episodes Filter Fragment -->
+
+</resources>
