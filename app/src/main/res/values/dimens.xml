@@ -9,6 +9,7 @@
     <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_normal">12dp</dimen>
     <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
     <dimen name="spacing_huge">32dp</dimen>
     <!-- Spacing Defaults -->
 
@@ -34,6 +35,11 @@
     <dimen name="characters_item_height">222dp</dimen>
     <dimen name="characters_item_image_height">140dp</dimen>
     <!-- Characters Fragment -->
+
+    <!-- Characters Details Fragment -->
+    <dimen name="characters_details_picture_background_height">84dp</dimen>
+    <dimen name="characters_details_photo_size">130dp</dimen>
+    <!-- Characters Details Fragment -->
 
     <!-- Locations Fragment -->
     <dimen name="locations_item_height">83dp</dimen>

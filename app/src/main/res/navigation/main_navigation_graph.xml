@@ -13,6 +13,19 @@
         <action
             android:id="@+id/characters_to_characters_filter"
             app:destination="@id/characters_filter" />
+        <action
+            android:id="@+id/characters_to_characters_details"
+            app:destination="@id/characters_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/characters_details"
+        android:name="dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment"
+        android:label="CharactersDetailsFragment"
+        tools:layout="@layout/characters_details_fragment" >
+        <argument
+            android:name="CHARACTERS_DETAILS_ARGUMENT"
+            app:argType="dev.pimentel.rickandmorty.presentation.characters.details.dto.CharacterDetails" />
     </fragment>
 
     <dialog

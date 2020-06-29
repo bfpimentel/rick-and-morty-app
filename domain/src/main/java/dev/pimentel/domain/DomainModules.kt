@@ -1,5 +1,6 @@
 package dev.pimentel.domain
 
+import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.domain.usecases.GetEpisodes
 import dev.pimentel.domain.usecases.GetFilters
@@ -13,6 +14,7 @@ private val useCaseModule = module {
     factory { GetEpisodes(get()) }
     factory { GetFilters(get()) }
     factory { SaveFilter(get()) }
+    factory { GetCharacterDetails(get()) }
 }
 
 val domainModules = listOf(

@@ -43,6 +43,16 @@
     <string name="characters_title">Characters</string>
     <!-- Characters Fragment -->
 
+    <!-- Characters Fragment -->
+    <string name="characters_details_unknown">Unknown</string>
+    <string name="characters_details_information">Information</string>
+    <string name="characters_details_gender">Gender</string>
+    <string name="characters_details_origin">Origin</string>
+    <string name="characters_details_type">Type</string>
+    <string name="characters_details_location">Location</string>
+    <string name="characters_details_episodes">Episodes</string>
+    <!-- Characters Fragment -->
+
     <!-- Characters Filter Fragment -->
     <string name="characters_filter_name_label">Name</string>
     <string name="characters_filter_name_hint">Give a name</string>
@@ -73,7 +83,6 @@
     <string name="locations_filter_dimension_hint">Give a dimension</string>
     <string name="locations_filter_apply">Apply</string>
     <!-- Locations Filter Fragment -->
-    <!-- Characters Filter Fragment -->
 
     <!-- Episodes Fragment -->
     <string name="episodes_title">Episodes</string>

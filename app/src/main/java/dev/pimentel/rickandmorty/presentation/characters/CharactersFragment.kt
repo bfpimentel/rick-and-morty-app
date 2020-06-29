@@ -62,6 +62,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             viewModel::getMoreCharacters
         )
 
+        adapter.onItemClick = viewModel::getDetails
+
         binding.apply {
             charactersList.also { list ->
                 list.adapter = adapter

@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Character
+import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
+import dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment
+import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
@@ -18,7 +21,9 @@ import timber.log.Timber
 
 class CharactersViewModel(
     private val getCharacters: GetCharacters,
-    private val itemMapper: CharactersItemMapper,
+    private val getCharacterDetails: GetCharacterDetails,
+    private val charactersItemMapper: CharactersItemMapper,
+    private val characterDetailsMapper: CharacterDetailsMapper,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
@@ -73,7 +78,7 @@ class CharactersViewModel(
                 this.characters.addAll(response.characters)
                 this.lastPage = response.pages
 
-                charactersItems.postValue(this.characters.map(itemMapper::get))
+                charactersItems.postValue(this.characters.map(charactersItemMapper::get))
             }, Timber::e)
     }
 
@@ -86,6 +91,19 @@ class CharactersViewModel(
             R.id.characters_to_characters_filter,
             CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
         )
+    }
+
+    override fun getDetails(id: Int) {
+        getCharacterDetails(GetCharacterDetails.Params(id))
+            .compose(observeOnUIAfterSingleResult())
+            .handle({ response ->
+                val details = characterDetailsMapper.get(response)
+
+                navigator.navigate(
+                    R.id.characters_to_characters_details,
+                    CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
+                )
+            }, Timber::d)
     }
 
     private fun handleFilterIconChange() {
