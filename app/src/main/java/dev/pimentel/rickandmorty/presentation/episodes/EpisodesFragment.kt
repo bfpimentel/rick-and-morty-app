@@ -76,8 +76,6 @@ class EpisodesFragment : Fragment(R.layout.episodes_fragment) {
                 list.addOnScrollListener(endOfScrollListener)
             }
 
-            errorContainer.setOnClickListener { viewModel.getEpisodesWithLastFilter() }
-
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()
                 return@setOnMenuItemClickListener true

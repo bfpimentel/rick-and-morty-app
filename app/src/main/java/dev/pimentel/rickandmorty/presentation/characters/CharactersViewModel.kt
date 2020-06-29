@@ -20,7 +20,6 @@ import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
-import timber.log.Timber
 
 @Suppress("LongParameterList")
 class CharactersViewModel(
@@ -40,9 +39,11 @@ class CharactersViewModel(
 
     private val charactersState = MutableLiveData<CharactersState>()
     private val filterIcon = MutableLiveData<Int>()
+    private val error = MutableLiveData<String>()
 
     override fun charactersState(): LiveData<CharactersState> = charactersState
     override fun filterIcon(): LiveData<Int> = filterIcon
+    override fun error(): LiveData<String> = error
 
     override fun onCleared() {
         super.onCleared()
@@ -102,7 +103,11 @@ class CharactersViewModel(
                     R.id.characters_to_characters_details,
                     CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
                 )
-            }, Timber::d)
+            }, { throwable ->
+                error.postValue(
+                    getErrorMessage(GetErrorMessage.Params(throwable))
+                )
+            })
     }
 
     private fun handleFilterIconChange(filter: CharactersFilter) {

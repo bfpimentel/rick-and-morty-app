@@ -80,8 +80,6 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
                 list.addOnScrollListener(endOfScrollListener)
             }
 
-            errorContainer.setOnClickListener { viewModel.getLocationsWithLastFilter() }
-
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()
                 return@setOnMenuItemClickListener true

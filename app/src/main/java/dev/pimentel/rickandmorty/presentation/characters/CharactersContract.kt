@@ -14,5 +14,6 @@ interface CharactersContract {
 
         fun charactersState(): LiveData<CharactersState>
         fun filterIcon(): LiveData<Int>
+        fun error(): LiveData<String>
     }
 }

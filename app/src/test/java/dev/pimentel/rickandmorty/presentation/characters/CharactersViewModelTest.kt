@@ -1,16 +1,20 @@
 package dev.pimentel.rickandmorty.presentation.characters
 
 import dev.pimentel.domain.entities.Character
+import dev.pimentel.domain.entities.Episode
 import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
+import dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment
+import dev.pimentel.rickandmorty.presentation.characters.details.dto.CharacterDetails
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemsMapper
+import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesItem
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.testshared.ViewModelTest
@@ -23,6 +27,7 @@ import io.mockk.verify
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import dev.pimentel.domain.entities.CharacterDetails as CharacterDetailsEntity
 
 class CharactersViewModelTest : ViewModelTest<CharactersContract.ViewModel>() {
 
@@ -258,6 +263,103 @@ class CharactersViewModelTest : ViewModelTest<CharactersContract.ViewModel>() {
                 R.id.characters_to_characters_filter,
                 CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to filter
             )
+        }
+        confirmVerified(
+            getCharacters,
+            getCharacterDetails,
+            charactersItemMapper,
+            characterDetailsMapper,
+            getErrorMessage,
+            navigator
+        )
+    }
+
+    @Test
+    fun `should navigate to character details after getting it successfully`() {
+        val id = 1
+        val getCharacterDetailsParams = GetCharacterDetails.Params(id)
+
+        val response = CharacterDetailsEntity(
+            1,
+            "name",
+            "status",
+            "species",
+            "image",
+            "gender",
+            "origin",
+            "type",
+            "location",
+            listOf(
+                Episode(1, "name1", "airDate1", "number1"),
+                Episode(2, "name2", "airDate2", "number2")
+            )
+        )
+
+        val details = CharacterDetails(
+            1,
+            "name",
+            "status",
+            "species",
+            "image",
+            "gender",
+            "origin",
+            "type",
+            "location",
+            listOf(
+                EpisodesItem(1, "name1", "airDate1", "number1"),
+                EpisodesItem(2, "name2", "airDate2", "number2")
+            )
+        )
+
+        every { getCharacterDetails(getCharacterDetailsParams) } returns Single.just(response)
+        every { characterDetailsMapper.get(response) } returns details
+        every {
+            navigator.navigate(
+                R.id.characters_to_characters_details,
+                CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
+            )
+        } just runs
+
+        viewModel.getDetails(id)
+        testScheduler.triggerActions()
+
+        verify(exactly = 1) {
+            getCharacterDetails(getCharacterDetailsParams)
+            characterDetailsMapper.get(response)
+            navigator.navigate(
+                R.id.characters_to_characters_details,
+                CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
+            )
+        }
+        confirmVerified(
+            getCharacters,
+            getCharacterDetails,
+            charactersItemMapper,
+            characterDetailsMapper,
+            getErrorMessage,
+            navigator
+        )
+    }
+
+    @Test
+    fun `should post error when failing to get character details`() {
+        val id = 1
+        val getCharacterDetailsParams = GetCharacterDetails.Params(id)
+        val error = IllegalArgumentException()
+        val getErrorMessageParams = GetErrorMessage.Params(error)
+        val errorMessage = "message"
+
+        every { getCharacterDetails(getCharacterDetailsParams) } returns Single.error(error)
+        every { getErrorMessage(getErrorMessageParams) } returns errorMessage
+
+        viewModel.getDetails(id)
+        testScheduler.triggerActions()
+
+        assertEquals(viewModel.error().value, errorMessage)
+
+        verify(exactly = 1) {
+            getCharacterDetails(getCharacterDetailsParams)
+            getErrorMessage(getErrorMessageParams)
         }
         confirmVerified(
             getCharacters,
