@@ -21,8 +21,7 @@ class GetLocations(
                     locationModel.id,
                     locationModel.name,
                     locationModel.type,
-                    locationModel.dimension,
-                    locationModel.residents
+                    locationModel.dimension
                 )
             }.let { locations ->
                 Response(
