@@ -3,6 +3,7 @@ package dev.pimentel.rickandmorty.presentation.characters.filter
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilterState
+import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
@@ -196,6 +197,46 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
         assertEquals(viewModel.filteringResult().value, result)
 
         verify(exactly = 1) { navigator.pop() }
+        confirmVerified(navigator)
+    }
+
+    @Test
+    fun `should open name filter`() {
+        every {
+            navigator.navigate(
+                R.id.characters_filter_to_filter,
+                FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.CHARACTER_NAME
+            )
+        } just runs
+
+        viewModel.openNameFilter()
+
+        verify(exactly = 1) {
+            navigator.navigate(
+                R.id.characters_filter_to_filter,
+                FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.CHARACTER_NAME
+            )
+        }
+        confirmVerified(navigator)
+    }
+
+    @Test
+    fun `should open species filter`() {
+        every {
+            navigator.navigate(
+                R.id.characters_filter_to_filter,
+                FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.CHARACTER_SPECIES
+            )
+        } just runs
+
+        viewModel.openSpeciesFilter()
+
+        verify(exactly = 1) {
+            navigator.navigate(
+                R.id.characters_filter_to_filter,
+                FilterDialog.FILTER_TYPE_ARGUMENT_KEY to FilterType.CHARACTER_SPECIES
+            )
+        }
         confirmVerified(navigator)
     }
 }
