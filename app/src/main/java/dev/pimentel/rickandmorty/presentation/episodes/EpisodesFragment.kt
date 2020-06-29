@@ -40,7 +40,17 @@ class EpisodesFragment : Fragment(R.layout.episodes_fragment) {
 
     private fun bindOutputs() {
         binding.apply {
-            viewModel.episodes().observe(viewLifecycleOwner, Observer(adapter::submitList))
+            viewModel.episodesState().observe(viewLifecycleOwner, Observer { state ->
+                adapter.submitList(state.episodes)
+                state.errorMessage.also {
+                    errorContainer.visibility = View.VISIBLE
+                    errorMessage.text = state.errorMessage
+                    episodesList.visibility = View.GONE
+                } ?: run {
+                    errorContainer.visibility = View.GONE
+                    episodesList.visibility = View.VISIBLE
+                }
+            })
 
             viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
                 toolbar.menu.findItem(R.id.filter).setIcon(icon)

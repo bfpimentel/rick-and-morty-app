@@ -6,19 +6,20 @@ import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Episode
 import dev.pimentel.domain.usecases.GetEpisodes
 import dev.pimentel.rickandmorty.R
-import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesItem
+import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesState
 import dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.presentation.episodes.mappers.EpisodesItemMapper
+import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
-import timber.log.Timber
 
 class EpisodesViewModel(
     private val getEpisodes: GetEpisodes,
-    private val itemMapper: EpisodesItemMapper,
+    private val episodesItemMapper: EpisodesItemMapper,
+    private val getErrorMessage: GetErrorMessage,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
@@ -31,10 +32,10 @@ class EpisodesViewModel(
 
     private var episodes: MutableList<Episode> = mutableListOf()
 
-    private val episodesItems = MutableLiveData<List<EpisodesItem>>()
+    private val episodesState = MutableLiveData<EpisodesState>()
     private val filterIcon = MutableLiveData<Int>()
 
-    override fun episodes(): LiveData<List<EpisodesItem>> = episodesItems
+    override fun episodesState(): LiveData<EpisodesState> = episodesState
     override fun filterIcon(): LiveData<Int> = filterIcon
 
     override fun onCleared() {
@@ -49,7 +50,7 @@ class EpisodesViewModel(
             lastFilter = filter
 
             this.episodes = mutableListOf()
-            episodesItems.postValue(listOf())
+            episodesState.postValue(EpisodesState.Empty())
         } else {
             if (page == lastPage) {
                 return
@@ -71,8 +72,18 @@ class EpisodesViewModel(
                 this.episodes.addAll(response.episodes)
                 this.lastPage = response.pages
 
-                episodesItems.postValue(itemMapper.getAll(this.episodes))
-            }, Timber::e)
+                episodesState.postValue(
+                    EpisodesState.Success(
+                        episodesItemMapper.getAll(episodes)
+                    )
+                )
+            }, { throwable ->
+                episodesState.postValue(
+                    EpisodesState.Error(
+                        getErrorMessage(GetErrorMessage.Params(throwable))
+                    )
+                )
+            })
     }
 
     override fun getMoreEpisodes() {

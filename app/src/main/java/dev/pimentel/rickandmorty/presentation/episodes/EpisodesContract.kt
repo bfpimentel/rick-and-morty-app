@@ -1,7 +1,7 @@
 package dev.pimentel.rickandmorty.presentation.episodes
 
 import androidx.lifecycle.LiveData
-import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesItem
+import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesState
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 
 interface EpisodesContract {
@@ -11,7 +11,7 @@ interface EpisodesContract {
         fun getMoreEpisodes()
         fun openFilters()
 
-        fun episodes(): LiveData<List<EpisodesItem>>
+        fun episodesState(): LiveData<EpisodesState>
         fun filterIcon(): LiveData<Int>
     }
 }

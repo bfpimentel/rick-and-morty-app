@@ -11,6 +11,7 @@ val episodesModule = module {
         EpisodesViewModel(
             get(),
             EpisodesItemMapperImpl(androidContext()),
+            get(),
             get<Navigator>(),
             get()
         )
