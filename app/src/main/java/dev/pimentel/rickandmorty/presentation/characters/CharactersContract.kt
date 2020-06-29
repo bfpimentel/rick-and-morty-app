@@ -1,7 +1,7 @@
 package dev.pimentel.rickandmorty.presentation.characters
 
 import androidx.lifecycle.LiveData
-import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 
 interface CharactersContract {
@@ -12,7 +12,7 @@ interface CharactersContract {
         fun openFilters()
         fun getDetails(id: Int)
 
-        fun characters(): LiveData<List<CharactersItem>>
+        fun charactersState(): LiveData<CharactersState>
         fun filterIcon(): LiveData<Int>
     }
 }

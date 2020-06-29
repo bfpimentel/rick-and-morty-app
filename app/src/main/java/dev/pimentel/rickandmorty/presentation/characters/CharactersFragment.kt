@@ -41,7 +41,17 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
     private fun bindOutputs() {
         binding.apply {
-            viewModel.characters().observe(viewLifecycleOwner, Observer(adapter::submitList))
+            viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
+                adapter.submitList(state.characters)
+                state.errorMessage.also {
+                    errorContainer.visibility = View.VISIBLE
+                    errorMessage.text = state.errorMessage
+                    charactersList.visibility = View.GONE
+                } ?: run {
+                    errorContainer.visibility = View.GONE
+                    charactersList.visibility = View.VISIBLE
+                }
+            })
 
             viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
                 toolbar.menu.findItem(R.id.filter).setIcon(icon)

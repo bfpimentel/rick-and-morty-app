@@ -8,7 +8,7 @@ import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment
-import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
@@ -38,10 +38,10 @@ class CharactersViewModel(
 
     private var characters: MutableList<Character> = mutableListOf()
 
-    private val charactersItems = MutableLiveData<List<CharactersItem>>()
+    private val charactersState = MutableLiveData<CharactersState>()
     private val filterIcon = MutableLiveData<Int>()
 
-    override fun characters(): LiveData<List<CharactersItem>> = charactersItems
+    override fun charactersState(): LiveData<CharactersState> = charactersState
     override fun filterIcon(): LiveData<Int> = filterIcon
 
     override fun onCleared() {
@@ -56,7 +56,7 @@ class CharactersViewModel(
             lastFilter = filter
 
             this.characters = mutableListOf()
-            charactersItems.postValue(listOf())
+            charactersState.postValue(CharactersState.Empty())
         } else {
             if (page == lastPage) {
                 return
@@ -80,9 +80,17 @@ class CharactersViewModel(
                 this.characters.addAll(response.characters)
                 this.lastPage = response.pages
 
-                charactersItems.postValue(this.characters.map(charactersItemMapper::get))
+                charactersState.postValue(
+                    CharactersState.Success(
+                        characters.map(charactersItemMapper::get)
+                    )
+                )
             }, { throwable ->
-                Timber.e(getErrorMessage(GetErrorMessage.Params(throwable)))
+                charactersState.postValue(
+                    CharactersState.Error(
+                        getErrorMessage(GetErrorMessage.Params(throwable))
+                    )
+                )
             })
     }
 
