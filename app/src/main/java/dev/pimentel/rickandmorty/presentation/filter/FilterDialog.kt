@@ -50,12 +50,12 @@ class FilterDialog : DialogFragment(R.layout.filter_dialog) {
         binding.apply {
             viewModel.filterState().observe(viewLifecycleOwner, Observer { state ->
                 title.setText(state.titleRes)
-                state.clearText ?: run {
+                state.clearText?.also {
                     searchField.removeTextChangedListener(searchFieldListener)
                     searchField.text = null
                     searchField.addTextChangedListener(searchFieldListener)
                 }
-                state.clearSelection ?: run { oldFilters.clearCheck() }
+                state.clearSelection?.also { oldFilters.clearCheck() }
                 state.list.mapIndexed { index, filter ->
                     val binding = FilterItemBinding.inflate(layoutInflater, oldFilters, false)
                     binding.item.text = filter

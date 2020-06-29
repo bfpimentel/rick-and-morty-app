@@ -7,6 +7,7 @@
     <!-- Error Messages -->
     <string name="error_message_no_connection">Failed to connect to the server. Check your internet connection!</string>
     <string name="error_message_default">An unexpected problem happened on the server!</string>
+    <string name="error_message_http_404">No results for these filters!</string>
     <!-- Error Messages -->
 
     <!-- Bottom Menu -->

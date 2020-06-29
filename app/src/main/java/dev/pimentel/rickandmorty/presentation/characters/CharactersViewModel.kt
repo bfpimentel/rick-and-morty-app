@@ -8,11 +8,12 @@ import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment
-import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
+import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemMapper
+import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
@@ -24,6 +25,7 @@ class CharactersViewModel(
     private val getCharacterDetails: GetCharacterDetails,
     private val charactersItemMapper: CharactersItemMapper,
     private val characterDetailsMapper: CharacterDetailsMapper,
+    private val getErrorMessage: GetErrorMessage,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
@@ -79,7 +81,9 @@ class CharactersViewModel(
                 this.lastPage = response.pages
 
                 charactersItems.postValue(this.characters.map(charactersItemMapper::get))
-            }, Timber::e)
+            }, { throwable ->
+                Timber.e(getErrorMessage(GetErrorMessage.Params(throwable)))
+            })
     }
 
     override fun getMoreCharacters() {

@@ -5,8 +5,8 @@ import androidx.annotation.StringRes
 sealed class FilterState(
     @StringRes val titleRes: Int,
     val list: List<String> = emptyList(),
-    val clearText: Unit? = Unit,
-    val clearSelection: Unit? = Unit,
+    val clearText: Unit? = null,
+    val clearSelection: Unit? = null,
     val canApply: Boolean = false
 ) {
 
@@ -28,7 +28,7 @@ sealed class FilterState(
     ) : FilterState(
         titleRes = titleRes,
         canApply = canApply,
-        clearText = null
+        clearText = Unit
     )
 
     class ClearSelection(
@@ -37,6 +37,6 @@ sealed class FilterState(
     ) : FilterState(
         titleRes = titleRes,
         canApply = canApply,
-        clearSelection = null
+        clearSelection = Unit
     )
 }
