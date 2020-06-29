@@ -5,6 +5,7 @@ import dev.pimentel.data.models.PagedResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface LocationsRemoteDataSource {
 
@@ -15,4 +16,9 @@ interface LocationsRemoteDataSource {
         @Query("type") type: String?,
         @Query("dimension") dimension: String?
     ): Single<PagedResponse<LocationModel>>
+
+    @GET
+    fun getLocation(
+        @Url url: String
+    ): Single<LocationModel>
 }

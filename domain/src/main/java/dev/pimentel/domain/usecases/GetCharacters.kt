@@ -22,21 +22,6 @@ class GetCharacters(
                     characterModel.id,
                     characterModel.name,
                     characterModel.status,
-                    characterModel.type,
-                    characterModel.gender,
-                    characterModel.origin.let { originModel ->
-                        Character.Origin(
-                            originModel.name,
-                            originModel.url
-                        )
-                    },
-                    characterModel.location.let { locationModel ->
-                        Character.Location(
-                            locationModel.name,
-                            locationModel.url
-                        )
-                    },
-                    characterModel.episodes,
                     characterModel.image
                 )
             }.let { characters ->

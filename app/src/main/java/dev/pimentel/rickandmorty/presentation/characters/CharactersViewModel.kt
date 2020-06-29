@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.domain.entities.Character
+import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
@@ -18,6 +19,7 @@ import timber.log.Timber
 
 class CharactersViewModel(
     private val getCharacters: GetCharacters,
+    private val getCharacterDetails: GetCharacterDetails,
     private val itemMapper: CharactersItemMapper,
     private val navigator: NavigatorRouter,
     schedulerProvider: SchedulerProvider
@@ -86,6 +88,14 @@ class CharactersViewModel(
             R.id.characters_to_characters_filter,
             CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
         )
+    }
+
+    override fun getDetails(id: Int) {
+        getCharacterDetails(GetCharacterDetails.Params(id))
+            .compose(observeOnUIAfterSingleResult())
+            .handle({ response ->
+                Timber.d(response.toString())
+            }, Timber::d)
     }
 
     private fun handleFilterIconChange() {

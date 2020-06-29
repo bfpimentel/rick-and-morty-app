@@ -10,6 +10,7 @@ interface CharactersContract {
         fun getCharacters(filter: CharactersFilter)
         fun getMoreCharacters()
         fun openFilters()
+        fun getDetails(id: Int)
 
         fun characters(): LiveData<List<CharactersItem>>
         fun filterIcon(): LiveData<Int>

@@ -14,6 +14,8 @@ class CharactersAdapter : ListAdapter<CharactersItem, CharactersAdapter.ViewHold
     DIFF_CALLBACK
 ) {
 
+    lateinit var onItemClick: (Int) -> Unit
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
             CharactersItemBinding.inflate(
@@ -33,6 +35,8 @@ class CharactersAdapter : ListAdapter<CharactersItem, CharactersAdapter.ViewHold
 
         fun bind(character: CharactersItem, position: Int) {
             binding.apply {
+                root.setOnClickListener { onItemClick(character.id) }
+
                 image.load(character.image)
                 status.text = character.status
                 name.text = character.name
