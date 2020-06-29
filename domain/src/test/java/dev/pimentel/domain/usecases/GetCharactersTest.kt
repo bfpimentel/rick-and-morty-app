@@ -1,6 +1,7 @@
 package dev.pimentel.domain.usecases
 
 import dev.pimentel.domain.entities.Character
+import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.models.CharacterModel
 import dev.pimentel.domain.models.PagedResponse
 import dev.pimentel.domain.repositories.CharactersRepository
@@ -42,7 +43,7 @@ class GetCharactersTest {
             )
         )
 
-        val result = GetCharacters.Response(
+        val result = Pageable(
             10,
             listOf(
                 Character(1, "name1", "status1", "image1"),
