@@ -43,11 +43,7 @@ class FilterViewModel(
 
     override fun initializeWithFilterType(filterType: FilterType) {
         this.filterType = filterType
-        filterState.postValue(
-            FilterState.Title(
-                filterType.titleRes
-            )
-        )
+        filterState.postValue(FilterState.Title(filterType.titleRes))
 
         getFilters(GetFilters.Params(filterTypeMapper.mapToDomain(filterType)))
             .compose(observeOnUIAfterSingleResult())
