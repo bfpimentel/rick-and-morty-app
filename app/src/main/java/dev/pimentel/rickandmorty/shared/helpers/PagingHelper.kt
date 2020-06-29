@@ -55,7 +55,7 @@ class PagingHelperImpl<ResultType>(
 
                 onSuccess(this@PagingHelperImpl.allItems)
             }, { throwable ->
-                this@PagingHelperImpl.currentPage = DEFAULT_PAGE // TODO
+                this@PagingHelperImpl.currentPage = DEFAULT_PAGE
                 this@PagingHelperImpl.lastPage = DEFAULT_LAST_PAGE
 
                 onError(throwable)

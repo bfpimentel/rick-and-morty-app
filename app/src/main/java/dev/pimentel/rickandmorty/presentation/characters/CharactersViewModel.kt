@@ -12,7 +12,7 @@ import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
-import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemMapper
+import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemsMapper
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
@@ -26,7 +26,7 @@ import timber.log.Timber
 class CharactersViewModel(
     private val getCharacters: GetCharacters,
     private val getCharacterDetails: GetCharacterDetails,
-    private val charactersItemMapper: CharactersItemMapper,
+    private val charactersItemsMapper: CharactersItemsMapper,
     private val characterDetailsMapper: CharacterDetailsMapper,
     private val getErrorMessage: GetErrorMessage,
     private val navigator: NavigatorRouter,
@@ -70,7 +70,7 @@ class CharactersViewModel(
         ).handlePaging(
             { result ->
                 charactersState.postValue(
-                    CharactersState.Success(result.map(charactersItemMapper::get))
+                    CharactersState.Success(charactersItemsMapper.getAll(result))
                 )
             },
             { throwable ->
