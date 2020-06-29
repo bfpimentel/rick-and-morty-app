@@ -65,7 +65,7 @@ class EpisodesFragment : Fragment(R.layout.episodes_fragment) {
             layoutManager,
             { false },
             { false },
-            viewModel::getMoreEpisodes
+            viewModel::getEpisodesWithLastFilter
         )
 
         binding.apply {
@@ -74,6 +74,8 @@ class EpisodesFragment : Fragment(R.layout.episodes_fragment) {
                 list.layoutManager = layoutManager
                 list.addOnScrollListener(endOfScrollListener)
             }
+
+            errorContainer.setOnClickListener { viewModel.getEpisodesWithLastFilter() }
 
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()

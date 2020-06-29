@@ -52,10 +52,7 @@ class EpisodesViewModel(
             this.episodes = mutableListOf()
             episodesState.postValue(EpisodesState.Empty())
         } else {
-            if (page == lastPage) {
-                return
-            }
-
+            if (page == lastPage) return
             page++
         }
 
@@ -78,6 +75,9 @@ class EpisodesViewModel(
                     )
                 )
             }, { throwable ->
+                page = DEFAULT_PAGE
+                lastPage = DEFAULT_LAST_PAGE
+
                 episodesState.postValue(
                     EpisodesState.Error(
                         getErrorMessage(GetErrorMessage.Params(throwable))
@@ -86,7 +86,7 @@ class EpisodesViewModel(
             })
     }
 
-    override fun getMoreEpisodes() {
+    override fun getEpisodesWithLastFilter() {
         getEpisodes(lastFilter)
     }
 

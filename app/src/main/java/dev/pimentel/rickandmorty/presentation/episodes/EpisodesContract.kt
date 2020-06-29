@@ -8,7 +8,7 @@ interface EpisodesContract {
 
     interface ViewModel {
         fun getEpisodes(filter: EpisodesFilter)
-        fun getMoreEpisodes()
+        fun getEpisodesWithLastFilter()
         fun openFilters()
 
         fun episodesState(): LiveData<EpisodesState>

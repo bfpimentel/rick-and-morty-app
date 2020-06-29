@@ -24,7 +24,10 @@
         android:id="@+id/error_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackground"
         android:visibility="gone"
+        android:layout_marginBottom="@dimen/spacing_huge"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -32,7 +35,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/spacing_huge"
             app:srcCompat="@raw/rick_and_morty_logo" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -43,9 +45,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="@dimen/spacing_medium"
             android:layout_marginTop="@dimen/spacing_small"
+            android:gravity="center"
             android:textColor="@color/black"
-            android:theme="@style/Headline5"
-            tools:text="Empty List" />
+            android:theme="@style/Headline6"
+            tools:text="@string/error_message_no_connection" />
 
     </RelativeLayout>
 

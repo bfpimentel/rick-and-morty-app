@@ -69,7 +69,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             layoutManager,
             { false },
             { false },
-            viewModel::getMoreCharacters
+            viewModel::getCharactersWithLastFilter
         )
 
         adapter.onItemClick = viewModel::getDetails
@@ -80,6 +80,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 list.layoutManager = layoutManager
                 list.addOnScrollListener(endOfScrollListener)
             }
+
+            errorContainer.setOnClickListener { viewModel.getCharactersWithLastFilter() }
 
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()

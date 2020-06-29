@@ -69,7 +69,7 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
             layoutManager,
             { false },
             { false },
-            viewModel::getMoreLocations
+            viewModel::getLocationsWithLastFilter
         )
 
         binding.apply {
@@ -78,6 +78,8 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
                 list.layoutManager = layoutManager
                 list.addOnScrollListener(endOfScrollListener)
             }
+
+            errorContainer.setOnClickListener { viewModel.getLocationsWithLastFilter() }
 
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()

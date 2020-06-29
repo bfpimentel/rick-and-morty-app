@@ -8,7 +8,7 @@ interface LocationsContract {
 
     interface ViewModel {
         fun getLocations(filter: LocationsFilter)
-        fun getMoreLocations()
+        fun getLocationsWithLastFilter()
         fun openFilters()
 
         fun locationsState(): LiveData<LocationsState>

@@ -52,10 +52,7 @@ class LocationsViewModel(
             this.locations = mutableListOf()
             locationsState.postValue(LocationsState.Empty())
         } else {
-            if (page == lastPage) {
-                return
-            }
-
+            if (page == lastPage) return
             page++
         }
 
@@ -79,6 +76,9 @@ class LocationsViewModel(
                     )
                 )
             }, { throwable ->
+                page = DEFAULT_PAGE
+                lastPage = DEFAULT_LAST_PAGE
+
                 locationsState.postValue(
                     LocationsState.Error(
                         getErrorMessage(GetErrorMessage.Params(throwable))
@@ -87,7 +87,7 @@ class LocationsViewModel(
             })
     }
 
-    override fun getMoreLocations() {
+    override fun getLocationsWithLastFilter() {
         getLocations(lastFilter)
     }
 

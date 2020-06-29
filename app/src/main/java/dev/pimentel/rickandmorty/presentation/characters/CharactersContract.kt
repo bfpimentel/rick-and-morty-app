@@ -8,7 +8,7 @@ interface CharactersContract {
 
     interface ViewModel {
         fun getCharacters(filter: CharactersFilter)
-        fun getMoreCharacters()
+        fun getCharactersWithLastFilter()
         fun openFilters()
         fun getDetails(id: Int)
 

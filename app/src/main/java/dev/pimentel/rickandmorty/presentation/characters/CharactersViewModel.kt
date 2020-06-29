@@ -51,17 +51,15 @@ class CharactersViewModel(
 
     override fun getCharacters(filter: CharactersFilter) {
         if (lastFilter != filter) {
+            lastFilter = filter
+
             page = FIRST_PAGE
             lastPage = DEFAULT_LAST_PAGE
-            lastFilter = filter
 
             this.characters = mutableListOf()
             charactersState.postValue(CharactersState.Empty())
         } else {
-            if (page == lastPage) {
-                return
-            }
-
+            if (page == lastPage) return
             page++
         }
 
@@ -86,6 +84,9 @@ class CharactersViewModel(
                     )
                 )
             }, { throwable ->
+                page = DEFAULT_PAGE
+                lastPage = DEFAULT_LAST_PAGE
+
                 charactersState.postValue(
                     CharactersState.Error(
                         getErrorMessage(GetErrorMessage.Params(throwable))
@@ -94,7 +95,7 @@ class CharactersViewModel(
             })
     }
 
-    override fun getMoreCharacters() {
+    override fun getCharactersWithLastFilter() {
         getCharacters(lastFilter)
     }
 
