@@ -13,7 +13,7 @@ interface DisposablesHolder {
     fun observeOnUIAfterCompletableResult(): CompletableTransformer
     fun <T> Single<T>.handle(onSuccess: (T) -> Unit, onError: (Throwable) -> Unit)
     fun Completable.handle(onSuccess: () -> Unit, onError: (Throwable) -> Unit)
-    fun dispose()
+    fun disposeHolder()
 }
 
 class DisposablesHolderImpl(
@@ -22,7 +22,7 @@ class DisposablesHolderImpl(
 
     private val compositeDisposable = CompositeDisposable()
 
-    override fun dispose() {
+    override fun disposeHolder() {
         compositeDisposable.dispose()
     }
 

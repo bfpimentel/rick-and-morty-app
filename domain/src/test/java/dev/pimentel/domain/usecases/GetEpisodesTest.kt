@@ -1,6 +1,7 @@
 package dev.pimentel.domain.usecases
 
 import dev.pimentel.domain.entities.Episode
+import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.models.EpisodeModel
 import dev.pimentel.domain.models.PagedResponse
 import dev.pimentel.domain.repositories.EpisodesRepository
@@ -40,7 +41,7 @@ class GetEpisodesTest {
             )
         )
 
-        val result = GetEpisodes.Response(
+        val result = Pageable(
             10,
             listOf(
                 Episode(1, "name1", "airDate1", "number1"),

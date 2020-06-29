@@ -1,6 +1,7 @@
 package dev.pimentel.domain.usecases
 
 import dev.pimentel.domain.entities.Location
+import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.models.LocationModel
 import dev.pimentel.domain.models.PagedResponse
 import dev.pimentel.domain.repositories.LocationsRepository
@@ -41,7 +42,7 @@ class GetLocationsTest {
             )
         )
 
-        val result = GetLocations.Response(
+        val result = Pageable(
             10,
             listOf(
                 Location(1, "name1", "type1", "dimension1"),

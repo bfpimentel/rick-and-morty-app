@@ -2,6 +2,7 @@ package dev.pimentel.rickandmorty.presentation.characters
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
@@ -43,7 +44,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         binding.apply {
             viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
                 adapter.submitList(state.characters)
-                state.errorMessage.also {
+                state.scrollToTheTop?.also { charactersList.scrollToPosition(0) }
+                state.errorMessage?.also {
                     errorContainer.visibility = View.VISIBLE
                     errorMessage.text = state.errorMessage
                     charactersList.visibility = View.GONE
@@ -52,6 +54,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                     charactersList.visibility = View.VISIBLE
                 }
             })
+
+            viewModel.error().observe(viewLifecycleOwner, Observer(::showErrorDialog))
 
             viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
                 toolbar.menu.findItem(R.id.filter).setIcon(icon)
@@ -81,8 +85,6 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 list.addOnScrollListener(endOfScrollListener)
             }
 
-            errorContainer.setOnClickListener { viewModel.getCharactersWithLastFilter() }
-
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
                 viewModel.openFilters()
                 return@setOnMenuItemClickListener true
@@ -99,6 +101,14 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         }
 
         viewModel.getCharacters(CharactersFilter.NO_FILTER)
+    }
+
+    private fun showErrorDialog(errorMessage: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.error_dialog_title)
+            .setMessage(errorMessage)
+            .create()
+            .show()
     }
 
     private companion object {

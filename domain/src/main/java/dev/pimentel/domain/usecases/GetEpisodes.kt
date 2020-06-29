@@ -1,15 +1,16 @@
 package dev.pimentel.domain.usecases
 
 import dev.pimentel.domain.entities.Episode
+import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.repositories.EpisodesRepository
 import dev.pimentel.domain.usecases.shared.UseCase
 import io.reactivex.rxjava3.core.Single
 
 class GetEpisodes(
     private val episodesRepository: EpisodesRepository
-) : UseCase<GetEpisodes.Params, Single<GetEpisodes.Response>> {
+) : UseCase<GetEpisodes.Params, Single<Pageable<Episode>>> {
 
-    override fun invoke(params: Params): Single<Response> =
+    override fun invoke(params: Params): Single<Pageable<Episode>> =
         episodesRepository.getEpisodes(
             params.page,
             params.name,
@@ -23,7 +24,7 @@ class GetEpisodes(
                     episodeModel.number
                 )
             }.let { episodes ->
-                Response(
+                Pageable(
                     pagedResponse.pages,
                     episodes
                 )
@@ -34,10 +35,5 @@ class GetEpisodes(
         val page: Int,
         val name: String? = null,
         val number: String? = null
-    )
-
-    data class Response(
-        val pages: Int,
-        val episodes: List<Episode>
     )
 }

@@ -2,7 +2,12 @@ package dev.pimentel.rickandmorty.shared.navigator
 
 import androidx.navigation.NavController
 import dev.pimentel.rickandmorty.R
-import io.mockk.*
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
