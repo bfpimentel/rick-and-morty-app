@@ -22,13 +22,13 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class FilterViewModelTest : ViewModelTest<FilterViewModel>() {
+class FilterViewModelTest : ViewModelTest<FilterContract.ViewModel>() {
 
     private val filterTypeMapper = mockk<FilterTypeMapper>()
     private val getFilters = mockk<GetFilters>()
     private val saveFilter = mockk<SaveFilter>()
     private val navigator = mockk<Navigator>()
-    override lateinit var viewModel: FilterViewModel
+    override lateinit var viewModel: FilterContract.ViewModel
 
     override fun `setup subject`() {
         viewModel = FilterViewModel(
