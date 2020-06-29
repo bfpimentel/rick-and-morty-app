@@ -38,7 +38,7 @@ class FilterViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        dispose()
+        disposeHolder()
     }
 
     override fun initializeWithFilterType(filterType: FilterType) {

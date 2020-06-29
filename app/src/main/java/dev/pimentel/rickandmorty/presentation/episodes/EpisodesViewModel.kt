@@ -40,7 +40,7 @@ class EpisodesViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        dispose()
+        disposeHolder()
     }
 
     override fun getEpisodes(filter: EpisodesFilter) {

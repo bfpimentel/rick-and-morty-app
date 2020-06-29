@@ -16,6 +16,8 @@ import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemM
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
+import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
+import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 import timber.log.Timber
@@ -31,13 +33,10 @@ class CharactersViewModel(
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
+    PagingHelper<Character> by PagingHelperImpl(schedulerProvider),
     CharactersContract.ViewModel {
 
-    private var page: Int = DEFAULT_PAGE
-    private var lastPage: Int = DEFAULT_LAST_PAGE
     private var lastFilter = CharactersFilter.NO_FILTER
-
-    private var characters: MutableList<Character> = mutableListOf()
 
     private val charactersState = MutableLiveData<CharactersState>()
     private val filterIcon = MutableLiveData<Int>()
@@ -47,53 +46,39 @@ class CharactersViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        dispose()
+        disposeHolder()
+        disposePaging()
     }
 
     override fun getCharacters(filter: CharactersFilter) {
-        if (lastFilter != filter) {
-            lastFilter = filter
+        handleFilterIconChange(filter)
 
-            page = FIRST_PAGE
-            lastPage = DEFAULT_LAST_PAGE
-
-            this.characters = mutableListOf()
+        val reset = lastFilter != filter
+        if (reset) {
+            this.lastFilter = filter
             charactersState.postValue(CharactersState.Empty())
-        } else {
-            if (page == lastPage) return
-            page++
         }
-
-        handleFilterIconChange()
 
         getCharacters(
             GetCharacters.Params(
-                page,
+                getCurrentPage(reset),
                 filter.name,
                 filter.species,
                 filter.status,
                 filter.gender
             )
-        ).compose(observeOnUIAfterSingleResult())
-            .handle({ response ->
-                this.characters.addAll(response.characters)
-                this.lastPage = response.pages
-
+        ).handlePaging(
+            { result ->
                 charactersState.postValue(
-                    CharactersState.Success(
-                        characters.map(charactersItemMapper::get)
-                    )
+                    CharactersState.Success(result.map(charactersItemMapper::get))
                 )
-            }, { throwable ->
-                page = DEFAULT_PAGE
-                lastPage = DEFAULT_LAST_PAGE
-
+            },
+            { throwable ->
                 charactersState.postValue(
-                    CharactersState.Error(
-                        getErrorMessage(GetErrorMessage.Params(throwable))
-                    )
+                    CharactersState.Error(getErrorMessage(GetErrorMessage.Params(throwable)))
                 )
-            })
+            }
+        )
     }
 
     override fun getCharactersWithLastFilter() {
@@ -120,16 +105,10 @@ class CharactersViewModel(
             }, Timber::d)
     }
 
-    private fun handleFilterIconChange() {
+    private fun handleFilterIconChange(filter: CharactersFilter) {
         filterIcon.postValue(
-            if (lastFilter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
+            if (filter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
             else R.drawable.ic_filter_default
         )
-    }
-
-    private companion object {
-        const val DEFAULT_PAGE = 0
-        const val FIRST_PAGE = 1
-        const val DEFAULT_LAST_PAGE = -1
     }
 }

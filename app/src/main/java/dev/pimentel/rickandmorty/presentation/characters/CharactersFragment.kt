@@ -43,7 +43,8 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         binding.apply {
             viewModel.charactersState().observe(viewLifecycleOwner, Observer { state ->
                 adapter.submitList(state.characters)
-                state.errorMessage.also {
+                state.scrollToTheTop?.also { charactersList.scrollToPosition(0) }
+                state.errorMessage?.also {
                     errorContainer.visibility = View.VISIBLE
                     errorMessage.text = state.errorMessage
                     charactersList.visibility = View.GONE

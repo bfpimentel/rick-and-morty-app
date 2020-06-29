@@ -40,7 +40,7 @@ class LocationsViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        dispose()
+        disposeHolder()
     }
 
     override fun getLocations(filter: LocationsFilter) {

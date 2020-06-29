@@ -1,15 +1,16 @@
 package dev.pimentel.domain.usecases
 
 import dev.pimentel.domain.entities.Character
+import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.repositories.CharactersRepository
 import dev.pimentel.domain.usecases.shared.UseCase
 import io.reactivex.rxjava3.core.Single
 
 class GetCharacters(
     private val charactersRepository: CharactersRepository
-) : UseCase<GetCharacters.Params, Single<GetCharacters.Response>> {
+) : UseCase<GetCharacters.Params, Single<Pageable<Character>>> {
 
-    override fun invoke(params: Params): Single<Response> =
+    override fun invoke(params: Params): Single<Pageable<Character>> =
         charactersRepository.getCharacters(
             params.page,
             params.name,
@@ -25,7 +26,7 @@ class GetCharacters(
                     characterModel.image
                 )
             }.let { characters ->
-                Response(
+                Pageable(
                     pagedResponse.pages,
                     characters
                 )
@@ -38,10 +39,5 @@ class GetCharacters(
         val species: String? = null,
         val status: String? = null,
         val gender: String? = null
-    )
-
-    data class Response(
-        val pages: Int,
-        val characters: List<Character>
     )
 }
