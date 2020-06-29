@@ -13,6 +13,8 @@ import dev.pimentel.rickandmorty.presentation.episodes.mappers.EpisodesItemMappe
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
+import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
+import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 
@@ -24,13 +26,10 @@ class EpisodesViewModel(
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
+    PagingHelper<Episode> by PagingHelperImpl(schedulerProvider),
     EpisodesContract.ViewModel {
 
-    private var page: Int = DEFAULT_PAGE
-    private var lastPage: Int = DEFAULT_LAST_PAGE
     private var lastFilter = EpisodesFilter.NO_FILTER
-
-    private var episodes: MutableList<Episode> = mutableListOf()
 
     private val episodesState = MutableLiveData<EpisodesState>()
     private val filterIcon = MutableLiveData<Int>()
@@ -44,44 +43,28 @@ class EpisodesViewModel(
     }
 
     override fun getEpisodes(filter: EpisodesFilter) {
-        if (lastFilter != filter) {
-            page = FIRST_PAGE
-            lastPage = DEFAULT_LAST_PAGE
-            lastFilter = filter
+        handleFilterIconChange(filter)
 
-            this.episodes = mutableListOf()
+        val reset = lastFilter != filter
+        if (reset) {
+            this.lastFilter = filter
             episodesState.postValue(EpisodesState.Empty())
-        } else {
-            if (page == lastPage) return
-            page++
         }
-
-        handleFilterIconChange()
 
         getEpisodes(
             GetEpisodes.Params(
-                page,
+                getCurrentPage(reset),
                 filter.name,
                 filter.number
             )
         ).compose(observeOnUIAfterSingleResult())
-            .handle({ response ->
-                this.episodes.addAll(response.episodes)
-                this.lastPage = response.pages
-
+            .handlePaging({ response ->
                 episodesState.postValue(
-                    EpisodesState.Success(
-                        episodesItemMapper.getAll(episodes)
-                    )
+                    EpisodesState.Success(episodesItemMapper.getAll(response))
                 )
             }, { throwable ->
-                page = DEFAULT_PAGE
-                lastPage = DEFAULT_LAST_PAGE
-
                 episodesState.postValue(
-                    EpisodesState.Error(
-                        getErrorMessage(GetErrorMessage.Params(throwable))
-                    )
+                    EpisodesState.Error(getErrorMessage(GetErrorMessage.Params(throwable)))
                 )
             })
     }
@@ -97,16 +80,10 @@ class EpisodesViewModel(
         )
     }
 
-    private fun handleFilterIconChange() {
+    private fun handleFilterIconChange(filter: EpisodesFilter) {
         filterIcon.postValue(
-            if (lastFilter != EpisodesFilter.NO_FILTER) R.drawable.ic_filter_selected
+            if (filter != EpisodesFilter.NO_FILTER) R.drawable.ic_filter_selected
             else R.drawable.ic_filter_default
         )
-    }
-
-    private companion object {
-        const val DEFAULT_PAGE = 0
-        const val FIRST_PAGE = 1
-        const val DEFAULT_LAST_PAGE = -1
     }
 }

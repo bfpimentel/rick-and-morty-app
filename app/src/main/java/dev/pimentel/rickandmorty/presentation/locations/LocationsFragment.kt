@@ -43,7 +43,8 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
         binding.apply {
             viewModel.locationsState().observe(viewLifecycleOwner, Observer { state ->
                 adapter.submitList(state.locations)
-                state.errorMessage.also {
+                state.scrollToTheTop?.also { locationsList.scrollToPosition(0) }
+                state.errorMessage?.also {
                     errorContainer.visibility = View.VISIBLE
                     errorMessage.text = state.errorMessage
                     locationsList.visibility = View.GONE

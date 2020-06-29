@@ -13,6 +13,8 @@ import dev.pimentel.rickandmorty.presentation.locations.mappers.LocationsItemMap
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
+import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
+import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 
@@ -24,13 +26,10 @@ class LocationsViewModel(
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
+    PagingHelper<Location> by PagingHelperImpl(schedulerProvider),
     LocationsContract.ViewModel {
 
-    private var page: Int = DEFAULT_PAGE
-    private var lastPage: Int = DEFAULT_LAST_PAGE
     private var lastFilter = LocationsFilter.NO_FILTER
-
-    private var locations: MutableList<Location> = mutableListOf()
 
     private val locationsState = MutableLiveData<LocationsState>()
     private val filterIcon = MutableLiveData<Int>()
@@ -44,47 +43,30 @@ class LocationsViewModel(
     }
 
     override fun getLocations(filter: LocationsFilter) {
-        if (lastFilter != filter) {
-            page = FIRST_PAGE
-            lastPage = DEFAULT_LAST_PAGE
-            lastFilter = filter
+        handleFilterIconChange(filter)
 
-            this.locations = mutableListOf()
+        val reset = lastFilter != filter
+        if (reset) {
+            this.lastFilter = filter
             locationsState.postValue(LocationsState.Empty())
-        } else {
-            if (page == lastPage) return
-            page++
         }
-
-        handleFilterIconChange()
 
         getLocations(
             GetLocations.Params(
-                page,
+                getCurrentPage(reset),
                 filter.name,
                 filter.type,
                 filter.dimension
             )
-        ).compose(observeOnUIAfterSingleResult())
-            .handle({ response ->
-                this.locations.addAll(response.locations)
-                this.lastPage = response.pages
-
-                locationsState.postValue(
-                    LocationsState.Success(
-                        locations.map(locationsItemMapper::get)
-                    )
-                )
-            }, { throwable ->
-                page = DEFAULT_PAGE
-                lastPage = DEFAULT_LAST_PAGE
-
-                locationsState.postValue(
-                    LocationsState.Error(
-                        getErrorMessage(GetErrorMessage.Params(throwable))
-                    )
-                )
-            })
+        ).handlePaging({ result ->
+            locationsState.postValue(
+                LocationsState.Success(result.map(locationsItemMapper::get))
+            )
+        }, { throwable ->
+            locationsState.postValue(
+                LocationsState.Error(getErrorMessage(GetErrorMessage.Params(throwable)))
+            )
+        })
     }
 
     override fun getLocationsWithLastFilter() {
@@ -98,16 +80,10 @@ class LocationsViewModel(
         )
     }
 
-    private fun handleFilterIconChange() {
+    private fun handleFilterIconChange(filter: LocationsFilter) {
         filterIcon.postValue(
-            if (lastFilter != LocationsFilter.NO_FILTER) R.drawable.ic_filter_selected
+            if (filter != LocationsFilter.NO_FILTER) R.drawable.ic_filter_selected
             else R.drawable.ic_filter_default
         )
-    }
-
-    private companion object {
-        const val DEFAULT_PAGE = 0
-        const val FIRST_PAGE = 1
-        const val DEFAULT_LAST_PAGE = -1
     }
 }

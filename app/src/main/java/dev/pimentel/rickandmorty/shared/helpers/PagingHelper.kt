@@ -31,12 +31,12 @@ class PagingHelperImpl<ResultType>(
 
     override fun getCurrentPage(reset: Boolean): Int {
         if (reset) {
-            currentPage = FIRST_PAGE // TODO
+            currentPage = FIRST_PAGE
             lastPage = DEFAULT_LAST_PAGE
 
             allItems = mutableListOf()
         } else {
-            currentPage++ // TODO
+            currentPage++
         }
 
         return currentPage
@@ -46,7 +46,7 @@ class PagingHelperImpl<ResultType>(
         onSuccess: (List<ResultType>) -> Unit,
         onError: (Throwable) -> Unit
     ) {
-        if (this@PagingHelperImpl.currentPage >= this@PagingHelperImpl.lastPage) return
+        if (this@PagingHelperImpl.currentPage > this@PagingHelperImpl.lastPage) return
 
         this.compose(observeOnUIAfterSingleResult())
             .handle({ response ->

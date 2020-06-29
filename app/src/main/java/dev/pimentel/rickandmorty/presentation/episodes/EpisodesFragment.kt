@@ -42,6 +42,7 @@ class EpisodesFragment : Fragment(R.layout.episodes_fragment) {
         binding.apply {
             viewModel.episodesState().observe(viewLifecycleOwner, Observer { state ->
                 adapter.submitList(state.episodes)
+                state.scrollToTheTop?.also { episodesList.scrollToPosition(0) }
                 state.errorMessage.also {
                     errorContainer.visibility = View.VISIBLE
                     errorMessage.text = state.errorMessage

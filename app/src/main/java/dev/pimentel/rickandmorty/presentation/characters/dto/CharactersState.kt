@@ -6,9 +6,7 @@ sealed class CharactersState(
     val errorMessage: String? = null
 ) {
 
-    class Empty : CharactersState(
-        scrollToTheTop = Unit
-    )
+    class Empty : CharactersState(scrollToTheTop = Unit)
 
     class Success(
         characters: List<CharactersItem>
