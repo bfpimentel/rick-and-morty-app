@@ -4,7 +4,6 @@ import dev.pimentel.data.models.CharacterModel
 import dev.pimentel.data.models.EpisodeModel
 import dev.pimentel.data.sources.remote.CharactersRemoteDataSource
 import dev.pimentel.data.sources.remote.EpisodesRemoteDataSource
-import dev.pimentel.data.sources.remote.LocationsRemoteDataSource
 import dev.pimentel.domain.repositories.CharactersRepository
 import io.reactivex.rxjava3.core.Single
 import dev.pimentel.domain.models.CharacterDetailsModel as DomainCharacterDetailsModel
@@ -13,8 +12,7 @@ import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
 
 class CharactersRepositoryImpl(
     private val charactersRemoteDataSource: CharactersRemoteDataSource,
-    private val episodesRemoteDataSource: EpisodesRemoteDataSource,
-    private val locationsRemoteDataSource: LocationsRemoteDataSource
+    private val episodesRemoteDataSource: EpisodesRemoteDataSource
 ) : CharactersRepository {
 
     override fun getCharacters(
@@ -37,7 +35,6 @@ class CharactersRepositoryImpl(
             )
         }
 
-    @Suppress("unchecked")
     override fun getCharacterDetails(id: Int): Single<DomainCharacterDetailsModel> =
         charactersRemoteDataSource.getCharacterDetails(id)
             .flatMap { characterDetails ->
@@ -49,24 +46,19 @@ class CharactersRepositoryImpl(
                             episodes.asList() as List<EpisodeModel>
                         }
                     }
-                    .flatMap { episodes ->
-                        locationsRemoteDataSource.getLocation(characterDetails.location.url)
-                            .flatMap { location ->
-                                locationsRemoteDataSource.getLocation(characterDetails.origin.url)
-                                    .map { origin ->
-                                        DomainCharacterDetailsModel(
-                                            characterDetails.id,
-                                            characterDetails.name,
-                                            characterDetails.status,
-                                            characterDetails.type,
-                                            characterDetails.gender,
-                                            characterDetails.image,
-                                            origin.name,
-                                            location.name,
-                                            episodes.map(EpisodeModel::toDomain)
-                                        )
-                                    }
-                            }
+                    .map { episodes ->
+                        DomainCharacterDetailsModel(
+                            characterDetails.id,
+                            characterDetails.name,
+                            characterDetails.status,
+                            characterDetails.species,
+                            characterDetails.type,
+                            characterDetails.gender,
+                            characterDetails.image,
+                            characterDetails.origin.name,
+                            characterDetails.location.name,
+                            episodes.map(EpisodeModel::toDomain)
+                        )
                     }
             }
 }

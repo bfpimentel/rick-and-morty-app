@@ -88,7 +88,7 @@ private val localDataSourceModule = module {
 }
 
 private val repositoryModule = module {
-    single<CharactersRepository> { CharactersRepositoryImpl(get(), get(), get()) }
+    single<CharactersRepository> { CharactersRepositoryImpl(get(), get()) }
 
     single<LocationsRepository> { LocationsRepositoryImpl(get()) }
 

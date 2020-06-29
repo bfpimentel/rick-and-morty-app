@@ -16,6 +16,7 @@ class GetCharacterDetails(
                 detailsModel.id,
                 detailsModel.name,
                 detailsModel.status,
+                detailsModel.species,
                 detailsModel.image,
                 detailsModel.gender,
                 detailsModel.origin,

@@ -43,6 +43,10 @@
     <string name="characters_title">Characters</string>
     <!-- Characters Fragment -->
 
+    <!-- Characters Fragment -->
+    <string name="characters_details_unknown">Unknown</string>
+    <!-- Characters Fragment -->
+
     <!-- Characters Filter Fragment -->
     <string name="characters_filter_name_label">Name</string>
     <string name="characters_filter_name_hint">Give a name</string>
