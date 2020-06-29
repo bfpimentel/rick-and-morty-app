@@ -6,15 +6,13 @@ data class LocationModel(
     val id: Int,
     val name: String,
     val type: String,
-    val dimension: String,
-    val residents: List<String>
+    val dimension: String
 ) {
 
     fun toDomain() = DomainLocationModel(
         id,
         name,
         type,
-        dimension,
-        residents
+        dimension
     )
 }

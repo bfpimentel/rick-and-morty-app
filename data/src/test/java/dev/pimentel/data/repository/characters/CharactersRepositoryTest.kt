@@ -63,13 +63,7 @@ class CharactersRepositoryTest {
         val gender = "gender"
 
         every {
-            charactersRemoteDataSource.getCharacters(
-                page,
-                name,
-                species,
-                status,
-                gender
-            )
+            charactersRemoteDataSource.getCharacters(page, name, species, status, gender)
         } returns Single.just(dataResponse)
 
         charactersRepository.getCharacters(page, name, species, status, gender)
