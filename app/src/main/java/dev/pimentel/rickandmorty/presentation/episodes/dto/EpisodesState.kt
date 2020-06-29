@@ -5,7 +5,7 @@ sealed class EpisodesState(
     val errorMessage: String? = null
 ) {
 
-    class Empty() : EpisodesState()
+    class Empty : EpisodesState()
 
     class Success(
         episodes: List<EpisodesItem>

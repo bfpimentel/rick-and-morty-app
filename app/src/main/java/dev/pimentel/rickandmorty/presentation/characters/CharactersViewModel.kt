@@ -20,6 +20,7 @@ import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 import timber.log.Timber
 
+@Suppress("LongParameterList")
 class CharactersViewModel(
     private val getCharacters: GetCharacters,
     private val getCharacterDetails: GetCharacterDetails,

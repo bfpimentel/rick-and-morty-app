@@ -18,11 +18,15 @@ class GetErrorMessage(
 
     private fun getHttpExceptionMessage(exception: HttpException): String =
         when (exception.code()) {
-            404 -> context.getString(R.string.error_message_http_404)
+            NO_RESULT -> context.getString(R.string.error_message_http_404)
             else -> getDefaultMessage()
         }
 
     private fun getDefaultMessage(): String = context.getString(R.string.error_message_default)
 
     data class Params(val throwable: Throwable)
+
+    private companion object {
+        const val NO_RESULT = 404
+    }
 }

@@ -5,7 +5,7 @@ sealed class CharactersState(
     val errorMessage: String? = null
 ) {
 
-    class Empty() : CharactersState()
+    class Empty : CharactersState()
 
     class Success(
         characters: List<CharactersItem>

@@ -5,7 +5,7 @@ sealed class LocationsState(
     val errorMessage: String? = null
 ) {
 
-    class Empty() : LocationsState()
+    class Empty : LocationsState()
 
     class Success(
         locations: List<LocationsItem>
