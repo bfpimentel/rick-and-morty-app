@@ -35,6 +35,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+@Suppress("TooManyFunctions")
 @Module
 @InstallIn(ApplicationComponent::class)
 object DataModules {

@@ -36,15 +36,15 @@ dependencies {
 
     implementation project(":domain")
 
-    implementation "com.google.dagger:hilt-android:2.28.1-alpha"
-    kapt "com.google.dagger:hilt-android-compiler:2.28.1-alpha"
-
     implementation projectDependencies.kotlinStdlib
     implementation projectDependencies.rxJava
     implementation projectDependencies.moshi
     implementation projectDependencies.retrofitRxAdapter
     implementation projectDependencies.retrofitMoshi
     implementation projectDependencies.loggingInterceptor
+    implementation projectDependencies.hilt
+
+    kapt projectDependencies.hiltCompiler
 
     testImplementation testDependencies.mockk
     testImplementation testDependencies.junitAPI

@@ -41,7 +41,7 @@ object AppModules {
         @ApplicationContext context: Context
     ): GetErrorMessage = GetErrorMessage(context)
 
-    /* region [SCOPED DEPENDENCIES] TODO: Inject only when each ViewModel needs it*/
+    /* region [SCOPED DEPENDENCIES] */
     @Provides
     @Singleton
     fun providesCharacterDetailsMapper(
