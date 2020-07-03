@@ -1,6 +1,5 @@
 package dev.pimentel.rickandmorty.presentation.characters
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,7 +22,7 @@ import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 
 @Suppress("LongParameterList")
-class CharactersViewModel @ViewModelInject constructor(
+class CharactersViewModel(
     private val getCharacters: GetCharacters,
     private val getCharacterDetails: GetCharacterDetails,
     private val charactersItemsMapper: CharactersItemsMapper,

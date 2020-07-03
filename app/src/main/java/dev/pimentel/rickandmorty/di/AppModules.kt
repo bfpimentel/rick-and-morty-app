@@ -42,15 +42,15 @@ object AppModules {
     ): GetErrorMessage = GetErrorMessage(context)
 
     /* region [SCOPED DEPENDENCIES] TODO: Inject only when each ViewModel is created*/
-    @Provides
-    @Singleton
-    fun providesCharacterDetailsMapper(
-        @ApplicationContext context: Context
-    ): CharacterDetailsMapper = CharacterDetailsMapperImpl(context)
-
-    @Provides
-    @Singleton
-    fun providesCharactersItemsMapper(): CharactersItemsMapper = CharactersItemsMapperImpl()
+//    @Provides
+//    @Singleton
+//    fun providesCharacterDetailsMapper(
+//        @ApplicationContext context: Context
+//    ): CharacterDetailsMapper = CharacterDetailsMapperImpl(context)
+//
+//    @Provides
+//    @Singleton
+//    fun providesCharactersItemsMapper(): CharactersItemsMapper = CharactersItemsMapperImpl()
 
     @Provides
     @Singleton

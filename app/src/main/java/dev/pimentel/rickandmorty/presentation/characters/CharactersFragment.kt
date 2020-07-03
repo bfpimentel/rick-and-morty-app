@@ -5,7 +5,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -22,10 +21,12 @@ import javax.inject.Inject
 class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
     @Inject
+    lateinit var viewModel: CharactersContract.ViewModel
+
+    @Inject
     lateinit var adapter: CharactersAdapter
 
     private val binding by lifecycleBinding(CharactersFragmentBinding::bind)
-    private val viewModel: CharactersContract.ViewModel by viewModels<CharactersViewModel>()
 
     private lateinit var endOfScrollListener: EndOfScrollListener<StaggeredGridLayoutManager>
 
