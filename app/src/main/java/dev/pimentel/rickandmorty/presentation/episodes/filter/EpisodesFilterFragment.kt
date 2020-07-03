@@ -6,22 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.EpisodesFilterFragmentBinding
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
 
+@AndroidEntryPoint
 class EpisodesFilterFragment : BottomSheetDialogFragment() {
 
     private val binding by lifecycleBinding(EpisodesFilterFragmentBinding::bind)
-    private val viewModel: EpisodesFilterContract.ViewModel by viewModel<EpisodesFilterViewModel>()
+    private val viewModel: EpisodesFilterContract.ViewModel by viewModels<EpisodesFilterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,14 +31,8 @@ class EpisodesFilterFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadKoinModules(episodesFilterModule)
         bindOutputs()
         bindInputs()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unloadKoinModules(episodesFilterModule)
     }
 
     private fun bindOutputs() {

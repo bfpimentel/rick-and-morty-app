@@ -1,5 +1,6 @@
 package dev.pimentel.rickandmorty.presentation.episodes.filter
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,11 +10,11 @@ import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
-import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
+import dev.pimentel.rickandmorty.shared.navigator.Navigator
 
 @Suppress("TooManyFunctions")
-class EpisodesFilterViewModel(
-    private val navigator: NavigatorRouter
+class EpisodesFilterViewModel @ViewModelInject constructor(
+    private val navigator: Navigator
 ) : ViewModel(),
     EpisodesFilterContract.ViewModel {
 

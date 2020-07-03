@@ -1,8 +1,9 @@
 package dev.pimentel.rickandmorty.presentation.characters.filter
 
 import dagger.Module
-import dagger.hilt.android.scopes.FragmentScoped
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
-@FragmentScoped
+@InstallIn(FragmentComponent::class)
 object CharactersFilterModule

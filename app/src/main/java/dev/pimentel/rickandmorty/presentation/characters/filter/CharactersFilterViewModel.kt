@@ -10,11 +10,11 @@ import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFi
 import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
-import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
+import dev.pimentel.rickandmorty.shared.navigator.Navigator
 
 @Suppress("TooManyFunctions")
 class CharactersFilterViewModel @ViewModelInject constructor(
-    private val navigator: NavigatorRouter
+    private val navigator: Navigator
 ) : ViewModel(),
     CharactersFilterContract.ViewModel {
 

@@ -1,13 +1,14 @@
 package dev.pimentel.rickandmorty.presentation.characters.details
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.pimentel.rickandmorty.presentation.characters.details.dto.CharacterDetails
-import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
+import dev.pimentel.rickandmorty.shared.navigator.Navigator
 
-class CharactersDetailsViewModel(
-    private val navigator: NavigatorRouter
+class CharactersDetailsViewModel @ViewModelInject constructor(
+    private val navigator: Navigator
 ) : ViewModel(), CharactersDetailsContract.ViewModel {
 
     private val characterDetails = MutableLiveData<CharacterDetails>()

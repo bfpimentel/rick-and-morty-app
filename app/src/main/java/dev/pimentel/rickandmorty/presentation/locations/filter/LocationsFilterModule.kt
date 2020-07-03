@@ -1,9 +1,9 @@
 package dev.pimentel.rickandmorty.presentation.locations.filter
 
-import dev.pimentel.rickandmorty.shared.navigator.Navigator
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
-val locationsFilterModule = module {
-    viewModel { LocationsFilterViewModel(get<Navigator>()) }
-}
+@Module
+@InstallIn(FragmentComponent::class)
+object LocationsFilterModule

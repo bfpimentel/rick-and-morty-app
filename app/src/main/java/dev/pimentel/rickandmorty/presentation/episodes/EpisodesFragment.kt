@@ -4,37 +4,37 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.EpisodesFragmentBinding
 import dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EpisodesFragment : Fragment(R.layout.episodes_fragment) {
 
+    @Inject
+    lateinit var adapter: EpisodesAdapter
+
     private val binding by lifecycleBinding(EpisodesFragmentBinding::bind)
-    private val viewModel: EpisodesContract.ViewModel by viewModel<EpisodesViewModel>()
-    private val adapter: EpisodesAdapter by inject()
+    private val viewModel: EpisodesContract.ViewModel by viewModels<EpisodesViewModel>()
 
     private lateinit var endOfScrollListener: EndOfScrollListener<LinearLayoutManager>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadKoinModules(episodesModule)
         bindOutputs()
         bindInputs()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unloadKoinModules(episodesModule)
         endOfScrollListener.dispose()
     }
 

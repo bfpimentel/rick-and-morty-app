@@ -1,20 +1,22 @@
 package dev.pimentel.rickandmorty.presentation.episodes
 
-import dev.pimentel.rickandmorty.presentation.episodes.mappers.EpisodesItemMapperImpl
-import dev.pimentel.rickandmorty.shared.navigator.Navigator
-import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.scopes.FragmentScoped
 
-val episodesModule = module {
-    viewModel {
-        EpisodesViewModel(
-            get(),
-            EpisodesItemMapperImpl(androidContext()),
-            get(),
-            get<Navigator>(),
-            get()
-        )
-    }
-    factory { EpisodesAdapter() }
+@Module
+@InstallIn(FragmentComponent::class)
+object EpisodesModule {
+
+    @Provides
+    @FragmentScoped
+    fun providesEpisodesAdapter(): EpisodesAdapter = EpisodesAdapter()
+
+//    @Provides
+//    @FragmentScoped
+//    fun providesEpisodesItemMapper(
+//        @ApplicationContext context: Context
+//    ): EpisodesItemMapper = EpisodesItemMapperImpl(context)
 }

@@ -1,4 +1,4 @@
-package dev.pimentel.rickandmorty
+package dev.pimentel.rickandmorty.di
 
 import dagger.Module
 import dagger.Provides

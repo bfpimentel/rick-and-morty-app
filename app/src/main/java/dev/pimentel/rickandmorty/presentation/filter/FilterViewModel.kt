@@ -1,5 +1,6 @@
 package dev.pimentel.rickandmorty.presentation.filter
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,15 +12,15 @@ import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapper
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
-import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
+import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 import timber.log.Timber
 
-class FilterViewModel(
+class FilterViewModel @ViewModelInject constructor(
     private val filterTypeMapper: FilterTypeMapper,
     private val getFilters: GetFilters,
     private val saveFilter: SaveFilter,
-    private val navigator: NavigatorRouter,
+    private val navigator: Navigator,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),

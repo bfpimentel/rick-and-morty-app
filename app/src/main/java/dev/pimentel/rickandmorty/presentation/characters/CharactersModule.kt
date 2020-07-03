@@ -20,13 +20,13 @@ object CharactersModule {
     @FragmentScoped
     fun providesCharactersAdapter(): CharactersAdapter = CharactersAdapter()
 
-    @Provides
-    @FragmentScoped
-    fun providesCharacterDetailsMapper(
-        @ApplicationContext context: Context
-    ): CharacterDetailsMapper = CharacterDetailsMapperImpl(context)
-
-    @Provides
-    @FragmentScoped
-    fun providesCharactersItemsMapper(): CharactersItemsMapper = CharactersItemsMapperImpl()
+//    @Provides
+//    @FragmentScoped
+//    fun providesCharacterDetailsMapper(
+//        @ApplicationContext context: Context
+//    ): CharacterDetailsMapper = CharacterDetailsMapperImpl(context)
+//
+//    @Provides
+//    @FragmentScoped
+//    fun providesCharactersItemsMapper(): CharactersItemsMapper = CharactersItemsMapperImpl()
 }

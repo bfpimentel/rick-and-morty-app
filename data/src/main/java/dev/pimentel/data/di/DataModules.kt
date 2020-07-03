@@ -1,4 +1,4 @@
-package dev.pimentel.data
+package dev.pimentel.data.di
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.pimentel.data.R
 import dev.pimentel.data.models.FilterModel
 import dev.pimentel.data.repositories.characters.CharactersRepositoryImpl
 import dev.pimentel.data.repositories.episodes.EpisodesRepositoryImpl
@@ -34,11 +35,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-private const val REQUEST_TIMEOUT = 60L
-
 @Module
 @InstallIn(ApplicationComponent::class)
 object DataModules {
+
+    private const val REQUEST_TIMEOUT = 60L
 
     @Provides
     @Singleton

@@ -87,6 +87,7 @@ dependencies {
     implementation projectDependencies.timber
     implementation projectDependencies.coil
     implementation projectDependencies.retrofitRxAdapter
+    implementation projectDependencies.moshi
 
     testImplementation testDependencies.androidTestCore
     testImplementation testDependencies.mockk
