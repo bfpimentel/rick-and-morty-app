@@ -1,0 +1,23 @@
+plugins {
+    id("java-library")
+    id("kotlin")
+}
+
+apply(from: "../dependencies.gradle")
+apply(from: "../project.gradle")
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation projectDependencies.kotlinStdlib
+    implementation projectDependencies.koin
+    implementation projectDependencies.rxJava
+
+    testImplementation testDependencies.mockk
+    testImplementation testDependencies.junitAPI
+    testRuntimeOnly testDependencies.junitEngine
+}

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:theme="@style/AppToolbar"
+            app:layout_scrollFlags="scroll|snap"
+            app:menu="@menu/filter"
+            app:title="@string/top_filter" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_medium"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/name_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/characters_filter_name_label"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    android:textStyle="bold"
+                    android:theme="@style/Subtitle1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/characters_filter_name_hint"
+                    android:textColorHint="@color/gray1" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_divider"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:background="@color/gray1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/species_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/characters_filter_species_label"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    android:textStyle="bold"
+                    android:theme="@style/Subtitle1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/species"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/characters_filter_species_hint"
+                    android:textColorHint="@color/gray1" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_divider"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:background="@color/gray1" />
+
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/characters_filter_status_label"
+                android:theme="@style/Body2" />
+
+            <RadioGroup
+                android:id="@+id/status_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle|end">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/status_alive"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_radio_button_height"
+                    android:text="@string/characters_filter_status_alive"
+                    android:theme="@style/AppRadioButton" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/status_dead"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_radio_button_height"
+                    android:text="@string/characters_filter_status_dead"
+                    android:theme="@style/AppRadioButton" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/status_unknown"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_radio_button_height"
+                    android:text="@string/characters_filter_status_unknown"
+                    android:theme="@style/AppRadioButton" />
+
+            </RadioGroup>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/characters_filter_gender_label"
+                android:theme="@style/Body2" />
+
+            <RadioGroup
+                android:id="@+id/gender_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle|end">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/gender_female"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_radio_button_height"
+                    android:text="@string/characters_filter_gender_female"
+                    android:theme="@style/AppRadioButton" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/gender_male"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_radio_button_height"
+                    android:text="@string/characters_filter_gender_male"
+                    android:theme="@style/AppRadioButton" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/gender_genderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_radio_button_height"
+                    android:text="@string/characters_filter_gender_genderless"
+                    android:theme="@style/AppRadioButton" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/gender_unknown"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_radio_button_height"
+                    android:text="@string/characters_filter_gender_unknown"
+                    android:theme="@style/AppRadioButton" />
+
+            </RadioGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/apply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/characters_filter_apply"
+                android:theme="@style/PrimaryButton" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
