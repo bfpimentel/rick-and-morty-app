@@ -1,9 +1,15 @@
 package dev.pimentel.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pimentel.data.models.FilterModel
 import dev.pimentel.data.repositories.characters.CharactersRepositoryImpl
 import dev.pimentel.data.repositories.episodes.EpisodesRepositoryImpl
@@ -22,26 +28,31 @@ import dev.pimentel.domain.repositories.FilterRepository
 import dev.pimentel.domain.repositories.LocationsRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 private const val REQUEST_TIMEOUT = 60L
 
-private val moshiModule = module {
-    single {
-        Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-    }
-}
+@Module
+@InstallIn(ApplicationComponent::class)
+object DataModules {
 
-private val networkModule = module {
-    single {
-        val apiUrl = androidContext().getString(R.string.api_url)
+    @Provides
+    @Singleton
+    fun providesMoshi(): Moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
+
+    @Provides
+    @Singleton
+    fun providesRetrofit(
+        moshi: Moshi,
+        @ApplicationContext context: Context
+    ): Retrofit {
+        val apiUrl = context.getString(R.string.api_url)
 
         val client = OkHttpClient.Builder()
             .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
@@ -52,57 +63,85 @@ private val networkModule = module {
             })
             .build()
 
-        return@single Retrofit.Builder()
+        return Retrofit.Builder()
             .baseUrl(apiUrl)
             .client(client)
-            .addConverterFactory(MoshiConverterFactory.create(get()))
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
     }
-}
 
-private val remoteDataSourceModule = module {
-    single { get<Retrofit>().create(CharactersRemoteDataSource::class.java) }
-    single { get<Retrofit>().create(LocationsRemoteDataSource::class.java) }
-    single { get<Retrofit>().create(EpisodesRemoteDataSource::class.java) }
-}
+    @Provides
+    @Singleton
+    fun providesCharactersRemoteDataSource(retrofit: Retrofit): CharactersRemoteDataSource =
+        retrofit.create(CharactersRemoteDataSource::class.java)
 
-private val sharedPreferencesModule = module {
-    single {
-        androidContext().getSharedPreferences(
-            androidContext().packageName,
-            Context.MODE_PRIVATE
-        )
-    }
-}
+    @Provides
+    @Singleton
+    fun providesLocationsRemoteDataSource(retrofit: Retrofit): LocationsRemoteDataSource =
+        retrofit.create(LocationsRemoteDataSource::class.java)
 
-private val localDataSourceModule = module {
-    single<FilterLocalDataSource> {
+    @Provides
+    @Singleton
+    fun providesEpisodesRemoteDataSource(retrofit: Retrofit): EpisodesRemoteDataSource =
+        retrofit.create(EpisodesRemoteDataSource::class.java)
+
+    @Provides
+    @Singleton
+    fun providesSharedPreferences(
+        @ApplicationContext context: Context
+    ): SharedPreferences = context.getSharedPreferences(
+        context.packageName,
+        Context.MODE_PRIVATE
+    )
+
+    @Provides
+    @Singleton
+    fun providesFilterLocalDataSource(
+        sharedPreferences: SharedPreferences,
+        moshi: Moshi
+    ): FilterLocalDataSource {
         val filterListType = Types.newParameterizedType(List::class.java, FilterModel::class.java)
 
-        FilterLocalDataSourceImpl(
-            get(),
-            get<Moshi>().adapter(filterListType)
+        return FilterLocalDataSourceImpl(
+            sharedPreferences,
+            moshi.adapter(filterListType)
         )
     }
+
+    @Provides
+    @Singleton
+    fun providesCharactersRepository(
+        charactersRemoteDataSource: CharactersRemoteDataSource,
+        episodesRemoteDataSource: EpisodesRemoteDataSource
+    ): CharactersRepository = CharactersRepositoryImpl(
+        charactersRemoteDataSource,
+        episodesRemoteDataSource
+    )
+
+    @Provides
+    @Singleton
+    fun providesLocationsRepository(
+        locationsRemoteDataSource: LocationsRemoteDataSource
+    ): LocationsRepository = LocationsRepositoryImpl(locationsRemoteDataSource)
+
+    @Provides
+    @Singleton
+    fun providesEpisodesRepository(
+        episodesRemoteDataSource: EpisodesRemoteDataSource
+    ): EpisodesRepository = EpisodesRepositoryImpl(episodesRemoteDataSource)
+
+    @Provides
+    @Singleton
+    fun providesFilterTypeModelMapper(): FilterTypeModelMapper = FilterTypeModelMapperImpl()
+
+    @Provides
+    @Singleton
+    fun providesFilterRepository(
+        filterLocalDataSource: FilterLocalDataSource,
+        filterTypeModelMapper: FilterTypeModelMapper
+    ): FilterRepository = FilterRepositoryImpl(
+        filterLocalDataSource,
+        filterTypeModelMapper
+    )
 }
-
-private val repositoryModule = module {
-    single<CharactersRepository> { CharactersRepositoryImpl(get(), get()) }
-
-    single<LocationsRepository> { LocationsRepositoryImpl(get()) }
-
-    single<EpisodesRepository> { EpisodesRepositoryImpl(get()) }
-
-    single<FilterTypeModelMapper> { FilterTypeModelMapperImpl() }
-    single<FilterRepository> { FilterRepositoryImpl(get(), get()) }
-}
-
-val dataModules = listOf(
-    moshiModule,
-    networkModule,
-    remoteDataSourceModule,
-    sharedPreferencesModule,
-    localDataSourceModule,
-    repositoryModule
-)

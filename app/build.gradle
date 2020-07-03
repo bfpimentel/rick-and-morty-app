@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
     id("de.mannodermaus.android-junit5")
 }
 
@@ -57,18 +59,26 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(":domain")
     implementation project(":data")
 
+    implementation "com.google.dagger:hilt-android:2.28.1-alpha"
+    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha01'
+    kapt "com.google.dagger:hilt-android-compiler:2.28.1-alpha"
+    kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha01'
+
     implementation projectDependencies.kotlinStdlib
     implementation projectDependencies.kotlinReflect
     implementation projectDependencies.materialDesign
     implementation projectDependencies.appCompat
     implementation projectDependencies.fragment
-    implementation projectDependencies.koin
     implementation projectDependencies.navigationFragment
     implementation projectDependencies.navigationUI
     implementation projectDependencies.rxJava

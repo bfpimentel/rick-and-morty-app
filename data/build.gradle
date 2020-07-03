@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-android-extensions")
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
     id("de.mannodermaus.android-junit5")
 }
 
@@ -35,8 +36,10 @@ dependencies {
 
     implementation project(":domain")
 
+    implementation "com.google.dagger:hilt-android:2.28.1-alpha"
+    kapt "com.google.dagger:hilt-android-compiler:2.28.1-alpha"
+
     implementation projectDependencies.kotlinStdlib
-    implementation projectDependencies.koin
     implementation projectDependencies.rxJava
     implementation projectDependencies.moshi
     implementation projectDependencies.retrofitRxAdapter
