@@ -1,19 +1,20 @@
 package dev.pimentel.rickandmorty.presentation.locations
 
-import dev.pimentel.rickandmorty.presentation.locations.mappers.LocationsItemMapperImpl
-import dev.pimentel.rickandmorty.shared.navigator.Navigator
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.scopes.FragmentScoped
 
-val locationsModule = module {
-    viewModel {
-        LocationsViewModel(
-            get(),
-            LocationsItemMapperImpl(),
-            get(),
-            get<Navigator>(),
-            get()
-        )
-    }
-    factory { LocationsAdapter() }
+@Module
+@InstallIn(FragmentComponent::class)
+object LocationsModule {
+
+    @Provides
+    @FragmentScoped
+    fun providesLocationsAdapter(): LocationsAdapter = LocationsAdapter()
+
+//    @Provides
+//    @FragmentScoped
+//    fun providesLocationsItemMapper(): LocationsItemMapper = LocationsItemMapperImpl()
 }

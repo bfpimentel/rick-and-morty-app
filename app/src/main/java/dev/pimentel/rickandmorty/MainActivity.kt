@@ -4,14 +4,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.databinding.MainActivityBinding
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
-import dev.pimentel.rickandmorty.shared.navigator.NavigatorBinder
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val navigator: NavigatorBinder by inject<Navigator>()
+    @Inject
+    lateinit var navigator: Navigator
 
     private lateinit var binding: MainActivityBinding
 

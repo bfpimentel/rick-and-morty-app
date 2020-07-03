@@ -3,35 +3,31 @@ package dev.pimentel.rickandmorty.presentation.characters.details
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
 import coil.transform.CircleCropTransformation
+import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersDetailsFragmentBinding
 import dev.pimentel.rickandmorty.presentation.characters.details.dto.CharacterDetails
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CharactersDetailsFragment : Fragment(R.layout.characters_details_fragment) {
 
+    @Inject
+    lateinit var adapter: CharactersDetailsEpisodesAdapter
+
     private val binding by lifecycleBinding(CharactersDetailsFragmentBinding::bind)
-    private val viewModel: CharactersDetailsContract.ViewModel by viewModel<CharactersDetailsViewModel>()
-    private val adapter: CharactersDetailsEpisodesAdapter by inject()
+    private val viewModel: CharactersDetailsContract.ViewModel by viewModels<CharactersDetailsViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadKoinModules(charactersDetailsModule)
         bindOutputs()
         bindInputs()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unloadKoinModules(charactersDetailsModule)
     }
 
     private fun bindOutputs() {
@@ -42,9 +38,7 @@ class CharactersDetailsFragment : Fragment(R.layout.characters_details_fragment)
             }
 
             viewModel.characterDetails().observe(viewLifecycleOwner, Observer { details ->
-                photo.load(details.image) {
-                    transformations(CircleCropTransformation())
-                }
+                photo.load(details.image) { transformations(CircleCropTransformation()) }
 
                 toolbar.title = details.name
                 status.text = details.status

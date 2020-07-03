@@ -1,5 +1,6 @@
 package dev.pimentel.rickandmorty.presentation.characters
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,17 +19,17 @@ import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
-import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
+import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 
 @Suppress("LongParameterList")
-class CharactersViewModel(
+class CharactersViewModel @ViewModelInject constructor(
     private val getCharacters: GetCharacters,
     private val getCharacterDetails: GetCharacterDetails,
     private val charactersItemsMapper: CharactersItemsMapper,
     private val characterDetailsMapper: CharacterDetailsMapper,
     private val getErrorMessage: GetErrorMessage,
-    private val navigator: NavigatorRouter,
+    private val navigator: Navigator,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),

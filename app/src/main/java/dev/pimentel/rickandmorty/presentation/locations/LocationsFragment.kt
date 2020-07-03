@@ -4,38 +4,38 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.LocationsFragmentBinding
 import dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LocationsFragment : Fragment(R.layout.locations_fragment) {
 
+    @Inject
+    lateinit var adapter: LocationsAdapter
+
     private val binding by lifecycleBinding(LocationsFragmentBinding::bind)
-    private val viewModel: LocationsContract.ViewModel by viewModel<LocationsViewModel>()
-    private val adapter: LocationsAdapter by inject()
+    private val viewModel: LocationsContract.ViewModel by viewModels<LocationsViewModel>()
 
     private lateinit var endOfScrollListener: EndOfScrollListener<StaggeredGridLayoutManager>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadKoinModules(locationsModule)
         bindOutputs()
         bindInputs()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unloadKoinModules(locationsModule)
         endOfScrollListener.dispose()
     }
 

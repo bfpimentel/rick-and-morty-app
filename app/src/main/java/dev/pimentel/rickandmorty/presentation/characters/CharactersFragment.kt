@@ -5,38 +5,38 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersFragmentBinding
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
+    @Inject
+    lateinit var adapter: CharactersAdapter
+
     private val binding by lifecycleBinding(CharactersFragmentBinding::bind)
-    private val viewModel: CharactersContract.ViewModel by viewModel<CharactersViewModel>()
-    private val adapter: CharactersAdapter by inject()
+    private val viewModel: CharactersContract.ViewModel by viewModels<CharactersViewModel>()
 
     private lateinit var endOfScrollListener: EndOfScrollListener<StaggeredGridLayoutManager>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadKoinModules(charactersModule)
         bindOutputs()
         bindInputs()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unloadKoinModules(charactersModule)
         endOfScrollListener.dispose()
     }
 

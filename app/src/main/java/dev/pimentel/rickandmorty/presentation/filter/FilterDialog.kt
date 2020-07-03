@@ -8,21 +8,21 @@ import androidx.core.os.bundleOf
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.FilterDialogBinding
 import dev.pimentel.rickandmorty.databinding.FilterItemBinding
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
 import timber.log.Timber
 
+@AndroidEntryPoint
 class FilterDialog : DialogFragment(R.layout.filter_dialog) {
 
     private val binding by lifecycleBinding(FilterDialogBinding::bind)
-    private val viewModel: FilterContract.ViewModel by viewModel<FilterViewModel>()
+    private val viewModel: FilterContract.ViewModel by viewModels<FilterViewModel>()
 
     private lateinit var searchFieldListener: TextWatcher
 
@@ -36,14 +36,8 @@ class FilterDialog : DialogFragment(R.layout.filter_dialog) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadKoinModules(filterModule)
         bindOutputs()
         bindInputs()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unloadKoinModules(filterModule)
     }
 
     private fun bindOutputs() {

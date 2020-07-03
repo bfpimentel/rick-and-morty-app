@@ -1,5 +1,6 @@
 package dev.pimentel.rickandmorty.presentation.episodes
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,14 +16,14 @@ import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
-import dev.pimentel.rickandmorty.shared.navigator.NavigatorRouter
+import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 
-class EpisodesViewModel(
+class EpisodesViewModel @ViewModelInject constructor(
     private val getEpisodes: GetEpisodes,
     private val episodesItemMapper: EpisodesItemMapper,
     private val getErrorMessage: GetErrorMessage,
-    private val navigator: NavigatorRouter,
+    private val navigator: Navigator,
     schedulerProvider: SchedulerProvider
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),

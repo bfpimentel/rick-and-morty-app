@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
     id("de.mannodermaus.android-junit5")
 }
 
@@ -57,6 +59,10 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -68,7 +74,6 @@ dependencies {
     implementation projectDependencies.materialDesign
     implementation projectDependencies.appCompat
     implementation projectDependencies.fragment
-    implementation projectDependencies.koin
     implementation projectDependencies.navigationFragment
     implementation projectDependencies.navigationUI
     implementation projectDependencies.rxJava
@@ -77,6 +82,12 @@ dependencies {
     implementation projectDependencies.timber
     implementation projectDependencies.coil
     implementation projectDependencies.retrofitRxAdapter
+    implementation projectDependencies.moshi
+    implementation projectDependencies.hilt
+    implementation projectDependencies.hiltAndroid
+
+    kapt projectDependencies.hiltCompiler
+    kapt projectDependencies.hiltAndroidCompiler
 
     testImplementation testDependencies.androidTestCore
     testImplementation testDependencies.mockk
