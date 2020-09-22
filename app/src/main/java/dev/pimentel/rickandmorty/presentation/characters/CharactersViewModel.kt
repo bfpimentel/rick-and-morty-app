@@ -1,14 +1,14 @@
 package dev.pimentel.rickandmorty.presentation.characters
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersIntent
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
@@ -21,12 +21,23 @@ import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-@Suppress("LongParameterList")
+@FlowPreview
 @ExperimentalCoroutinesApi
+@Suppress("LongParameterList")
 class CharactersViewModel @ViewModelInject constructor(
     private val getCharacters: GetCharacters,
     private val getCharacterDetails: GetCharacterDetails,
@@ -43,12 +54,27 @@ class CharactersViewModel @ViewModelInject constructor(
     private var lastFilter = CharactersFilter.NO_FILTER
 
     private val charactersState = MutableStateFlow<CharactersState>(CharactersState.Empty())
-    private val filterIcon = MutableLiveData<Int>()
-    private val error = MutableLiveData<String>()
+    private val filterIcon = MutableStateFlow(R.drawable.ic_filter_default)
+    private val error = MutableStateFlow<String?>(null)
+
+    override val intentChannel: Channel<CharactersIntent> = Channel(Channel.UNLIMITED)
+
+    init {
+        viewModelScope.launch {
+            intentChannel.consumeAsFlow().debounce(1000L).collect { intent ->
+                when (intent) {
+                    is CharactersIntent.GetCharacters -> getCharacters(intent.filter)
+                    is CharactersIntent.GetCharactersWithLastFilter -> getCharacters(lastFilter)
+                    is CharactersIntent.OpenFilters -> openFilters()
+                    is CharactersIntent.GetDetails -> getDetails(intent.characterId)
+                }
+            }
+        }
+    }
 
     override fun charactersState(): StateFlow<CharactersState> = charactersState
-    override fun filterIcon(): LiveData<Int> = filterIcon
-    override fun error(): LiveData<String> = error
+    override fun filterIcon(): StateFlow<Int> = filterIcon
+    override fun error(): StateFlow<String?> = error
 
     override fun onCleared() {
         super.onCleared()
@@ -56,7 +82,7 @@ class CharactersViewModel @ViewModelInject constructor(
         disposePaging()
     }
 
-    override fun getCharacters(filter: CharactersFilter) {
+    private fun getCharacters(filter: CharactersFilter) {
         handleFilterIconChange(filter)
 
         val reset = lastFilter != filter
@@ -87,18 +113,14 @@ class CharactersViewModel @ViewModelInject constructor(
         )
     }
 
-    override fun getCharactersWithLastFilter() {
-        getCharacters(lastFilter)
-    }
-
-    override fun openFilters() {
+    private fun openFilters() {
         navigator.navigate(
             R.id.characters_to_characters_filter,
             CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
         )
     }
 
-    override fun getDetails(id: Int) {
+    private fun getDetails(id: Int) {
         getCharacterDetails(GetCharacterDetails.Params(id))
             .compose(observeOnUIAfterSingleResult())
             .handle({ response ->
@@ -109,16 +131,29 @@ class CharactersViewModel @ViewModelInject constructor(
                     CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
                 )
             }, { throwable ->
-                error.postValue(
-                    getErrorMessage(GetErrorMessage.Params(throwable))
-                )
+                error.value = getErrorMessage(GetErrorMessage.Params(throwable))
             })
     }
 
     private fun handleFilterIconChange(filter: CharactersFilter) {
-        filterIcon.postValue(
+        filterIcon.value =
             if (filter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
             else R.drawable.ic_filter_default
-        )
+    }
+}
+
+fun <T> debounce(
+    delayMs: Long = 500L,
+    coroutineContext: CoroutineContext,
+    f: (T) -> Unit
+): (T) -> Unit {
+    var debounceJob: Job? = null
+    return { param: T ->
+        if (debounceJob?.isCompleted != false) {
+            debounceJob = CoroutineScope(coroutineContext).launch {
+                delay(delayMs)
+                f(param)
+            }
+        }
     }
 }

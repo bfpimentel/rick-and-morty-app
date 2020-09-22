@@ -1,10 +1,11 @@
 package dev.pimentel.rickandmorty.shared.helpers
 
 import android.view.View
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -16,7 +17,7 @@ fun <T> Fragment.lifecycleBinding(bindingFactory: (View) -> T): ReadOnlyProperty
         init {
             this@lifecycleBinding
                 .viewLifecycleOwnerLiveData
-                .observe(this@lifecycleBinding, Observer { owner ->
+                .observe(this@lifecycleBinding, { owner ->
                     owner?.lifecycle?.addObserver(this)
                 })
         }
@@ -30,4 +31,9 @@ fun <T> Fragment.lifecycleBinding(bindingFactory: (View) -> T): ReadOnlyProperty
                 binding = newBinding
             }
         }
+    }
+
+fun Fragment.composeViewFor(content: @Composable () -> Unit) =
+    ComposeView(requireContext()).apply {
+        setContent(content)
     }
