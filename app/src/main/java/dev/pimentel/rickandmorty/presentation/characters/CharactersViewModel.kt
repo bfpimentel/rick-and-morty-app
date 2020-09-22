@@ -21,8 +21,12 @@ import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Suppress("LongParameterList")
+@ExperimentalCoroutinesApi
 class CharactersViewModel @ViewModelInject constructor(
     private val getCharacters: GetCharacters,
     private val getCharacterDetails: GetCharacterDetails,
@@ -38,11 +42,11 @@ class CharactersViewModel @ViewModelInject constructor(
 
     private var lastFilter = CharactersFilter.NO_FILTER
 
-    private val charactersState = MutableLiveData<CharactersState>()
+    private val charactersState = MutableStateFlow<CharactersState>(CharactersState.Empty())
     private val filterIcon = MutableLiveData<Int>()
     private val error = MutableLiveData<String>()
 
-    override fun charactersState(): LiveData<CharactersState> = charactersState
+    override fun charactersState(): StateFlow<CharactersState> = charactersState
     override fun filterIcon(): LiveData<Int> = filterIcon
     override fun error(): LiveData<String> = error
 
@@ -58,7 +62,7 @@ class CharactersViewModel @ViewModelInject constructor(
         val reset = lastFilter != filter
         if (reset) {
             this.lastFilter = filter
-            charactersState.postValue(CharactersState.Empty())
+            charactersState.value = CharactersState.Empty()
         }
 
         getCharacters(
@@ -71,13 +75,13 @@ class CharactersViewModel @ViewModelInject constructor(
             )
         ).handlePaging(
             { result ->
-                charactersState.postValue(
-                    CharactersState.Success(charactersItemsMapper.getAll(result))
+                charactersState.value = CharactersState.Success(
+                    charactersItemsMapper.getAll(result)
                 )
             },
             { throwable ->
-                charactersState.postValue(
-                    CharactersState.Error(getErrorMessage(GetErrorMessage.Params(throwable)))
+                charactersState.value = CharactersState.Error(
+                    getErrorMessage(GetErrorMessage.Params(throwable))
                 )
             }
         )
