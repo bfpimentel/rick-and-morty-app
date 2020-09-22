@@ -21,19 +21,15 @@ import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -139,21 +135,5 @@ class CharactersViewModel @ViewModelInject constructor(
         filterIcon.value =
             if (filter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
             else R.drawable.ic_filter_default
-    }
-}
-
-fun <T> debounce(
-    delayMs: Long = 500L,
-    coroutineContext: CoroutineContext,
-    f: (T) -> Unit
-): (T) -> Unit {
-    var debounceJob: Job? = null
-    return { param: T ->
-        if (debounceJob?.isCompleted != false) {
-            debounceJob = CoroutineScope(coroutineContext).launch {
-                delay(delayMs)
-                f(param)
-            }
-        }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -67,7 +68,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(text = "Characters") },
+                        title = { Text(text = stringResource(id = R.string.characters_title)) },
                         actions = {
                             IconButton(onClick = {
                                 viewModel.intentChannel.offer(CharactersIntent.OpenFilters)
@@ -101,7 +102,6 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 modifier = Modifier.weight(1f).padding(8.dp),
                 viewBlock = {
                     // TODO: Need to change ViewBinding view to a Composable one.
-
                     CharactersItemBinding.inflate(
                         LayoutInflater.from(it)
                     ).apply {
