@@ -15,7 +15,7 @@ import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.FilterDialogBinding
 import dev.pimentel.rickandmorty.databinding.FilterItemBinding
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
-import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
+import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
 import timber.log.Timber
 
 @AndroidEntryPoint

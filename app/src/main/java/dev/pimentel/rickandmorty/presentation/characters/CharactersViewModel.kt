@@ -15,20 +15,21 @@ import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFi
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemsMapper
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
+import dev.pimentel.rickandmorty.shared.extensions.throttleFirst
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
+import dev.pimentel.rickandmorty.shared.mvi.Reducer
+import dev.pimentel.rickandmorty.shared.mvi.ReducerImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 @FlowPreview
@@ -45,19 +46,16 @@ class CharactersViewModel @ViewModelInject constructor(
 ) : ViewModel(),
     DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
     PagingHelper<Character> by PagingHelperImpl(schedulerProvider),
+    Reducer<CharactersState> by ReducerImpl(CharactersState()),
     CharactersContract.ViewModel {
 
     private var lastFilter = CharactersFilter.NO_FILTER
-
-    private val charactersState = MutableStateFlow<CharactersState>(CharactersState.Empty())
-    private val filterIcon = MutableStateFlow(R.drawable.ic_filter_default)
-    private val error = MutableStateFlow<String?>(null)
 
     override val intentChannel: Channel<CharactersIntent> = Channel(Channel.UNLIMITED)
 
     init {
         viewModelScope.launch {
-            intentChannel.consumeAsFlow().debounce(1000L).collect { intent ->
+            intentChannel.consumeAsFlow().throttleFirst(1000L).collect { intent ->
                 when (intent) {
                     is CharactersIntent.GetCharacters -> getCharacters(intent.filter)
                     is CharactersIntent.GetCharactersWithLastFilter -> getCharacters(lastFilter)
@@ -68,9 +66,7 @@ class CharactersViewModel @ViewModelInject constructor(
         }
     }
 
-    override fun charactersState(): StateFlow<CharactersState> = charactersState
-    override fun filterIcon(): StateFlow<Int> = filterIcon
-    override fun error(): StateFlow<String?> = error
+    override fun state(): StateFlow<CharactersState> = mutableState
 
     override fun onCleared() {
         super.onCleared()
@@ -84,7 +80,7 @@ class CharactersViewModel @ViewModelInject constructor(
         val reset = lastFilter != filter
         if (reset) {
             this.lastFilter = filter
-            charactersState.value = CharactersState.Empty()
+            updateState { copy(characters = emptyList()) }
         }
 
         getCharacters(
@@ -97,14 +93,14 @@ class CharactersViewModel @ViewModelInject constructor(
             )
         ).handlePaging(
             { result ->
-                charactersState.value = CharactersState.Success(
-                    charactersItemsMapper.getAll(result)
-                )
+                updateState {
+                    copy(characters = charactersItemsMapper.getAll(result))
+                }
             },
             { throwable ->
-                charactersState.value = CharactersState.Error(
-                    getErrorMessage(GetErrorMessage.Params(throwable))
-                )
+                updateState {
+                    copy(listErrorMessage = getErrorMessage(GetErrorMessage.Params(throwable)))
+                }
             }
         )
     }
@@ -127,13 +123,19 @@ class CharactersViewModel @ViewModelInject constructor(
                     CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
                 )
             }, { throwable ->
-                error.value = getErrorMessage(GetErrorMessage.Params(throwable))
+                val errorMessage = getErrorMessage(GetErrorMessage.Params(throwable))
+                updateState {
+                    copy(detailsErrorMessage = errorMessage)
+                }
             })
     }
 
     private fun handleFilterIconChange(filter: CharactersFilter) {
-        filterIcon.value =
-            if (filter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
-            else R.drawable.ic_filter_default
+        updateState {
+            copy(
+                filterIcon = if (filter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
+                else R.drawable.ic_filter_default
+            )
+        }
     }
 }

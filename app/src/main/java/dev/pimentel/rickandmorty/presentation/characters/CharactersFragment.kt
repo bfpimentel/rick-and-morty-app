@@ -10,7 +10,6 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.ColumnScope.weight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -31,7 +30,7 @@ import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersIntent
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
-import dev.pimentel.rickandmorty.shared.helpers.composeViewFor
+import dev.pimentel.rickandmorty.shared.extensions.composeViewFor
 import dev.pimentel.rickandmorty.shared.views.LazyVerticalGridForIndexed
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -60,11 +59,11 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     @Preview(name = "Screen")
     @Composable
     private fun Screen() {
-        val charactersState = viewModel.charactersState().collectAsState().value
-        val filterIcon = viewModel.filterIcon().collectAsState().value
-        val error = viewModel.error().collectAsState().value
+        val charactersState = viewModel.state().collectAsState().value
 
-        MaterialTheme {
+        with(charactersState) {
+            detailsErrorMessage?.also(::showErrorDialog)
+
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -79,23 +78,15 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                     )
                 }
             ) {
-                when (charactersState) {
-                    is CharactersState.Success -> SuccessScreen(value = charactersState)
-                    is CharactersState.Empty -> {
-                    }
-                    is CharactersState.Error -> {
-                    }
-                }
+                SuccessScreen(state = charactersState)
             }
         }
-
-        error?.also(::showErrorDialog)
     }
 
     @Composable
-    private fun SuccessScreen(value: CharactersState.Success) {
+    private fun SuccessScreen(state: CharactersState) {
         LazyVerticalGridForIndexed(
-            items = value.characters,
+            items = state.characters,
             perRow = CHARACTERS_ROW_COUNT
         ) { index, character ->
             AndroidView(
@@ -119,7 +110,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                     }.root
                 })
 
-            if (index == value.characters.lastIndex) {
+            if (index == state.characters.lastIndex) {
                 viewModel.intentChannel.offer(CharactersIntent.GetCharactersWithLastFilter)
             }
         }

@@ -1,6 +1,7 @@
-package dev.pimentel.rickandmorty.shared.helpers
+package dev.pimentel.rickandmorty.shared.extensions
 
 import android.view.View
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
@@ -35,5 +36,9 @@ fun <T> Fragment.lifecycleBinding(bindingFactory: (View) -> T): ReadOnlyProperty
 
 fun Fragment.composeViewFor(content: @Composable () -> Unit) =
     ComposeView(requireContext()).apply {
-        setContent(content)
+        setContent {
+            MaterialTheme {
+                content()
+            }
+        }
     }
