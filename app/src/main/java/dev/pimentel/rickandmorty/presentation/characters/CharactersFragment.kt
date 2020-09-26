@@ -5,16 +5,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope.weight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material.Card
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -25,8 +37,8 @@ import androidx.ui.tooling.preview.Preview
 import coil.api.load
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
-import dev.pimentel.rickandmorty.databinding.CharactersItemBinding
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersIntent
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersItem
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
@@ -39,7 +51,7 @@ import javax.inject.Inject
 @FlowPreview
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class CharactersFragment : Fragment(R.layout.characters_fragment) {
+class CharactersFragment : Fragment() {
 
     @Inject
     lateinit var adapter: CharactersAdapter
@@ -67,51 +79,78 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(text = stringResource(id = R.string.characters_title)) },
+                        elevation = 0.dp,
+                        title = {
+                            Text(
+                                text = stringResource(id = R.string.characters_title),
+                                style = MaterialTheme.typography.h6,
+                                color = Color.Black
+                            )
+                        },
                         actions = {
                             IconButton(onClick = {
                                 viewModel.intentChannel.offer(CharactersIntent.OpenFilters)
                             }) {
-                                Icon(asset = vectorResource(id = filterIcon))
+                                Icon(asset = vectorResource(id = filterIcon), tint = Color.Black)
                             }
                         }
                     )
                 }
             ) {
-                SuccessScreen(state = charactersState)
+                CharactersList(state = charactersState)
             }
         }
     }
 
     @Composable
-    private fun SuccessScreen(state: CharactersState) {
+    private fun CharactersList(state: CharactersState) {
         LazyVerticalGridForIndexed(
             items = state.characters,
             perRow = CHARACTERS_ROW_COUNT
         ) { index, character ->
-            AndroidView(
-                modifier = Modifier.weight(1f).padding(8.dp),
-                viewBlock = {
-                    // TODO: Need to change ViewBinding view to a Composable one.
-                    CharactersItemBinding.inflate(
-                        LayoutInflater.from(it)
-                    ).apply {
-                        root.setOnClickListener {
-                            viewModel.intentChannel.offer(
-                                CharactersIntent.GetDetails(
-                                    characterId = character.id
-                                )
-                            )
-                        }
-
-                        image.load(character.image)
-                        status.text = character.status
-                        name.text = character.name
-                    }.root
-                })
+            Character(item = character)
 
             if (index == state.characters.lastIndex) {
                 viewModel.intentChannel.offer(CharactersIntent.GetCharactersWithLastFilter)
+            }
+        }
+    }
+
+    @Composable
+    private fun Character(item: CharactersItem) {
+        Card(
+            modifier = Modifier.weight(1f).padding(8.dp)
+                .clickable(onClick = {
+                    viewModel.intentChannel.offer(
+                        CharactersIntent.GetDetails(
+                            characterId = item.id
+                        )
+                    )
+                }),
+            shape = MaterialTheme.shapes.small.copy(all = CornerSize(8.dp)),
+            border = BorderStroke(width = 0.5.dp, color = colorResource(id = R.color.gray3))
+        ) {
+            Column(modifier = Modifier.height(222.dp)) {
+                AndroidView(
+                    modifier = Modifier.height(140.dp).fillMaxWidth(),
+                    viewBlock = {
+                        AppCompatImageView(it).apply {
+                            scaleType = ImageView.ScaleType.CENTER_CROP
+                            load(item.image)
+                        }
+                    },
+                )
+                Text(
+                    modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 8.dp),
+                    style = MaterialTheme.typography.caption,
+                    text = item.status
+                )
+                Text(
+                    modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 8.dp),
+                    style = MaterialTheme.typography.subtitle1,
+                    maxLines = 2,
+                    text = item.name
+                )
             }
         }
     }
