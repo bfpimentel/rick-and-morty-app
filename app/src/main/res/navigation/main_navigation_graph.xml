@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/characters"
         android:name="dev.pimentel.rickandmorty.presentation.characters.CharactersFragment"
-        android:label="CharactersFragment"
-        tools:layout="@layout/characters_fragment">
+        android:label="CharactersFragment">
         <action
             android:id="@+id/characters_to_characters_filter"
             app:destination="@id/characters_filter" />
@@ -22,7 +21,7 @@
         android:id="@+id/characters_details"
         android:name="dev.pimentel.rickandmorty.presentation.characters.details.CharactersDetailsFragment"
         android:label="CharactersDetailsFragment"
-        tools:layout="@layout/characters_details_fragment" >
+        tools:layout="@layout/characters_details_fragment">
         <argument
             android:name="CHARACTERS_DETAILS_ARGUMENT"
             app:argType="dev.pimentel.rickandmorty.presentation.characters.details.dto.CharacterDetails" />

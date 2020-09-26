@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.CharactersDetailsFragmentBinding
 import dev.pimentel.rickandmorty.presentation.characters.details.dto.CharacterDetails
-import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
+import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint

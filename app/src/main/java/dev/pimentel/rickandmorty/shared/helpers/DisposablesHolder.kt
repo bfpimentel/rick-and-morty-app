@@ -7,7 +7,6 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleTransformer
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
-
 interface DisposablesHolder {
     fun <T> observeOnUIAfterSingleResult(): SingleTransformer<T, T>
     fun observeOnUIAfterCompletableResult(): CompletableTransformer

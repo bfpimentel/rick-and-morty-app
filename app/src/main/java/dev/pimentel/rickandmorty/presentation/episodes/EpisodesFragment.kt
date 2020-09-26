@@ -13,7 +13,7 @@ import dev.pimentel.rickandmorty.databinding.EpisodesFragmentBinding
 import dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
-import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
+import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint

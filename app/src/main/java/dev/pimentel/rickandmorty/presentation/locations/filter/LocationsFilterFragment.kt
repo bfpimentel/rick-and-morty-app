@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -15,7 +14,7 @@ import dev.pimentel.rickandmorty.databinding.LocationsFilterFragmentBinding
 import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
-import dev.pimentel.rickandmorty.shared.helpers.lifecycleBinding
+import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
 
 @AndroidEntryPoint
 class LocationsFilterFragment : BottomSheetDialogFragment() {

@@ -1,19 +1,12 @@
 package dev.pimentel.rickandmorty.presentation.characters
 
-import androidx.lifecycle.LiveData
+import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersIntent
 import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
-import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
+import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 interface CharactersContract {
 
-    interface ViewModel {
-        fun getCharacters(filter: CharactersFilter)
-        fun getCharactersWithLastFilter()
-        fun openFilters()
-        fun getDetails(id: Int)
-
-        fun charactersState(): LiveData<CharactersState>
-        fun filterIcon(): LiveData<Int>
-        fun error(): LiveData<String>
-    }
+    interface ViewModel : ReactiveViewModel<CharactersIntent, CharactersState>
 }

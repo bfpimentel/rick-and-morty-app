@@ -113,7 +113,7 @@ class CharactersViewModelTest : ViewModelTest<CharactersContract.ViewModel>() {
 
         assert(viewModel.charactersState().value is CharactersState.Error)
         assertEquals(
-            (viewModel.charactersState().value as CharactersState).errorMessage,
+            (viewModel.charactersState().value as CharactersState).listErrorMessage,
             errorMessage
         )
 
