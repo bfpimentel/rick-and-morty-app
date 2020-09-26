@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.ColumnScope.weight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumnForIndexed
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
 import androidx.compose.material.IconButton
@@ -43,18 +44,14 @@ import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.shared.extensions.composeViewFor
-import dev.pimentel.rickandmorty.shared.views.LazyVerticalGridForIndexed
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class CharactersFragment : Fragment() {
 
-    @Inject
-    lateinit var adapter: CharactersAdapter
     private val viewModel: CharactersContract.ViewModel by viewModels<CharactersViewModel>()
 
     override fun onCreateView(
@@ -74,8 +71,6 @@ class CharactersFragment : Fragment() {
         val charactersState = viewModel.state().collectAsState().value
 
         with(charactersState) {
-            detailsErrorMessage?.also(::showErrorDialog)
-
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -91,7 +86,10 @@ class CharactersFragment : Fragment() {
                             IconButton(onClick = {
                                 viewModel.intentChannel.offer(CharactersIntent.OpenFilters)
                             }) {
-                                Icon(asset = vectorResource(id = filterIcon), tint = Color.Black)
+                                Icon(
+                                    asset = vectorResource(id = filterIcon),
+                                    tint = Color.Black
+                                )
                             }
                         }
                     )
@@ -99,21 +97,31 @@ class CharactersFragment : Fragment() {
             ) {
                 CharactersList(state = charactersState)
             }
+
+            detailsErrorMessage?.also(::showErrorDialog)
         }
     }
 
     @Composable
     private fun CharactersList(state: CharactersState) {
-        LazyVerticalGridForIndexed(
-            items = state.characters,
-            perRow = CHARACTERS_ROW_COUNT
-        ) { index, character ->
+        LazyColumnForIndexed(items = state.characters) { index, character ->
             Character(item = character)
 
             if (index == state.characters.lastIndex) {
                 viewModel.intentChannel.offer(CharactersIntent.GetCharactersWithLastFilter)
             }
         }
+
+//        LazyVerticalGridForIndexed(
+//            items = state.characters,
+//            perRow = CHARACTERS_ROW_COUNT
+//        ) { index, character ->
+//            Character(item = character)
+//
+//            if (index == state.characters.lastIndex) {
+//                viewModel.intentChannel.offer(CharactersIntent.GetCharactersWithLastFilter)
+//            }
+//        }
     }
 
     @Composable
