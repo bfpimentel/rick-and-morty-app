@@ -1,22 +1,22 @@
 package dev.pimentel.data.repositories.filter
 
-import dev.pimentel.data.models.FilterModel
-import dev.pimentel.domain.models.FilterModel as DomainFilterModel
+import dev.pimentel.data.dto.FilterDTO
+import dev.pimentel.domain.models.FilterModel
 
 interface FilterTypeModelMapper {
-    fun mapToData(type: DomainFilterModel.Type): FilterModel.Type
+    fun mapToData(type: FilterModel.Type): FilterDTO.Type
 }
 
 class FilterTypeModelMapperImpl : FilterTypeModelMapper {
 
-    override fun mapToData(type: dev.pimentel.domain.models.FilterModel.Type): FilterModel.Type =
+    override fun mapToData(type: FilterModel.Type): FilterDTO.Type =
         when (type) {
-            DomainFilterModel.Type.CHARACTER_NAME -> FilterModel.Type.CHARACTER_NAME
-            DomainFilterModel.Type.CHARACTER_SPECIES -> FilterModel.Type.CHARACTER_SPECIES
-            DomainFilterModel.Type.LOCATION_NAME -> FilterModel.Type.LOCATION_NAME
-            DomainFilterModel.Type.LOCATION_TYPE -> FilterModel.Type.LOCATION_TYPE
-            DomainFilterModel.Type.LOCATION_DIMENSION -> FilterModel.Type.LOCATION_DIMENSION
-            DomainFilterModel.Type.EPISODE_NAME -> FilterModel.Type.EPISODE_NAME
-            DomainFilterModel.Type.EPISODE_NUMBER -> FilterModel.Type.EPISODE_NUMBER
+            FilterModel.Type.CHARACTER_NAME -> FilterDTO.Type.CHARACTER_NAME
+            FilterModel.Type.CHARACTER_SPECIES -> FilterDTO.Type.CHARACTER_SPECIES
+            FilterModel.Type.LOCATION_NAME -> FilterDTO.Type.LOCATION_NAME
+            FilterModel.Type.LOCATION_TYPE -> FilterDTO.Type.LOCATION_TYPE
+            FilterModel.Type.LOCATION_DIMENSION -> FilterDTO.Type.LOCATION_DIMENSION
+            FilterModel.Type.EPISODE_NAME -> FilterDTO.Type.EPISODE_NAME
+            FilterModel.Type.EPISODE_NUMBER -> FilterDTO.Type.EPISODE_NUMBER
         }
 }

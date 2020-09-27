@@ -14,7 +14,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation projectDependencies.kotlinStdlib
-    implementation projectDependencies.rxJava
 
     testImplementation testDependencies.mockk
     testImplementation testDependencies.junitAPI

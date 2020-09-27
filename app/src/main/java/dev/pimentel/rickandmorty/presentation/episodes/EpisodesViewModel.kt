@@ -11,6 +11,7 @@ import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesState
 import dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.presentation.episodes.mappers.EpisodesItemMapper
+import dev.pimentel.rickandmorty.shared.dispatchersprovider.DispatchersProvider
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
 import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
@@ -24,10 +25,9 @@ class EpisodesViewModel @ViewModelInject constructor(
     private val episodesItemMapper: EpisodesItemMapper,
     private val getErrorMessage: GetErrorMessage,
     private val navigator: Navigator,
-    schedulerProvider: SchedulerProvider
+    dispatchersProvider: DispatchersProvider
 ) : ViewModel(),
-    DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
-    PagingHelper<Episode> by PagingHelperImpl(schedulerProvider),
+    PagingHelper<Episode> by PagingHelperImpl(),
     EpisodesContract.ViewModel {
 
     private var lastFilter = EpisodesFilter.NO_FILTER
@@ -38,12 +38,6 @@ class EpisodesViewModel @ViewModelInject constructor(
     override fun episodesState(): LiveData<EpisodesState> = episodesState
     override fun filterIcon(): LiveData<Int> = filterIcon
 
-    override fun onCleared() {
-        super.onCleared()
-        disposeHolder()
-        disposePaging()
-    }
-
     override fun getEpisodes(filter: EpisodesFilter) {
         handleFilterIconChange(filter)
 
@@ -53,22 +47,27 @@ class EpisodesViewModel @ViewModelInject constructor(
             episodesState.postValue(EpisodesState.Empty())
         }
 
-        getEpisodes(
-            GetEpisodes.Params(
-                getCurrentPage(reset),
-                filter.name,
-                filter.number
-            )
-        ).compose(observeOnUIAfterSingleResult())
-            .handlePaging({ response ->
+        handlePaging(
+            request = {
+                getEpisodes(
+                    GetEpisodes.Params(
+                        getCurrentPage(reset),
+                        filter.name,
+                        filter.number
+                    )
+                )
+            },
+            onSuccess = { response ->
                 episodesState.postValue(
                     EpisodesState.Success(episodesItemMapper.getAll(response))
                 )
-            }, { throwable ->
+            },
+            onError = { error ->
                 episodesState.postValue(
-                    EpisodesState.Error(getErrorMessage(GetErrorMessage.Params(throwable)))
+                    EpisodesState.Error(getErrorMessage(GetErrorMessage.Params(error)))
                 )
-            })
+            }
+        )
     }
 
     override fun getEpisodesWithLastFilter() {

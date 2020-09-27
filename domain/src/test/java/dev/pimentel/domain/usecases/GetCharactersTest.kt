@@ -3,7 +3,7 @@ package dev.pimentel.domain.usecases
 import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.models.CharacterModel
-import dev.pimentel.domain.models.PagedResponse
+import dev.pimentel.domain.models.PagedResponseModel
 import dev.pimentel.domain.repositories.CharactersRepository
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -35,7 +35,7 @@ class GetCharactersTest {
         val status = "status"
         val gender = "gender"
 
-        val response = PagedResponse(
+        val response = PagedResponseModel(
             10,
             listOf(
                 CharacterModel(1, "name1", "status1", "image1"),

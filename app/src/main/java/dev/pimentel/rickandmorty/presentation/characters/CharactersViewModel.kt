@@ -14,16 +14,14 @@ import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
 import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemsMapper
+import dev.pimentel.rickandmorty.shared.dispatchersprovider.DispatchersProvider
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.extensions.throttleFirst
-import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
-import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
 import dev.pimentel.rickandmorty.shared.mvi.Reducer
 import dev.pimentel.rickandmorty.shared.mvi.ReducerImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
-import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -42,11 +40,10 @@ class CharactersViewModel @ViewModelInject constructor(
     private val characterDetailsMapper: CharacterDetailsMapper,
     private val getErrorMessage: GetErrorMessage,
     private val navigator: Navigator,
-    schedulerProvider: SchedulerProvider
+    dispatchersProvider: DispatchersProvider
 ) : ViewModel(),
-    DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
-    PagingHelper<Character> by PagingHelperImpl(schedulerProvider),
     Reducer<CharactersState> by ReducerImpl(CharactersState()),
+    PagingHelper<Character> by PagingHelperImpl(),
     CharactersContract.ViewModel {
 
     private var lastFilter = CharactersFilter.NO_FILTER
@@ -54,13 +51,13 @@ class CharactersViewModel @ViewModelInject constructor(
     override val intentChannel: Channel<CharactersIntent> = Channel(Channel.UNLIMITED)
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchersProvider.io) {
             intentChannel.consumeAsFlow().throttleFirst(1000L).collect { intent ->
                 when (intent) {
                     is CharactersIntent.GetCharacters -> getCharacters(intent.filter)
                     is CharactersIntent.GetCharactersWithLastFilter -> getCharacters(lastFilter)
-                    is CharactersIntent.OpenFilters -> openFilters()
                     is CharactersIntent.GetDetails -> getDetails(intent.characterId)
+                    is CharactersIntent.OpenFilters -> openFilters()
                 }
             }
         }
@@ -68,13 +65,7 @@ class CharactersViewModel @ViewModelInject constructor(
 
     override fun state(): StateFlow<CharactersState> = mutableState
 
-    override fun onCleared() {
-        super.onCleared()
-        disposeHolder()
-        disposePaging()
-    }
-
-    private fun getCharacters(filter: CharactersFilter) {
+    private suspend fun getCharacters(filter: CharactersFilter) {
         handleFilterIconChange(filter)
 
         val reset = lastFilter != filter
@@ -83,26 +74,47 @@ class CharactersViewModel @ViewModelInject constructor(
             updateState { copy(characters = emptyList()) }
         }
 
-        getCharacters(
-            GetCharacters.Params(
-                getCurrentPage(reset),
-                filter.name,
-                filter.species,
-                filter.status,
-                filter.gender
-            )
-        ).handlePaging(
-            { result ->
+        handlePaging(
+            request = {
+                getCharacters(
+                    GetCharacters.Params(
+                        getCurrentPage(reset),
+                        filter.name,
+                        filter.species,
+                        filter.status,
+                        filter.gender
+                    )
+                )
+            },
+            onSuccess = { result ->
                 updateState {
                     copy(characters = charactersItemsMapper.getAll(result))
                 }
             },
-            { throwable ->
+            onError = { exception ->
+                val errorMessage = getErrorMessage(GetErrorMessage.Params(exception))
                 updateState {
-                    copy(listErrorMessage = getErrorMessage(GetErrorMessage.Params(throwable)))
+                    copy(listErrorMessage = errorMessage)
                 }
             }
         )
+    }
+
+    private suspend fun getDetails(id: Int) {
+        try {
+            val result = getCharacterDetails(GetCharacterDetails.Params(id))
+            val details = characterDetailsMapper.get(result)
+
+            navigator.navigate(
+                R.id.characters_to_characters_details,
+                CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
+            )
+        } catch (exception: Exception) {
+            val errorMessage = getErrorMessage(GetErrorMessage.Params(exception))
+            updateState {
+                copy(detailsErrorMessage = errorMessage)
+            }
+        }
     }
 
     private fun openFilters() {
@@ -110,24 +122,6 @@ class CharactersViewModel @ViewModelInject constructor(
             R.id.characters_to_characters_filter,
             CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
         )
-    }
-
-    private fun getDetails(id: Int) {
-        getCharacterDetails(GetCharacterDetails.Params(id))
-            .compose(observeOnUIAfterSingleResult())
-            .handle({ response ->
-                val details = characterDetailsMapper.get(response)
-
-                navigator.navigate(
-                    R.id.characters_to_characters_details,
-                    CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
-                )
-            }, { throwable ->
-                val errorMessage = getErrorMessage(GetErrorMessage.Params(throwable))
-                updateState {
-                    copy(detailsErrorMessage = errorMessage)
-                }
-            })
     }
 
     private fun handleFilterIconChange(filter: CharactersFilter) {

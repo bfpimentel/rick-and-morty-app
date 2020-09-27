@@ -3,7 +3,7 @@ package dev.pimentel.domain.usecases
 import dev.pimentel.domain.entities.Episode
 import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.models.EpisodeModel
-import dev.pimentel.domain.models.PagedResponse
+import dev.pimentel.domain.models.PagedResponseModel
 import dev.pimentel.domain.repositories.EpisodesRepository
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -33,7 +33,7 @@ class GetEpisodesTest {
         val name = "name"
         val number = "number"
 
-        val response = PagedResponse(
+        val response = PagedResponseModel(
             10,
             listOf(
                 EpisodeModel(1, "name1", "airDate1", "number1"),

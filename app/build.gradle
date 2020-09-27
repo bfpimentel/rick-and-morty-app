@@ -88,12 +88,10 @@ dependencies {
     implementation projectDependencies.fragment
     implementation projectDependencies.navigationFragment
     implementation projectDependencies.navigationUI
-    implementation projectDependencies.rxJava
-    implementation projectDependencies.rxAndroid
     implementation projectDependencies.lifecycleCommon
     implementation projectDependencies.timber
     implementation projectDependencies.coil
-    implementation projectDependencies.retrofitRxAdapter
+    implementation projectDependencies.retrofit
     implementation projectDependencies.moshi
     implementation projectDependencies.hilt
     implementation projectDependencies.hiltAndroid

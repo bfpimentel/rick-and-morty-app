@@ -1,7 +1,7 @@
 package dev.pimentel.data.repository.episodes
 
-import dev.pimentel.data.models.EpisodeModel
-import dev.pimentel.data.models.PagedResponse
+import dev.pimentel.data.dto.EpisodeDTO
+import dev.pimentel.data.dto.PagedResponseDTO
 import dev.pimentel.data.repositories.episodes.EpisodesRepositoryImpl
 import dev.pimentel.data.sources.remote.EpisodesRemoteDataSource
 import dev.pimentel.domain.repositories.EpisodesRepository
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import dev.pimentel.domain.models.EpisodeModel as DomainEpisodeModel
-import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
+import dev.pimentel.domain.models.PagedResponseModel as DomainPagedResponse
 
 class EpisodesRepositoryTest {
 
@@ -31,11 +31,11 @@ class EpisodesRepositoryTest {
 
     @Test
     fun `should get locations`() {
-        val dataResponse = PagedResponse(
-            PagedResponse.Info(10),
+        val dataResponse = PagedResponseDTO(
+            PagedResponseDTO.Info(10),
             listOf(
-                EpisodeModel(1, "name1", "type1", "number1"),
-                EpisodeModel(2, "name2", "type2", "number2")
+                EpisodeDTO(1, "name1", "type1", "number1"),
+                EpisodeDTO(2, "name2", "type2", "number2")
             )
         )
 

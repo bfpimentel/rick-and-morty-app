@@ -13,7 +13,6 @@ import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.LocationsFragmentBinding
 import dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
-import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
 import javax.inject.Inject
 

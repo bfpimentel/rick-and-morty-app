@@ -3,7 +3,7 @@ package dev.pimentel.domain.usecases
 import dev.pimentel.domain.entities.Location
 import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.models.LocationModel
-import dev.pimentel.domain.models.PagedResponse
+import dev.pimentel.domain.models.PagedResponseModel
 import dev.pimentel.domain.repositories.LocationsRepository
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -34,7 +34,7 @@ class GetLocationsTest {
         val type = "type"
         val dimension = "dimension"
 
-        val response = PagedResponse(
+        val response = PagedResponseModel(
             10,
             listOf(
                 LocationModel(1, "name1", "type1", "dimension1"),

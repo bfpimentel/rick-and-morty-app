@@ -16,11 +16,11 @@ import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapper
 import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapperImpl
 import dev.pimentel.rickandmorty.presentation.locations.mappers.LocationsItemMapper
 import dev.pimentel.rickandmorty.presentation.locations.mappers.LocationsItemMapperImpl
+import dev.pimentel.rickandmorty.shared.dispatchersprovider.AppDispatchersProvider
+import dev.pimentel.rickandmorty.shared.dispatchersprovider.DispatchersProvider
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
 import dev.pimentel.rickandmorty.shared.navigator.NavigatorImpl
-import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
-import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProviderImpl
 import javax.inject.Singleton
 
 @Module
@@ -29,7 +29,7 @@ object AppModules {
 
     @Provides
     @Singleton
-    fun provideSchedulerProvider(): SchedulerProvider = SchedulerProviderImpl()
+    fun provideDispatchersProvider(): DispatchersProvider = AppDispatchersProvider()
 
     @Provides
     @Singleton

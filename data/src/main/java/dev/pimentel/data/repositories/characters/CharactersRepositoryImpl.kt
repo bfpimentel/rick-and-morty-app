@@ -1,53 +1,63 @@
 package dev.pimentel.data.repositories.characters
 
-import dev.pimentel.data.models.CharacterModel
-import dev.pimentel.data.models.EpisodeModel
+import dev.pimentel.data.models.CharacterDetailsModelImpl
+import dev.pimentel.data.models.CharacterModelImpl
+import dev.pimentel.data.models.EpisodeModelImpl
+import dev.pimentel.data.models.PagedResponseModelImpl
 import dev.pimentel.data.sources.remote.CharactersRemoteDataSource
 import dev.pimentel.data.sources.remote.EpisodesRemoteDataSource
+import dev.pimentel.domain.models.CharacterDetailsModel
+import dev.pimentel.domain.models.CharacterModel
+import dev.pimentel.domain.models.PagedResponseModel
 import dev.pimentel.domain.repositories.CharactersRepository
-import io.reactivex.rxjava3.core.Single
-import dev.pimentel.domain.models.CharacterDetailsModel as DomainCharacterDetailsModel
-import dev.pimentel.domain.models.CharacterModel as DomainCharacterModel
-import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
 
 class CharactersRepositoryImpl(
     private val charactersRemoteDataSource: CharactersRemoteDataSource,
     private val episodesRemoteDataSource: EpisodesRemoteDataSource
 ) : CharactersRepository {
 
-    override fun getCharacters(
+    override suspend fun getCharacters(
         page: Int,
         name: String?,
         species: String?,
         status: String?,
         gender: String?
-    ): Single<DomainPagedResponse<DomainCharacterModel>> =
+    ): PagedResponseModel<CharacterModel> =
         charactersRemoteDataSource.getCharacters(
             page,
             name,
             species,
             status,
             gender
-        ).map { response ->
-            DomainPagedResponse(
+        ).let { response ->
+            PagedResponseModelImpl(
                 response.info.pages,
-                response.results.map(CharacterModel::toDomain)
+                response.results.map { characterResponse ->
+                    CharacterModelImpl(
+                        characterResponse.id,
+                        characterResponse.name,
+                        characterResponse.status,
+                        characterResponse.image
+                    )
+                }
             )
         }
 
-    override fun getCharacterDetails(id: Int): Single<DomainCharacterDetailsModel> =
+    override suspend fun getCharacterDetails(id: Int): CharacterDetailsModel =
         charactersRemoteDataSource.getCharacterDetails(id)
-            .flatMap { characterDetails ->
+            .let { characterDetails ->
                 characterDetails.episodes
-                    .map(episodesRemoteDataSource::getEpisode)
-                    .let {
-                        Single.zip(it) { episodes ->
-                            @Suppress("UNCHECKED_CAST")
-                            episodes.asList() as List<EpisodeModel>
+                    .map { episodeId ->
+                        episodesRemoteDataSource.getEpisode(episodeId).let { episodeResponse ->
+                            EpisodeModelImpl(
+                                episodeResponse.id,
+                                episodeResponse.name,
+                                episodeResponse.airDate,
+                                episodeResponse.number
+                            )
                         }
-                    }
-                    .map { episodes ->
-                        DomainCharacterDetailsModel(
+                    }.let { episodes ->
+                        CharacterDetailsModelImpl(
                             characterDetails.id,
                             characterDetails.name,
                             characterDetails.status,
@@ -57,7 +67,7 @@ class CharactersRepositoryImpl(
                             characterDetails.image,
                             characterDetails.origin.name,
                             characterDetails.location.name,
-                            episodes.map(EpisodeModel::toDomain)
+                            episodes
                         )
                     }
             }

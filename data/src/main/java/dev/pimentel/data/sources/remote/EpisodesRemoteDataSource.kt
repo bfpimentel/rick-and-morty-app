@@ -1,8 +1,7 @@
 package dev.pimentel.data.sources.remote
 
-import dev.pimentel.data.models.EpisodeModel
-import dev.pimentel.data.models.PagedResponse
-import io.reactivex.rxjava3.core.Single
+import dev.pimentel.data.dto.EpisodeDTO
+import dev.pimentel.data.dto.PagedResponseDTO
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -10,14 +9,14 @@ import retrofit2.http.Url
 interface EpisodesRemoteDataSource {
 
     @GET("episode/")
-    fun getEpisodes(
+    suspend fun getEpisodes(
         @Query("page") page: Int,
         @Query("name") name: String?,
         @Query("episode") number: String?
-    ): Single<PagedResponse<EpisodeModel>>
+    ): PagedResponseDTO<EpisodeDTO>
 
     @GET
-    fun getEpisode(
+    suspend fun getEpisode(
         @Url url: String
-    ): Single<EpisodeModel>
+    ): EpisodeDTO
 }

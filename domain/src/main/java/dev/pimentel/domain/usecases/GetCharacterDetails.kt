@@ -4,14 +4,13 @@ import dev.pimentel.domain.entities.CharacterDetails
 import dev.pimentel.domain.entities.Episode
 import dev.pimentel.domain.repositories.CharactersRepository
 import dev.pimentel.domain.usecases.shared.UseCase
-import io.reactivex.rxjava3.core.Single
 
 class GetCharacterDetails(
     private val charactersRepository: CharactersRepository
-) : UseCase<GetCharacterDetails.Params, Single<CharacterDetails>> {
+) : UseCase<GetCharacterDetails.Params, CharacterDetails> {
 
-    override fun invoke(params: Params): Single<CharacterDetails> =
-        charactersRepository.getCharacterDetails(params.id).map { detailsModel ->
+    override suspend fun invoke(params: Params): CharacterDetails =
+        charactersRepository.getCharacterDetails(params.id).let { detailsModel ->
             CharacterDetails(
                 detailsModel.id,
                 detailsModel.name,

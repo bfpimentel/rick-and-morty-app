@@ -1,33 +1,23 @@
 package dev.pimentel.rickandmorty.shared.helpers
 
 import dev.pimentel.domain.entities.Pageable
-import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
-import io.reactivex.rxjava3.core.Single
 
 interface PagingHelper<ResultType> {
     fun getCurrentPage(reset: Boolean): Int
 
-    fun Single<Pageable<ResultType>>.handlePaging(
-        onSuccess: (List<ResultType>) -> Unit,
-        onError: (Throwable) -> Unit
+    suspend fun handlePaging(
+        request: suspend () -> Pageable<ResultType>,
+        onSuccess: suspend (List<ResultType>) -> Unit,
+        onError: suspend (Throwable) -> Unit
     )
-
-    fun disposePaging()
 }
 
-class PagingHelperImpl<ResultType>(
-    schedulerProvider: SchedulerProvider
-) : PagingHelper<ResultType>,
-    DisposablesHolder by DisposablesHolderImpl(schedulerProvider) {
+class PagingHelperImpl<ResultType> : PagingHelper<ResultType> {
 
     private var currentPage: Int = DEFAULT_PAGE
     private var lastPage: Int = DEFAULT_LAST_PAGE
 
     private var allItems: MutableList<ResultType> = mutableListOf()
-
-    override fun disposePaging() {
-        disposeHolder()
-    }
 
     override fun getCurrentPage(reset: Boolean): Int {
         if (reset) {
@@ -42,24 +32,26 @@ class PagingHelperImpl<ResultType>(
         return currentPage
     }
 
-    override fun Single<Pageable<ResultType>>.handlePaging(
-        onSuccess: (List<ResultType>) -> Unit,
-        onError: (Throwable) -> Unit
+    override suspend fun handlePaging(
+        request: suspend () -> Pageable<ResultType>,
+        onSuccess: suspend (List<ResultType>) -> Unit,
+        onError: suspend (Throwable) -> Unit
     ) {
-        if (this@PagingHelperImpl.currentPage > this@PagingHelperImpl.lastPage) return
+        if (currentPage > lastPage) return
 
-        this.compose(observeOnUIAfterSingleResult())
-            .handle({ response ->
-                this@PagingHelperImpl.allItems.addAll(response.items)
-                this@PagingHelperImpl.lastPage = response.lastPage
+        try {
+            val response = request()
 
-                onSuccess(this@PagingHelperImpl.allItems)
-            }, { throwable ->
-                this@PagingHelperImpl.currentPage = DEFAULT_PAGE
-                this@PagingHelperImpl.lastPage = DEFAULT_LAST_PAGE
+            allItems.addAll(response.items)
+            lastPage = response.lastPage
 
-                onError(throwable)
-            })
+            onSuccess(allItems)
+        } catch (exception: Exception) {
+            currentPage = DEFAULT_PAGE
+            lastPage = DEFAULT_LAST_PAGE
+
+            onError(exception)
+        }
     }
 
     private companion object {

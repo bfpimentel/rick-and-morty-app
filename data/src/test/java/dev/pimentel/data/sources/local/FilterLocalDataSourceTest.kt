@@ -2,7 +2,7 @@ package dev.pimentel.data.sources.local
 
 import android.content.SharedPreferences
 import com.squareup.moshi.JsonAdapter
-import dev.pimentel.data.models.FilterModel
+import dev.pimentel.data.dto.FilterDTO
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 class FilterLocalDataSourceTest {
 
     private val sharedPreferences = mockk<SharedPreferences>(relaxed = true)
-    private val jsonAdapter = mockk<JsonAdapter<List<FilterModel>>>(relaxed = true)
+    private val jsonAdapter = mockk<JsonAdapter<List<FilterDTO>>>(relaxed = true)
     private lateinit var filterLocalDataSource: FilterLocalDataSource
 
     @Test
@@ -27,7 +27,7 @@ class FilterLocalDataSourceTest {
 
     @Test
     fun `should just save filter when shared preferences does not contain the key`() {
-        val filter = FilterModel("locationType1", FilterModel.Type.LOCATION_TYPE)
+        val filter = FilterDTO("locationType1", FilterDTO.Type.LOCATION_TYPE)
         val newFilterList = listOf(filter)
         val newFilterListJson = "json"
 
@@ -58,10 +58,10 @@ class FilterLocalDataSourceTest {
 
     @Test
     fun `should add filter and save when filter key exists and there are not equal old filters`() {
-        val filter = FilterModel("locationType1", FilterModel.Type.LOCATION_TYPE)
+        val filter = FilterDTO("locationType1", FilterDTO.Type.LOCATION_TYPE)
 
         val oldFilterListJson = "oldJson"
-        val oldFilterList = listOf(FilterModel("locationType2", FilterModel.Type.LOCATION_TYPE))
+        val oldFilterList = listOf(FilterDTO("locationType2", FilterDTO.Type.LOCATION_TYPE))
 
         val newFilterList = oldFilterList + filter
         val newFilterListJson = "newJson"
@@ -97,17 +97,17 @@ class FilterLocalDataSourceTest {
 
     @Test
     fun `should remove and add filter and save when filter key exists and there are equal old filters`() {
-        val filter = FilterModel("locationType1", FilterModel.Type.LOCATION_TYPE)
+        val filter = FilterDTO("locationType1", FilterDTO.Type.LOCATION_TYPE)
 
         val oldFilterListJson = "oldJson"
         val oldFilterList = listOf(
-            FilterModel("locationType1", FilterModel.Type.LOCATION_TYPE),
-            FilterModel("locationType2", FilterModel.Type.LOCATION_TYPE)
+            FilterDTO("locationType1", FilterDTO.Type.LOCATION_TYPE),
+            FilterDTO("locationType2", FilterDTO.Type.LOCATION_TYPE)
         )
 
         val newFilterList = listOf(
-            FilterModel("locationType2", FilterModel.Type.LOCATION_TYPE),
-            FilterModel("locationType1", FilterModel.Type.LOCATION_TYPE)
+            FilterDTO("locationType2", FilterDTO.Type.LOCATION_TYPE),
+            FilterDTO("locationType1", FilterDTO.Type.LOCATION_TYPE)
         )
         val newFilterListJson = "newJson"
 
@@ -142,7 +142,7 @@ class FilterLocalDataSourceTest {
 
     @Test
     fun `should just return empty list when key does not exist`() {
-        val type = FilterModel.Type.LOCATION_TYPE
+        val type = FilterDTO.Type.LOCATION_TYPE
 
         every { sharedPreferences.contains(FILTER_KEY) } returns false
 
@@ -159,16 +159,16 @@ class FilterLocalDataSourceTest {
 
     @Test
     fun `should just return shared preferences filtered list when key exists`() {
-        val type = FilterModel.Type.LOCATION_TYPE
+        val type = FilterDTO.Type.LOCATION_TYPE
 
         val listJson = "listJson"
         val allTypesList = listOf(
-            FilterModel("locationType2", FilterModel.Type.LOCATION_TYPE),
-            FilterModel("locationType1", FilterModel.Type.LOCATION_DIMENSION)
+            FilterDTO("locationType2", FilterDTO.Type.LOCATION_TYPE),
+            FilterDTO("locationType1", FilterDTO.Type.LOCATION_DIMENSION)
         )
 
         val filteredList = listOf(
-            FilterModel("locationType2", FilterModel.Type.LOCATION_TYPE)
+            FilterDTO("locationType2", FilterDTO.Type.LOCATION_TYPE)
         )
 
         every { sharedPreferences.contains(FILTER_KEY) } returns true

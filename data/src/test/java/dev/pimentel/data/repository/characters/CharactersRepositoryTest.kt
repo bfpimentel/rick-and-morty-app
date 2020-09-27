@@ -1,9 +1,9 @@
 package dev.pimentel.data.repository.characters
 
-import dev.pimentel.data.models.CharacterDetailsModel
-import dev.pimentel.data.models.CharacterModel
-import dev.pimentel.data.models.EpisodeModel
-import dev.pimentel.data.models.PagedResponse
+import dev.pimentel.data.dto.CharacterDetailsModel
+import dev.pimentel.data.dto.CharacterDTO
+import dev.pimentel.data.dto.EpisodeDTO
+import dev.pimentel.data.dto.PagedResponseDTO
 import dev.pimentel.data.repositories.characters.CharactersRepositoryImpl
 import dev.pimentel.data.sources.remote.CharactersRemoteDataSource
 import dev.pimentel.data.sources.remote.EpisodesRemoteDataSource
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 import dev.pimentel.domain.models.CharacterDetailsModel as DomainCharacterDetailsModel
 import dev.pimentel.domain.models.CharacterModel as DomainCharacterModel
 import dev.pimentel.domain.models.EpisodeModel as DomainEpisodeModel
-import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
+import dev.pimentel.domain.models.PagedResponseModel as DomainPagedResponse
 
 class CharactersRepositoryTest {
 
@@ -40,11 +40,11 @@ class CharactersRepositoryTest {
 
     @Test
     fun `should get characters`() {
-        val dataResponse = PagedResponse(
-            PagedResponse.Info(10),
+        val dataResponse = PagedResponseDTO(
+            PagedResponseDTO.Info(10),
             listOf(
-                CharacterModel(1, "name1", "status1", "image1"),
-                CharacterModel(2, "name2", "status2", "image2")
+                CharacterDTO(1, "name1", "status1", "image1"),
+                CharacterDTO(2, "name2", "status2", "image2")
             )
         )
 
@@ -85,9 +85,9 @@ class CharactersRepositoryTest {
         val dataEpisodeUrl2 = "episode2"
         val dataEpisodeUrl3 = "episode3"
 
-        val dataEpisode1 = EpisodeModel(1, "episode1", "airDate1", "number1")
-        val dataEpisode2 = EpisodeModel(2, "episode2", "airDate2", "number2")
-        val dataEpisode3 = EpisodeModel(3, "episode3", "airDate3", "number3")
+        val dataEpisode1 = EpisodeDTO(1, "episode1", "airDate1", "number1")
+        val dataEpisode2 = EpisodeDTO(2, "episode2", "airDate2", "number2")
+        val dataEpisode3 = EpisodeDTO(3, "episode3", "airDate3", "number3")
 
         val dataResponse = CharacterDetailsModel(
             id,

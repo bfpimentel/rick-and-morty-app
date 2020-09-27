@@ -1,9 +1,8 @@
 package dev.pimentel.domain.models
 
-data class FilterModel(
-    val value: String,
+interface FilterModel {
+    val value: String
     val type: Type
-) {
 
     enum class Type {
         CHARACTER_NAME, CHARACTER_SPECIES,
