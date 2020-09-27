@@ -2,41 +2,11 @@ package dev.pimentel.rickandmorty.presentation.filter.dto
 
 import androidx.annotation.StringRes
 
-sealed class FilterState(
-    @StringRes val titleRes: Int,
+data class FilterState(
+    @StringRes val titleRes: Int? = null,
     val list: List<String> = emptyList(),
-    val clearText: Unit? = null,
-    val clearSelection: Unit? = null,
-    val canApply: Boolean = false
-) {
-
-    class Title(
-        titleRes: Int
-    ) : FilterState(titleRes = titleRes)
-
-    class Listing(
-        titleRes: Int,
-        list: List<String>
-    ) : FilterState(
-        titleRes = titleRes,
-        list = list
-    )
-
-    class ClearText(
-        titleRes: Int,
-        canApply: Boolean
-    ) : FilterState(
-        titleRes = titleRes,
-        canApply = canApply,
-        clearText = Unit
-    )
-
-    class ClearSelection(
-        titleRes: Int,
-        canApply: Boolean
-    ) : FilterState(
-        titleRes = titleRes,
-        canApply = canApply,
-        clearSelection = Unit
-    )
-}
+    val clearText: Boolean = false,
+    val clearSelection: Boolean = false,
+    val canApply: Boolean = false,
+    val result: FilterResult? = null
+)

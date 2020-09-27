@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -41,10 +42,9 @@ class CharactersViewModel @ViewModelInject constructor(
     private val getErrorMessage: GetErrorMessage,
     private val navigator: Navigator,
     dispatchersProvider: DispatchersProvider
-) : ViewModel(),
+) : ViewModel(), CharactersContract.ViewModel,
     Reducer<CharactersState> by ReducerImpl(CharactersState()),
-    PagingHelper<Character> by PagingHelperImpl(),
-    CharactersContract.ViewModel {
+    PagingHelper<Character> by PagingHelperImpl() {
 
     private var lastFilter = CharactersFilter.NO_FILTER
 
@@ -110,10 +110,20 @@ class CharactersViewModel @ViewModelInject constructor(
                 CharactersDetailsFragment.CHARACTERS_DETAILS_ARGUMENT_KEY to details
             )
         } catch (exception: Exception) {
+            Timber.d(exception)
             val errorMessage = getErrorMessage(GetErrorMessage.Params(exception))
             updateState {
                 copy(detailsErrorMessage = errorMessage)
             }
+        }
+    }
+
+    private suspend fun handleFilterIconChange(filter: CharactersFilter) {
+        updateState {
+            copy(
+                filterIcon = if (filter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
+                else R.drawable.ic_filter_default
+            )
         }
     }
 
@@ -122,14 +132,5 @@ class CharactersViewModel @ViewModelInject constructor(
             R.id.characters_to_characters_filter,
             CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
         )
-    }
-
-    private fun handleFilterIconChange(filter: CharactersFilter) {
-        updateState {
-            copy(
-                filterIcon = if (filter != CharactersFilter.NO_FILTER) R.drawable.ic_filter_selected
-                else R.drawable.ic_filter_default
-            )
-        }
     }
 }

@@ -1,18 +1,11 @@
 package dev.pimentel.rickandmorty.presentation.episodes.dto
 
-sealed class EpisodesState(
+import androidx.annotation.DrawableRes
+import dev.pimentel.rickandmorty.R
+
+data class EpisodesState(
     val episodes: List<EpisodesItem> = emptyList(),
+    @DrawableRes val filterIcon: Int = R.drawable.ic_filter_default,
     val scrollToTheTop: Unit? = null,
     val errorMessage: String? = null
-) {
-
-    class Empty : EpisodesState(scrollToTheTop = Unit)
-
-    class Success(
-        episodes: List<EpisodesItem>
-    ) : EpisodesState(episodes = episodes)
-
-    class Error(
-        errorMessage: String
-    ) : EpisodesState(errorMessage = errorMessage)
-}
+)

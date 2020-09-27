@@ -188,6 +188,7 @@ class CharactersFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.error_dialog_title)
             .setMessage(errorMessage)
+            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
             .create()
             .show()
     }

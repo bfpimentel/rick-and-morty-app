@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
-fun <T> Flow<T>.throttleFirst(windowDuration: Long): Flow<T> {
+fun <T> Flow<T>.throttleFirst(windowDuration: Long = 500L): Flow<T> {
     var job: Job = Job().apply { complete() }
 
     return onCompletion { job.cancel() }.run {

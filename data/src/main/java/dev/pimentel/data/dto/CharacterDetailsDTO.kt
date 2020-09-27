@@ -16,12 +16,12 @@ data class CharacterDetailsDTO(
 ) {
 
     data class OriginDTO(
-        val name: String,
-        val url: String
+        @Json(name = "name") val name: String,
+        @Json(name = "url") val url: String
     )
 
     data class LocationDTO(
-        val name: String,
-        val url: String
+        @Json(name = "name") val name: String,
+        @Json(name = "url") val url: String
     )
 }

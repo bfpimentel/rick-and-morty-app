@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
@@ -15,7 +16,9 @@ import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.presentation.filter.FilterDialog
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class EpisodesFilterFragment : BottomSheetDialogFragment() {
 
@@ -38,15 +41,15 @@ class EpisodesFilterFragment : BottomSheetDialogFragment() {
         binding.apply {
             viewModel.episodesFilterState().observe(
                 viewLifecycleOwner,
-                Observer { state ->
+                { state ->
                     name.text = state.name
                     number.text = state.number
                     toolbar.menu.findItem(R.id.clear).isVisible = state.canClear
                     apply.isEnabled = state.canApplyFilter
                 })
 
-            viewModel.filteringResult().observe(viewLifecycleOwner, Observer { filter ->
-                parentFragmentManager.setFragmentResult(
+            viewModel.filteringResult().observe(viewLifecycleOwner, { filter ->
+                setFragmentResult(
                     EPISODES_RESULT_LISTENER_KEY,
                     bundleOf(EPISODES_FILTER_RESULT_KEY to filter)
                 )
@@ -68,9 +71,9 @@ class EpisodesFilterFragment : BottomSheetDialogFragment() {
             apply.setOnClickListener { viewModel.getFilter() }
         }
 
-        parentFragmentManager.setFragmentResultListener(
+        setFragmentResultListener(
             FilterDialog.FILTER_RESULT_LISTENER_KEY,
-            viewLifecycleOwner
+//            viewLifecycleOwner
         ) { _, bundle ->
             viewModel.setTextFilter(
                 bundle[FilterDialog.FILTER_RESULT_KEY] as FilterResult

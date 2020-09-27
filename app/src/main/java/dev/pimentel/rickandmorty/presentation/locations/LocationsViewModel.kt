@@ -1,91 +1,104 @@
 package dev.pimentel.rickandmorty.presentation.locations
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.pimentel.domain.entities.Location
 import dev.pimentel.domain.usecases.GetLocations
 import dev.pimentel.rickandmorty.R
+import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsIntent
 import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsState
 import dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
 import dev.pimentel.rickandmorty.presentation.locations.mappers.LocationsItemMapper
+import dev.pimentel.rickandmorty.shared.dispatchersprovider.DispatchersProvider
 import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
-import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
-import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
+import dev.pimentel.rickandmorty.shared.extensions.throttleFirst
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
+import dev.pimentel.rickandmorty.shared.mvi.Reducer
+import dev.pimentel.rickandmorty.shared.mvi.ReducerImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
-import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 class LocationsViewModel @ViewModelInject constructor(
     private val getLocations: GetLocations,
     private val locationsItemMapper: LocationsItemMapper,
     private val getErrorMessage: GetErrorMessage,
     private val navigator: Navigator,
-    schedulerProvider: SchedulerProvider
-) : ViewModel(),
-    DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
-    PagingHelper<Location> by PagingHelperImpl(schedulerProvider),
-    LocationsContract.ViewModel {
+    dispatchersProvider: DispatchersProvider
+) : ViewModel(), LocationsContract.ViewModel,
+    PagingHelper<Location> by PagingHelperImpl(),
+    Reducer<LocationsState> by ReducerImpl(LocationsState()) {
 
     private var lastFilter = LocationsFilter.NO_FILTER
 
-    private val locationsState = MutableLiveData<LocationsState>()
-    private val filterIcon = MutableLiveData<Int>()
+    override val intentChannel: Channel<LocationsIntent> = Channel(Channel.UNLIMITED)
 
-    override fun locationsState(): LiveData<LocationsState> = locationsState
-    override fun filterIcon(): LiveData<Int> = filterIcon
-
-    override fun onCleared() {
-        super.onCleared()
-        disposeHolder()
-        disposePaging()
+    init {
+        viewModelScope.launch(dispatchersProvider.io) {
+            intentChannel.consumeAsFlow().throttleFirst().collect { intent ->
+                when (intent) {
+                    is LocationsIntent.GetLocations -> getLocations(intent.filter)
+                    is LocationsIntent.GetLocationsWithLastFilter -> getLocations(lastFilter)
+                    is LocationsIntent.OpenFilters -> openFilters()
+                }
+            }
+        }
     }
 
-    override fun getLocations(filter: LocationsFilter) {
+    override fun state(): StateFlow<LocationsState> = mutableState
+
+    private suspend fun getLocations(filter: LocationsFilter) {
         handleFilterIconChange(filter)
 
         val reset = lastFilter != filter
         if (reset) {
             this.lastFilter = filter
-            locationsState.postValue(LocationsState.Empty())
+            updateState { copy(scrollToTheTop = Unit, locations = emptyList()) }
         }
 
-        getLocations(
-            GetLocations.Params(
-                getCurrentPage(reset),
-                filter.name,
-                filter.type,
-                filter.dimension
-            )
-        ).handlePaging({ result ->
-            locationsState.postValue(
-                LocationsState.Success(result.map(locationsItemMapper::get))
-            )
-        }, { throwable ->
-            locationsState.postValue(
-                LocationsState.Error(getErrorMessage(GetErrorMessage.Params(throwable)))
-            )
-        })
-    }
-
-    override fun getLocationsWithLastFilter() {
-        getLocations(lastFilter)
-    }
-
-    override fun openFilters() {
-        navigator.navigate(
-            R.id.locations_to_locations_filter,
-            LocationsFilterFragment.LOCATIONS_FILTER_ARGUMENT_KEY to lastFilter
+        handlePaging(
+            request = {
+                getLocations(
+                    GetLocations.Params(
+                        getCurrentPage(reset),
+                        filter.name,
+                        filter.type,
+                        filter.dimension
+                    )
+                )
+            },
+            onSuccess = { result ->
+                val locations = result.map(locationsItemMapper::get)
+                updateState { copy(locations = locations) }
+            },
+            onError = { error ->
+                val errorMessage = getErrorMessage(GetErrorMessage.Params(error))
+                updateState { copy(errorMessage = errorMessage) }
+            }
         )
     }
 
-    private fun handleFilterIconChange(filter: LocationsFilter) {
-        filterIcon.postValue(
-            if (filter != LocationsFilter.NO_FILTER) R.drawable.ic_filter_selected
-            else R.drawable.ic_filter_default
+    private suspend fun handleFilterIconChange(filter: LocationsFilter) {
+        updateState {
+            copy(
+                filterIcon = if (filter != LocationsFilter.NO_FILTER) R.drawable.ic_filter_selected
+                else R.drawable.ic_filter_default
+            )
+        }
+    }
+
+    private fun openFilters() {
+        navigator.navigate(
+            R.id.locations_to_locations_filter,
+            LocationsFilterFragment.LOCATIONS_FILTER_ARGUMENT_KEY to lastFilter
         )
     }
 }

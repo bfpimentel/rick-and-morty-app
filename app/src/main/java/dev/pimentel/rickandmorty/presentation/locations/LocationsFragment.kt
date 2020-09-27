@@ -5,17 +5,23 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.LocationsFragmentBinding
+import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsIntent
 import dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
 import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
+import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class LocationsFragment : Fragment(R.layout.locations_fragment) {
 
@@ -33,29 +39,25 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
         bindInputs()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        endOfScrollListener.dispose()
-    }
 
     private fun bindOutputs() {
-        binding.apply {
-            viewModel.locationsState().observe(viewLifecycleOwner, Observer { state ->
-                adapter.submitList(state.locations)
-                state.scrollToTheTop?.also { locationsList.scrollToPosition(0) }
-                state.errorMessage?.also {
-                    errorContainer.visibility = View.VISIBLE
-                    errorMessage.text = state.errorMessage
-                    locationsList.visibility = View.GONE
-                } ?: run {
-                    errorContainer.visibility = View.GONE
-                    locationsList.visibility = View.VISIBLE
-                }
-            })
+        lifecycleScope.launch {
+            viewModel.state().collect { state ->
+                binding.apply {
+                    adapter.submitList(state.locations)
+                    state.scrollToTheTop?.also { locationsList.scrollToPosition(0) }
+                    state.errorMessage?.also {
+                        errorContainer.visibility = View.VISIBLE
+                        errorMessage.text = state.errorMessage
+                        locationsList.visibility = View.GONE
+                    } ?: run {
+                        errorContainer.visibility = View.GONE
+                        locationsList.visibility = View.VISIBLE
+                    }
 
-            viewModel.filterIcon().observe(viewLifecycleOwner, Observer { icon ->
-                toolbar.menu.findItem(R.id.filter).setIcon(icon)
-            })
+                    toolbar.menu.findItem(R.id.filter).setIcon(state.filterIcon)
+                }
+            }
         }
     }
 
@@ -69,7 +71,7 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
             layoutManager,
             { false },
             { false },
-            viewModel::getLocationsWithLastFilter
+            { viewModel.intentChannel.offer(LocationsIntent.GetLocationsWithLastFilter) }
         )
 
         binding.apply {
@@ -80,21 +82,25 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
             }
 
             toolbar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
-                viewModel.openFilters()
+                viewModel.intentChannel.offer(LocationsIntent.OpenFilters)
                 return@setOnMenuItemClickListener true
             }
         }
 
-        parentFragmentManager.setFragmentResultListener(
+        setFragmentResultListener(
             LocationsFilterFragment.LOCATIONS_RESULT_LISTENER_KEY,
-            viewLifecycleOwner
+//            viewLifecycleOwner
         ) { _, bundle ->
-            viewModel.getLocations(
-                bundle[LocationsFilterFragment.LOCATIONS_FILTER_RESULT_KEY] as LocationsFilter
+            viewModel.intentChannel.offer(
+                LocationsIntent.GetLocations(
+                    bundle[LocationsFilterFragment.LOCATIONS_FILTER_RESULT_KEY] as LocationsFilter
+                )
             )
         }
 
-        viewModel.getLocations(LocationsFilter.NO_FILTER)
+        viewModel.intentChannel.offer(
+            LocationsIntent.GetLocations(LocationsFilter.NO_FILTER)
+        )
     }
 
     private companion object {

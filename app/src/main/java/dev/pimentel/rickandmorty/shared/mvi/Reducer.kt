@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @ExperimentalCoroutinesApi
 interface Reducer<T> {
     val mutableState: MutableStateFlow<T>
-    fun updateState(handler: T.() -> T)
+    suspend fun updateState(handler: suspend T.() -> T)
 }
 
 @ExperimentalCoroutinesApi
@@ -16,7 +16,7 @@ class ReducerImpl<T>(
 
     override val mutableState = MutableStateFlow(initialState)
 
-    override fun updateState(handler: T.() -> T) {
+    override suspend fun updateState(handler: suspend T.() -> T) {
         mutableState.value = handler(mutableState.value)
     }
 }
