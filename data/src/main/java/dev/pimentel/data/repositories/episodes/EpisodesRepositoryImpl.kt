@@ -1,29 +1,36 @@
 package dev.pimentel.data.repositories.episodes
 
-import dev.pimentel.data.models.EpisodeModel
+import dev.pimentel.data.models.EpisodeModelImpl
+import dev.pimentel.data.models.PagedResponseModelImpl
 import dev.pimentel.data.sources.remote.EpisodesRemoteDataSource
+import dev.pimentel.domain.models.EpisodeModel
+import dev.pimentel.domain.models.PagedResponseModel
 import dev.pimentel.domain.repositories.EpisodesRepository
-import io.reactivex.rxjava3.core.Single
-import dev.pimentel.domain.models.EpisodeModel as DomainEpisodeModel
-import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
 
 class EpisodesRepositoryImpl(
     private val remoteDataSource: EpisodesRemoteDataSource
 ) : EpisodesRepository {
 
-    override fun getEpisodes(
+    override suspend fun getEpisodes(
         page: Int,
         name: String?,
         number: String?
-    ): Single<DomainPagedResponse<DomainEpisodeModel>> =
+    ): PagedResponseModel<EpisodeModel> =
         remoteDataSource.getEpisodes(
             page,
             name,
             number
-        ).map { response ->
-            DomainPagedResponse(
+        ).let { response ->
+            PagedResponseModelImpl(
                 response.info.pages,
-                response.results.map(EpisodeModel::toDomain)
+                response.results.map { episodeResponse ->
+                    EpisodeModelImpl(
+                        episodeResponse.id,
+                        episodeResponse.name,
+                        episodeResponse.airDate,
+                        episodeResponse.number,
+                    )
+                }
             )
         }
 }

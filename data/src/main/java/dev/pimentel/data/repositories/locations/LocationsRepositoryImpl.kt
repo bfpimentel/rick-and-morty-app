@@ -1,31 +1,38 @@
 package dev.pimentel.data.repositories.locations
 
-import dev.pimentel.data.models.LocationModel
+import dev.pimentel.data.models.LocationModelImpl
+import dev.pimentel.data.models.PagedResponseModelImpl
 import dev.pimentel.data.sources.remote.LocationsRemoteDataSource
+import dev.pimentel.domain.models.LocationModel
+import dev.pimentel.domain.models.PagedResponseModel
 import dev.pimentel.domain.repositories.LocationsRepository
-import io.reactivex.rxjava3.core.Single
-import dev.pimentel.domain.models.LocationModel as DomainLocationModel
-import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
 
 class LocationsRepositoryImpl(
     private val remoteDataSource: LocationsRemoteDataSource
 ) : LocationsRepository {
 
-    override fun getLocations(
+    override suspend fun getLocations(
         page: Int,
         name: String?,
         type: String?,
         dimension: String?
-    ): Single<DomainPagedResponse<DomainLocationModel>> =
+    ): PagedResponseModel<LocationModel> =
         remoteDataSource.getLocations(
             page,
             name,
             type,
             dimension
-        ).map { response ->
-            DomainPagedResponse(
+        ).let { response ->
+            PagedResponseModelImpl(
                 response.info.pages,
-                response.results.map(LocationModel::toDomain)
+                response.results.map { locationResponse ->
+                    LocationModelImpl(
+                        locationResponse.id,
+                        locationResponse.name,
+                        locationResponse.type,
+                        locationResponse.dimension
+                    )
+                }
             )
         }
 }

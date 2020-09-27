@@ -4,18 +4,17 @@ import dev.pimentel.domain.entities.Episode
 import dev.pimentel.domain.entities.Pageable
 import dev.pimentel.domain.repositories.EpisodesRepository
 import dev.pimentel.domain.usecases.shared.UseCase
-import io.reactivex.rxjava3.core.Single
 
 class GetEpisodes(
     private val episodesRepository: EpisodesRepository
-) : UseCase<GetEpisodes.Params, Single<Pageable<Episode>>> {
+) : UseCase<GetEpisodes.Params, Pageable<Episode>> {
 
-    override fun invoke(params: Params): Single<Pageable<Episode>> =
+    override suspend fun invoke(params: Params): Pageable<Episode> =
         episodesRepository.getEpisodes(
             params.page,
             params.name,
             params.number
-        ).map { pagedResponse ->
+        ).let { pagedResponse ->
             pagedResponse.results.map { episodeModel ->
                 Episode(
                     episodeModel.id,

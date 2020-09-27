@@ -1,6 +1,6 @@
-package dev.pimentel.data.models
+package dev.pimentel.data.dto
 
-data class FilterModel(
+data class FilterDTO(
     val value: String,
     val type: Type
 ) {

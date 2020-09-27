@@ -11,7 +11,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pimentel.data.R
-import dev.pimentel.data.models.FilterModel
+import dev.pimentel.data.dto.FilterDTO
 import dev.pimentel.data.repositories.characters.CharactersRepositoryImpl
 import dev.pimentel.data.repositories.episodes.EpisodesRepositoryImpl
 import dev.pimentel.data.repositories.filter.FilterRepositoryImpl
@@ -30,7 +30,6 @@ import dev.pimentel.domain.repositories.LocationsRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -69,7 +68,6 @@ object DataModules {
             .baseUrl(apiUrl)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
     }
 
@@ -103,7 +101,7 @@ object DataModules {
         sharedPreferences: SharedPreferences,
         moshi: Moshi
     ): FilterLocalDataSource {
-        val filterListType = Types.newParameterizedType(List::class.java, FilterModel::class.java)
+        val filterListType = Types.newParameterizedType(List::class.java, FilterDTO::class.java)
 
         return FilterLocalDataSourceImpl(
             sharedPreferences,

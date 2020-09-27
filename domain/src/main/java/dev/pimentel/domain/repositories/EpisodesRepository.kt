@@ -1,13 +1,12 @@
 package dev.pimentel.domain.repositories
 
 import dev.pimentel.domain.models.EpisodeModel
-import dev.pimentel.domain.models.PagedResponse
-import io.reactivex.rxjava3.core.Single
+import dev.pimentel.domain.models.PagedResponseModel
 
 interface EpisodesRepository {
-    fun getEpisodes(
+    suspend fun getEpisodes(
         page: Int,
         name: String?,
         number: String?
-    ): Single<PagedResponse<EpisodeModel>>
+    ): PagedResponseModel<EpisodeModel>
 }

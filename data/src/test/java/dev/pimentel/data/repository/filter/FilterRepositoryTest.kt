@@ -1,6 +1,6 @@
 package dev.pimentel.data.repository.filter
 
-import dev.pimentel.data.models.FilterModel
+import dev.pimentel.data.dto.FilterDTO
 import dev.pimentel.data.repositories.filter.FilterRepositoryImpl
 import dev.pimentel.data.repositories.filter.FilterTypeModelMapper
 import dev.pimentel.data.sources.local.FilterLocalDataSource
@@ -36,9 +36,9 @@ class FilterRepositoryTest {
     @Test
     fun `should save filter and then just complete`() {
         val domainFilter = DomainFilterModel("", DomainFilterModel.Type.LOCATION_TYPE)
-        val dataFilter = FilterModel("", FilterModel.Type.LOCATION_TYPE)
+        val dataFilter = FilterDTO("", FilterDTO.Type.LOCATION_TYPE)
 
-        every { filterTypeModelMapper.mapToData(domainFilter.type) } returns FilterModel.Type.LOCATION_TYPE
+        every { filterTypeModelMapper.mapToData(domainFilter.type) } returns FilterDTO.Type.LOCATION_TYPE
         every { filterLocalDataSource.saveFilter(dataFilter) } returns Completable.complete()
 
         filterRepository.saveFilter(domainFilter)
@@ -56,12 +56,12 @@ class FilterRepositoryTest {
     @Test
     fun `should get all filters by type and map them to a string list`() {
         val domainType = DomainFilterModel.Type.LOCATION_TYPE
-        val dataType = FilterModel.Type.LOCATION_TYPE
+        val dataType = FilterDTO.Type.LOCATION_TYPE
 
         val list = listOf(
-            FilterModel("value1", dataType),
-            FilterModel("value2", dataType),
-            FilterModel("value3", dataType)
+            FilterDTO("value1", dataType),
+            FilterDTO("value2", dataType),
+            FilterDTO("value3", dataType)
         )
 
         every { filterTypeModelMapper.mapToData(domainType) } returns dataType

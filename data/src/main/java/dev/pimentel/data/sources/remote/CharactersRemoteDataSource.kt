@@ -1,9 +1,8 @@
 package dev.pimentel.data.sources.remote
 
-import dev.pimentel.data.models.CharacterDetailsModel
-import dev.pimentel.data.models.CharacterModel
-import dev.pimentel.data.models.PagedResponse
-import io.reactivex.rxjava3.core.Single
+import dev.pimentel.data.dto.CharacterDTO
+import dev.pimentel.data.dto.CharacterDetailsDTO
+import dev.pimentel.data.dto.PagedResponseDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -11,16 +10,16 @@ import retrofit2.http.Query
 interface CharactersRemoteDataSource {
 
     @GET("character/")
-    fun getCharacters(
+    suspend fun getCharacters(
         @Query("page") page: Int,
         @Query("name") name: String?,
         @Query("species") species: String?,
         @Query("status") status: String?,
         @Query("gender") gender: String?
-    ): Single<PagedResponse<CharacterModel>>
+    ): PagedResponseDTO<CharacterDTO>
 
     @GET("character/{id}")
-    fun getCharacterDetails(
+    suspend fun getCharacterDetails(
         @Path("id") id: Int
-    ): Single<CharacterDetailsModel>
+    ): CharacterDetailsDTO
 }

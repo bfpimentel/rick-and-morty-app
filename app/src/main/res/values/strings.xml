@@ -12,6 +12,7 @@
 
     <!-- Common -->
     <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_button">OK</string>
     <!-- Common -->
 
     <!-- Bottom Menu -->

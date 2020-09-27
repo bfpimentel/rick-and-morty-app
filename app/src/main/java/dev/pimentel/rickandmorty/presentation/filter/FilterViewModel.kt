@@ -1,104 +1,117 @@
 package dev.pimentel.rickandmorty.presentation.filter
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.pimentel.domain.usecases.GetFilters
 import dev.pimentel.domain.usecases.SaveFilter
+import dev.pimentel.rickandmorty.presentation.filter.dto.FilterIntent
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterResult
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterState
 import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapper
-import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolder
-import dev.pimentel.rickandmorty.shared.helpers.DisposablesHolderImpl
+import dev.pimentel.rickandmorty.shared.dispatchersprovider.DispatchersProvider
+import dev.pimentel.rickandmorty.shared.extensions.throttleFirst
+import dev.pimentel.rickandmorty.shared.mvi.Reducer
+import dev.pimentel.rickandmorty.shared.mvi.ReducerImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
-import dev.pimentel.rickandmorty.shared.schedulerprovider.SchedulerProvider
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 class FilterViewModel @ViewModelInject constructor(
     private val filterTypeMapper: FilterTypeMapper,
     private val getFilters: GetFilters,
     private val saveFilter: SaveFilter,
     private val navigator: Navigator,
-    schedulerProvider: SchedulerProvider
-) : ViewModel(),
-    DisposablesHolder by DisposablesHolderImpl(schedulerProvider),
-    FilterContract.ViewModel {
+    dispatchersProvider: DispatchersProvider
+) : ViewModel(), FilterContract.ViewModel, Reducer<FilterState> by ReducerImpl(FilterState()) {
 
     private lateinit var filterType: FilterType
 
     private var list: List<String>? = null
     private var filterValue: String? = null
 
-    private val filterState = MutableLiveData<FilterState>()
-    private val filterResult = MutableLiveData<FilterResult>()
+    override val intentChannel: Channel<FilterIntent> = Channel(Channel.UNLIMITED)
 
-    override fun filterState(): LiveData<FilterState> = filterState
-    override fun filterResult(): LiveData<FilterResult> = filterResult
+    override fun state(): StateFlow<FilterState> = mutableState
 
-    override fun onCleared() {
-        super.onCleared()
-        disposeHolder()
+    init {
+        viewModelScope.launch(dispatchersProvider.io) {
+            intentChannel.consumeAsFlow().throttleFirst().collect { intent ->
+                when (intent) {
+                    is FilterIntent.Initialize -> initializeWithFilterType(intent.filterType)
+                    is FilterIntent.SetFilterFromText -> setFilterFromText(intent.text)
+                    is FilterIntent.SetFilterFromSelection -> setFilterFromSelection(intent.index)
+                    is FilterIntent.GetFilter -> getFilter()
+                    is FilterIntent.Close -> navigator.pop()
+                }
+            }
+        }
     }
 
-    override fun initializeWithFilterType(filterType: FilterType) {
+    private suspend fun initializeWithFilterType(filterType: FilterType) {
         this.filterType = filterType
-        filterState.postValue(FilterState.Title(filterType.titleRes))
 
-        getFilters(GetFilters.Params(filterTypeMapper.mapToDomain(filterType)))
-            .compose(observeOnUIAfterSingleResult())
-            .handle({ list ->
-                this.list = list
+        updateState { copy(titleRes = filterType.titleRes) }
 
-                filterState.postValue(
-                    FilterState.Listing(
-                        filterType.titleRes,
-                        list
-                    )
-                )
-            }, Timber::d)
+        try {
+            val filters = getFilters(
+                GetFilters.Params(filterTypeMapper.mapToDomain(filterType))
+            )
+
+            this.list = filters
+
+            updateState { copy(list = filters) }
+        } catch (exception: Exception) {
+            Timber.d(exception)
+        }
     }
 
-    override fun setFilterFromText(text: String) {
+    private suspend fun setFilterFromText(text: String) {
         filterValue = text
-        filterState.postValue(
-            FilterState.ClearSelection(
-                filterType.titleRes,
-                !filterValue.isNullOrBlank()
+        updateState {
+            copy(
+                clearSelection = !filterValue.isNullOrBlank()
             )
-        )
+        }
     }
 
-    override fun setFilterFromSelection(index: Int) {
+    private suspend fun setFilterFromSelection(index: Int) {
         filterValue = list?.getOrNull(index)
-        filterState.postValue(
-            FilterState.ClearText(
-                filterType.titleRes,
-                !filterValue.isNullOrBlank()
+        updateState {
+            copy(
+                clearText = !filterValue.isNullOrBlank()
             )
-        )
+        }
     }
 
-    override fun getFilter() {
-        saveFilter(
-            SaveFilter.Params(
-                filterValue!!,
-                filterTypeMapper.mapToDomain(filterType)
+    private suspend fun getFilter() {
+        try {
+            saveFilter(
+                SaveFilter.Params(
+                    filterValue!!,
+                    filterTypeMapper.mapToDomain(filterType)
+                )
             )
-        ).compose(observeOnUIAfterCompletableResult())
-            .handle({
-                filterResult.postValue(
-                    FilterResult(
+
+            updateState {
+                copy(
+                    result = FilterResult(
                         filterType,
                         filterValue!!
                     )
                 )
-                navigator.pop()
-            }, Timber::d)
-    }
+            }
 
-    override fun close() {
-        navigator.pop()
+            navigator.pop()
+        } catch (exception: Exception) {
+            Timber.d(exception)
+        }
     }
 }

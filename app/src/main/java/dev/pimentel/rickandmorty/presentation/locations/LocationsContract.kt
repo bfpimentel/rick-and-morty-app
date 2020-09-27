@@ -1,17 +1,12 @@
 package dev.pimentel.rickandmorty.presentation.locations
 
-import androidx.lifecycle.LiveData
+import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsIntent
 import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsState
-import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
+import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 interface LocationsContract {
 
-    interface ViewModel {
-        fun getLocations(filter: LocationsFilter)
-        fun getLocationsWithLastFilter()
-        fun openFilters()
-
-        fun locationsState(): LiveData<LocationsState>
-        fun filterIcon(): LiveData<Int>
-    }
+    interface ViewModel : ReactiveViewModel<LocationsIntent, LocationsState>
 }

@@ -1,7 +1,7 @@
 package dev.pimentel.data.repository.locations
 
-import dev.pimentel.data.models.LocationModel
-import dev.pimentel.data.models.PagedResponse
+import dev.pimentel.data.dto.LocationDTO
+import dev.pimentel.data.dto.PagedResponseDTO
 import dev.pimentel.data.repositories.locations.LocationsRepositoryImpl
 import dev.pimentel.data.sources.remote.LocationsRemoteDataSource
 import dev.pimentel.domain.repositories.LocationsRepository
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import dev.pimentel.domain.models.LocationModel as DomainLocationModel
-import dev.pimentel.domain.models.PagedResponse as DomainPagedResponse
+import dev.pimentel.domain.models.PagedResponseModel as DomainPagedResponse
 
 class LocationsRepositoryTest {
 
@@ -31,11 +31,11 @@ class LocationsRepositoryTest {
 
     @Test
     fun `should get locations`() {
-        val dataResponse = PagedResponse(
-            PagedResponse.Info(10),
+        val dataResponse = PagedResponseDTO(
+            PagedResponseDTO.Info(10),
             listOf(
-                LocationModel(1, "name1", "type1", "dimension1"),
-                LocationModel(2, "name2", "type2", "dimension2")
+                LocationDTO(1, "name1", "type1", "dimension1"),
+                LocationDTO(2, "name2", "type2", "dimension2")
             )
         )
 
