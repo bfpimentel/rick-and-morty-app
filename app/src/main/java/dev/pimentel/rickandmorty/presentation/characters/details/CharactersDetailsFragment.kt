@@ -19,7 +19,7 @@ import dev.pimentel.rickandmorty.shared.extensions.composeViewFor
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CharactersDetailsFragment : Fragment(R.layout.characters_details_fragment) {
+class CharactersDetailsFragment : Fragment() {
 
     @Inject
     lateinit var adapter: CharactersDetailsEpisodesAdapter

@@ -4,9 +4,9 @@ import androidx.annotation.StringRes
 
 data class FilterState(
     @StringRes val titleRes: Int? = null,
-    val list: List<String> = emptyList(),
-    val clearText: Boolean = false,
-    val clearSelection: Boolean = false,
+    val filters: List<String> = emptyList(),
+    val selectedItemIndex: Int? = null,
+    val inputText: String = "",
     val canApply: Boolean = false,
     val result: FilterResult? = null
 )

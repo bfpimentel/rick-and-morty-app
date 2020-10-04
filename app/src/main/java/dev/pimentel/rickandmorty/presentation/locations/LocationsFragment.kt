@@ -12,10 +12,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.LocationsFragmentBinding
 import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsIntent
+import dev.pimentel.rickandmorty.presentation.locations.dto.LocationsState
 import dev.pimentel.rickandmorty.presentation.locations.filter.LocationsFilterFragment
 import dev.pimentel.rickandmorty.presentation.locations.filter.dto.LocationsFilter
 import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
+import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -29,7 +31,8 @@ class LocationsFragment : Fragment(R.layout.locations_fragment) {
     lateinit var adapter: LocationsAdapter
 
     private val binding by lifecycleBinding(LocationsFragmentBinding::bind)
-    private val viewModel: LocationsContract.ViewModel by viewModels<LocationsViewModel>()
+    private val viewModel: ReactiveViewModel<LocationsIntent, LocationsState>
+            by viewModels<LocationsViewModel>()
 
     private lateinit var endOfScrollListener: EndOfScrollListener<StaggeredGridLayoutManager>
 

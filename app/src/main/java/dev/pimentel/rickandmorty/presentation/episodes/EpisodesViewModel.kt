@@ -16,6 +16,7 @@ import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.extensions.throttleFirst
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
+import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
 import dev.pimentel.rickandmorty.shared.mvi.Reducer
 import dev.pimentel.rickandmorty.shared.mvi.ReducerImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
@@ -33,7 +34,7 @@ class EpisodesViewModel @ViewModelInject constructor(
     private val getErrorMessage: GetErrorMessage,
     private val navigator: Navigator,
     dispatchersProvider: DispatchersProvider
-) : ViewModel(), EpisodesContract.ViewModel,
+) : ViewModel(), ReactiveViewModel<EpisodesIntent, EpisodesState>,
     PagingHelper<Episode> by PagingHelperImpl(),
     Reducer<EpisodesState> by ReducerImpl(EpisodesState()) {
 

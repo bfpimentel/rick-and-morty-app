@@ -58,7 +58,7 @@ class FilterViewModelTest : ViewModelTest<FilterContract.ViewModel>() {
         testScheduler.triggerActions()
 
         assert(viewModel.filterState().value is FilterState.Listing)
-        assertEquals((viewModel.filterState().value as FilterState).list, filters)
+        assertEquals((viewModel.filterState().value as FilterState).filters, filters)
 
         verify(atLeast = 1, atMost = 2) {
             filterTypeMapper.mapToDomain(filterType)

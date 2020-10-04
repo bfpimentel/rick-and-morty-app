@@ -11,10 +11,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
 import dev.pimentel.rickandmorty.databinding.EpisodesFragmentBinding
 import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesIntent
+import dev.pimentel.rickandmorty.presentation.episodes.dto.EpisodesState
 import dev.pimentel.rickandmorty.presentation.episodes.filter.EpisodesFilterFragment
 import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
+import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -28,7 +30,8 @@ class EpisodesFragment : Fragment(R.layout.episodes_fragment) {
     lateinit var adapter: EpisodesAdapter
 
     private val binding by lifecycleBinding(EpisodesFragmentBinding::bind)
-    private val viewModel: EpisodesContract.ViewModel by viewModels<EpisodesViewModel>()
+    private val viewModel: ReactiveViewModel<EpisodesIntent, EpisodesState>
+            by viewModels<EpisodesViewModel>()
 
     private lateinit var endOfScrollListener: EndOfScrollListener<LinearLayoutManager>
 

@@ -19,6 +19,7 @@ import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.extensions.throttleFirst
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
+import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
 import dev.pimentel.rickandmorty.shared.mvi.Reducer
 import dev.pimentel.rickandmorty.shared.mvi.ReducerImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
@@ -41,8 +42,8 @@ class CharactersViewModel @ViewModelInject constructor(
     private val characterDetailsMapper: CharacterDetailsMapper,
     private val getErrorMessage: GetErrorMessage,
     private val navigator: Navigator,
-    dispatchersProvider: DispatchersProvider
-) : ViewModel(), CharactersContract.ViewModel,
+    private val dispatchersProvider: DispatchersProvider
+) : ViewModel(), ReactiveViewModel<CharactersIntent, CharactersState>,
     Reducer<CharactersState> by ReducerImpl(CharactersState()),
     PagingHelper<Character> by PagingHelperImpl() {
 
@@ -128,9 +129,11 @@ class CharactersViewModel @ViewModelInject constructor(
     }
 
     private fun openFilters() {
-        navigator.navigate(
-            R.id.characters_to_characters_filter,
-            CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
-        )
+        viewModelScope.launch(dispatchersProvider.ui) {
+            navigator.navigate(
+                R.id.characters_to_characters_filter,
+                CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
+            )
+        }
     }
 }

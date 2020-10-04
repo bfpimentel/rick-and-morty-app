@@ -36,8 +36,8 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
             canClear = false,
             name = null,
             species = null,
-            statusId = null,
-            genderId = null
+            selectedStatusIndex = null,
+            selectedGenderIndex = null
         )
 
         viewModel.initializeWithFilter(filter)
@@ -53,8 +53,8 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
             canClear = true,
             name = name,
             species = null,
-            statusId = null,
-            genderId = null
+            selectedStatusIndex = null,
+            selectedGenderIndex = null
         )
 
         viewModel.setTextFilter(FilterResult(FilterType.CHARACTER_NAME, name))
@@ -72,8 +72,8 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
             canClear = true,
             name = null,
             species = species,
-            statusId = null,
-            genderId = null
+            selectedStatusIndex = null,
+            selectedGenderIndex = null
         )
 
         viewModel.setTextFilter(FilterResult(FilterType.CHARACTER_SPECIES, species))
@@ -91,8 +91,8 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
             canClear = true,
             name = null,
             species = null,
-            statusId = status,
-            genderId = null
+            selectedStatusIndex = status,
+            selectedGenderIndex = null
         )
 
         viewModel.setStatus(status)
@@ -110,8 +110,8 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
             canClear = false,
             name = null,
             species = null,
-            statusId = null,
-            genderId = null
+            selectedStatusIndex = null,
+            selectedGenderIndex = null
         )
 
         viewModel.setStatus(status)
@@ -129,8 +129,8 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
             canClear = true,
             name = null,
             species = null,
-            statusId = null,
-            genderId = gender
+            selectedStatusIndex = null,
+            selectedGenderIndex = gender
         )
 
         viewModel.setGender(gender)
@@ -148,8 +148,8 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
             canClear = false,
             name = null,
             species = null,
-            statusId = null,
-            genderId = null
+            selectedStatusIndex = null,
+            selectedGenderIndex = null
         )
 
         viewModel.setGender(gender)
@@ -166,8 +166,8 @@ class CharactersFilterViewModelTest : ViewModelTest<CharactersFilterContract.Vie
             canClear = false,
             name = null,
             species = null,
-            statusId = null,
-            genderId = null
+            selectedStatusIndex = null,
+            selectedGenderIndex = null
         )
 
         viewModel.clearFilter()

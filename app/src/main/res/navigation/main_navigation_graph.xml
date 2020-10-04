@@ -27,7 +27,7 @@
             app:argType="dev.pimentel.rickandmorty.presentation.characters.details.dto.CharacterDetails" />
     </fragment>
 
-    <dialog
+    <fragment
         android:id="@+id/characters_filter"
         android:name="dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment"
         android:label="CharactersFilterFragment"
@@ -38,7 +38,7 @@
         <action
             android:id="@+id/characters_filter_to_filter"
             app:destination="@id/filter" />
-    </dialog>
+    </fragment>
 
     <fragment
         android:id="@+id/locations"

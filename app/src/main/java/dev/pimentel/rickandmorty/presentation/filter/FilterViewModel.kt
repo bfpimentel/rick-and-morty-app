@@ -12,6 +12,7 @@ import dev.pimentel.rickandmorty.presentation.filter.dto.FilterType
 import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapper
 import dev.pimentel.rickandmorty.shared.dispatchersprovider.DispatchersProvider
 import dev.pimentel.rickandmorty.shared.extensions.throttleFirst
+import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
 import dev.pimentel.rickandmorty.shared.mvi.Reducer
 import dev.pimentel.rickandmorty.shared.mvi.ReducerImpl
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
@@ -30,7 +31,8 @@ class FilterViewModel @ViewModelInject constructor(
     private val saveFilter: SaveFilter,
     private val navigator: Navigator,
     dispatchersProvider: DispatchersProvider
-) : ViewModel(), FilterContract.ViewModel, Reducer<FilterState> by ReducerImpl(FilterState()) {
+) : ViewModel(), ReactiveViewModel<FilterIntent, FilterState>,
+    Reducer<FilterState> by ReducerImpl(FilterState()) {
 
     private lateinit var filterType: FilterType
 
@@ -67,7 +69,7 @@ class FilterViewModel @ViewModelInject constructor(
 
             this.list = filters
 
-            updateState { copy(list = filters) }
+            updateState { copy(filters = filters) }
         } catch (exception: Exception) {
             Timber.d(exception)
         }
@@ -75,19 +77,19 @@ class FilterViewModel @ViewModelInject constructor(
 
     private suspend fun setFilterFromText(text: String) {
         filterValue = text
-        updateState {
-            copy(
-                clearSelection = !filterValue.isNullOrBlank()
-            )
+        filterValue.takeIf(String?::isNullOrBlank)?.also {
+            updateState {
+                copy(selectedItemIndex = null)
+            }
         }
     }
 
     private suspend fun setFilterFromSelection(index: Int) {
         filterValue = list?.getOrNull(index)
-        updateState {
-            copy(
-                clearText = !filterValue.isNullOrBlank()
-            )
+        filterValue.takeIf(String?::isNullOrBlank)?.also {
+            updateState {
+                copy(inputText = "")
+            }
         }
     }
 

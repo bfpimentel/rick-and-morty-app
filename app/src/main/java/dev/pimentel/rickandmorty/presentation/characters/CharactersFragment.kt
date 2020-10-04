@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.ui.tooling.preview.Preview
 import coil.api.load
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.rickandmorty.R
@@ -44,6 +43,7 @@ import dev.pimentel.rickandmorty.presentation.characters.dto.CharactersState
 import dev.pimentel.rickandmorty.presentation.characters.filter.CharactersFilterFragment
 import dev.pimentel.rickandmorty.presentation.characters.filter.dto.CharactersFilter
 import dev.pimentel.rickandmorty.shared.extensions.composeViewFor
+import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -52,7 +52,8 @@ import kotlinx.coroutines.FlowPreview
 @AndroidEntryPoint
 class CharactersFragment : Fragment() {
 
-    private val viewModel: CharactersContract.ViewModel by viewModels<CharactersViewModel>()
+    private val viewModel: ReactiveViewModel<CharactersIntent, CharactersState>
+            by viewModels<CharactersViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,7 +66,6 @@ class CharactersFragment : Fragment() {
         bindInputs()
     }
 
-    @Preview(name = "Screen")
     @Composable
     private fun Screen() {
         val charactersState = viewModel.state().collectAsState().value

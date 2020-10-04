@@ -24,20 +24,20 @@ class CharactersRepositoryImpl(
         gender: String?
     ): PagedResponseModel<CharacterModel> =
         charactersRemoteDataSource.getCharacters(
-            page,
-            name,
-            species,
-            status,
-            gender
+            page = page,
+            name = name,
+            species = species,
+            status = status,
+            gender = gender
         ).let { response ->
             PagedResponseModelImpl(
                 response.info.pages,
                 response.results.map { characterResponse ->
                     CharacterModelImpl(
-                        characterResponse.id,
-                        characterResponse.name,
-                        characterResponse.status,
-                        characterResponse.image
+                        id = characterResponse.id,
+                        name = characterResponse.name,
+                        status = characterResponse.status,
+                        image = characterResponse.image
                     )
                 }
             )
@@ -46,29 +46,28 @@ class CharactersRepositoryImpl(
     override suspend fun getCharacterDetails(id: Int): CharacterDetailsModel =
         charactersRemoteDataSource.getCharacterDetails(id)
             .let { characterDetails ->
-                characterDetails.episodes
-                    .map { episodeId ->
-                        episodesRemoteDataSource.getEpisode(episodeId).let { episodeResponse ->
-                            EpisodeModelImpl(
-                                episodeResponse.id,
-                                episodeResponse.name,
-                                episodeResponse.airDate,
-                                episodeResponse.number
-                            )
-                        }
-                    }.let { episodes ->
-                        CharacterDetailsModelImpl(
-                            characterDetails.id,
-                            characterDetails.name,
-                            characterDetails.status,
-                            characterDetails.species,
-                            characterDetails.type,
-                            characterDetails.gender,
-                            characterDetails.image,
-                            characterDetails.origin.name,
-                            characterDetails.location.name,
-                            episodes
+                characterDetails.episodes.map { episodeId ->
+                    episodesRemoteDataSource.getEpisode(episodeId).let { episodeResponse ->
+                        EpisodeModelImpl(
+                            id = episodeResponse.id,
+                            name = episodeResponse.name,
+                            airDate = episodeResponse.airDate,
+                            number = episodeResponse.number
                         )
                     }
+                }.let { episodes ->
+                    CharacterDetailsModelImpl(
+                        id = characterDetails.id,
+                        name = characterDetails.name,
+                        status = characterDetails.status,
+                        species = characterDetails.species,
+                        type = characterDetails.type,
+                        gender = characterDetails.gender,
+                        origin = characterDetails.origin.name,
+                        location = characterDetails.location.name,
+                        image = characterDetails.image,
+                        episodes = episodes
+                    )
+                }
             }
 }
