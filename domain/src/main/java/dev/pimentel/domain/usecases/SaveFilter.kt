@@ -8,7 +8,7 @@ class SaveFilter(
     private val filterRepository: FilterRepository
 ) : UseCase<SaveFilter.Params, Unit> {
 
-    override suspend fun invoke(params: Params) =
+    override suspend operator fun invoke(params: Params) =
         filterRepository.saveFilter(
             params.value,
             params.type

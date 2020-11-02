@@ -8,7 +8,7 @@ class GetFilters(
     private val filterRepository: FilterRepository
 ) : UseCase<GetFilters.Params, List<String>> {
 
-    override suspend fun invoke(params: Params): List<String> =
+    override suspend operator fun invoke(params: Params): List<String> =
         filterRepository.getFiltersByType(params.type).asReversed()
 
     data class Params(

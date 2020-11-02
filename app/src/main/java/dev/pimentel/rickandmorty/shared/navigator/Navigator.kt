@@ -2,10 +2,13 @@ package dev.pimentel.rickandmorty.shared.navigator
 
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
+import dev.pimentel.rickandmorty.shared.dispatchersprovider.DispatchersProvider
+import kotlinx.coroutines.launch
 
 interface NavigatorBinder {
-    fun bind(navController: NavController)
+    fun bind(navController: NavController, lifecycleScope: LifecycleCoroutineScope)
     fun unbind()
 }
 
@@ -17,27 +20,36 @@ interface NavigatorRouter {
 
 interface Navigator : NavigatorBinder, NavigatorRouter
 
-class NavigatorImpl : Navigator {
+class NavigatorImpl(private val dispatchersProvider: DispatchersProvider) : Navigator {
 
     private var navController: NavController? = null
+    private var lifecycleScope: LifecycleCoroutineScope? = null
 
-    override fun bind(navController: NavController) {
+    override fun bind(navController: NavController, lifecycleScope: LifecycleCoroutineScope) {
         this.navController = navController
+        this.lifecycleScope = lifecycleScope
     }
 
     override fun unbind() {
         this.navController = null
+        this.lifecycleScope = null
     }
 
     override fun navigate(@IdRes destinationId: Int) {
-        navController?.navigate(destinationId)
+        lifecycleScope?.launch(dispatchersProvider.ui) {
+            navController?.navigate(destinationId)
+        }
     }
 
     override fun <T> navigate(destinationId: Int, argument: Pair<String, T>) {
-        navController?.navigate(destinationId, bundleOf(argument))
+        lifecycleScope?.launch(dispatchersProvider.ui) {
+            navController?.navigate(destinationId, bundleOf(argument))
+        }
     }
 
     override fun pop() {
-        navController?.popBackStack()
+        lifecycleScope?.launch(dispatchersProvider.ui) {
+            navController?.popBackStack()
+        }
     }
 }

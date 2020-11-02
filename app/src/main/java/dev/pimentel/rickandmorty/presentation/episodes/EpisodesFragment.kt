@@ -17,6 +17,7 @@ import dev.pimentel.rickandmorty.presentation.episodes.filter.dto.EpisodesFilter
 import dev.pimentel.rickandmorty.shared.extensions.lifecycleBinding
 import dev.pimentel.rickandmorty.shared.helpers.EndOfScrollListener
 import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
+import dev.pimentel.rickandmorty.shared.mvi.Store
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

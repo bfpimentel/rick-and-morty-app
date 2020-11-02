@@ -9,7 +9,7 @@ class GetCharacterDetails(
     private val charactersRepository: CharactersRepository
 ) : UseCase<GetCharacterDetails.Params, CharacterDetails> {
 
-    override suspend fun invoke(params: Params): CharacterDetails =
+    override suspend operator fun invoke(params: Params): CharacterDetails =
         charactersRepository.getCharacterDetails(params.id).let { detailsModel ->
             CharacterDetails(
                 detailsModel.id,

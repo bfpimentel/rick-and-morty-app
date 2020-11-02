@@ -9,7 +9,7 @@ class GetLocations(
     private val locationsRepository: LocationsRepository
 ) : UseCase<GetLocations.Params, Pageable<Location>> {
 
-    override suspend fun invoke(params: Params): Pageable<Location> =
+    override suspend operator fun invoke(params: Params): Pageable<Location> =
         locationsRepository.getLocations(
             params.page,
             params.name,

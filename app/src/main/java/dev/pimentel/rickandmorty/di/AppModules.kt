@@ -6,10 +6,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapper
-import dev.pimentel.rickandmorty.presentation.characters.mappers.CharacterDetailsMapperImpl
-import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemsMapper
-import dev.pimentel.rickandmorty.presentation.characters.mappers.CharactersItemsMapperImpl
 import dev.pimentel.rickandmorty.presentation.episodes.mappers.EpisodesItemMapper
 import dev.pimentel.rickandmorty.presentation.episodes.mappers.EpisodesItemMapperImpl
 import dev.pimentel.rickandmorty.presentation.filter.mappers.FilterTypeMapper
@@ -33,7 +29,11 @@ object AppModules {
 
     @Provides
     @Singleton
-    fun provideNavigator(): Navigator = NavigatorImpl()
+    fun provideNavigator(
+        dispatchersProvider: DispatchersProvider
+    ): Navigator = NavigatorImpl(
+        dispatchersProvider = dispatchersProvider
+    )
 
     @Provides
     @Singleton
@@ -42,16 +42,6 @@ object AppModules {
     ): GetErrorMessage = GetErrorMessage(context)
 
     /* region [SCOPED DEPENDENCIES] */
-    @Provides
-    @Singleton
-    fun providesCharacterDetailsMapper(
-        @ApplicationContext context: Context
-    ): CharacterDetailsMapper = CharacterDetailsMapperImpl(context)
-
-    @Provides
-    @Singleton
-    fun providesCharactersItemsMapper(): CharactersItemsMapper = CharactersItemsMapperImpl()
-
     @Provides
     @Singleton
     fun providesLocationsItemMapper(): LocationsItemMapper = LocationsItemMapperImpl()

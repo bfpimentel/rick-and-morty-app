@@ -9,7 +9,7 @@ class GetEpisodes(
     private val episodesRepository: EpisodesRepository
 ) : UseCase<GetEpisodes.Params, Pageable<Episode>> {
 
-    override suspend fun invoke(params: Params): Pageable<Episode> =
+    override suspend operator fun invoke(params: Params): Pageable<Episode> =
         episodesRepository.getEpisodes(
             params.page,
             params.name,

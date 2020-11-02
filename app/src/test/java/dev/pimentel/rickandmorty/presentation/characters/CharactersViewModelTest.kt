@@ -39,7 +39,7 @@ class CharactersViewModelTest : ViewModelTest<CharactersContract.ViewModel>() {
     override lateinit var viewModel: CharactersContract.ViewModel
 
     override fun `setup subject`() {
-        viewModel = CharactersViewModel(
+        viewModel = CharactersStore(
             getCharacters,
             getCharacterDetails,
             charactersItemMapper,

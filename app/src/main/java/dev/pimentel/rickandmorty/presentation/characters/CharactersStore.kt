@@ -1,8 +1,5 @@
 package dev.pimentel.rickandmorty.presentation.characters
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dev.pimentel.domain.entities.Character
 import dev.pimentel.domain.usecases.GetCharacterDetails
 import dev.pimentel.domain.usecases.GetCharacters
@@ -19,52 +16,38 @@ import dev.pimentel.rickandmorty.shared.errorhandling.GetErrorMessage
 import dev.pimentel.rickandmorty.shared.extensions.throttleFirst
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelper
 import dev.pimentel.rickandmorty.shared.helpers.PagingHelperImpl
-import dev.pimentel.rickandmorty.shared.mvi.ReactiveViewModel
-import dev.pimentel.rickandmorty.shared.mvi.Reducer
-import dev.pimentel.rickandmorty.shared.mvi.ReducerImpl
+import dev.pimentel.rickandmorty.shared.mvi.Store
 import dev.pimentel.rickandmorty.shared.navigator.Navigator
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 @Suppress("LongParameterList")
-class CharactersViewModel @ViewModelInject constructor(
+class CharactersStore(
     private val getCharacters: GetCharacters,
     private val getCharacterDetails: GetCharacterDetails,
     private val charactersItemsMapper: CharactersItemsMapper,
     private val characterDetailsMapper: CharacterDetailsMapper,
     private val getErrorMessage: GetErrorMessage,
     private val navigator: Navigator,
-    private val dispatchersProvider: DispatchersProvider
-) : ViewModel(), ReactiveViewModel<CharactersIntent, CharactersState>,
-    Reducer<CharactersState> by ReducerImpl(CharactersState()),
-    PagingHelper<Character> by PagingHelperImpl() {
+    dispatchersProvider: DispatchersProvider
+) : Store<CharactersIntent, CharactersState>(
+    dispatchersProvider = dispatchersProvider,
+    initialState = CharactersState.INITIAL,
+), PagingHelper<Character> by PagingHelperImpl() {
 
     private var lastFilter = CharactersFilter.NO_FILTER
 
-    override val intentChannel: Channel<CharactersIntent> = Channel(Channel.UNLIMITED)
-
-    init {
-        viewModelScope.launch(dispatchersProvider.io) {
-            intentChannel.consumeAsFlow().throttleFirst(1000L).collect { intent ->
-                when (intent) {
-                    is CharactersIntent.GetCharacters -> getCharacters(intent.filter)
-                    is CharactersIntent.GetCharactersWithLastFilter -> getCharacters(lastFilter)
-                    is CharactersIntent.GetDetails -> getDetails(intent.characterId)
-                    is CharactersIntent.OpenFilters -> openFilters()
-                }
+    override suspend fun handleIntentions(intentions: Flow<CharactersIntent>) {
+        intentions.throttleFirst(1000L).collect { intent ->
+            when (intent) {
+                is CharactersIntent.GetCharacters -> getCharacters(intent.filter)
+                is CharactersIntent.GetCharactersWithLastFilter -> getCharacters(lastFilter)
+                is CharactersIntent.GetDetails -> getDetails(intent.characterId)
+                is CharactersIntent.OpenFilters -> openFilters()
             }
         }
     }
-
-    override fun state(): StateFlow<CharactersState> = mutableState
 
     private suspend fun getCharacters(filter: CharactersFilter) {
         handleFilterIconChange(filter)
@@ -129,11 +112,9 @@ class CharactersViewModel @ViewModelInject constructor(
     }
 
     private fun openFilters() {
-        viewModelScope.launch(dispatchersProvider.ui) {
-            navigator.navigate(
-                R.id.characters_to_characters_filter,
-                CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
-            )
-        }
+        navigator.navigate(
+            R.id.characters_to_characters_filter,
+            CharactersFilterFragment.CHARACTERS_FILTER_ARGUMENT_KEY to lastFilter
+        )
     }
 }

@@ -9,7 +9,7 @@ class GetCharacters(
     private val charactersRepository: CharactersRepository
 ) : UseCase<GetCharacters.Params, Pageable<Character>> {
 
-    override suspend fun invoke(params: Params): Pageable<Character> =
+    override suspend operator fun invoke(params: Params): Pageable<Character> =
         charactersRepository.getCharacters(
             params.page,
             params.name,

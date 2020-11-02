@@ -43,7 +43,7 @@ android {
 
     composeOptions {
         kotlinCompilerVersion = "1.4.0"
-        kotlinCompilerExtensionVersion = "1.0.0-alpha03"
+        kotlinCompilerExtensionVersion = "1.0.0-alpha06"
     }
 
     androidExtensions {
@@ -56,6 +56,7 @@ android {
     }
 
     kotlinOptions {
+        languageVersion = "1.4"
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         freeCompilerArgs += ["-Xallow-jvm-ir-dependencies", "-Xskip-prerelease-check"]
         useIR = true
@@ -114,4 +115,8 @@ dependencies {
     testImplementation testDependencies.mockk
     testImplementation testDependencies.junitAPI
     testRuntimeOnly testDependencies.junitEngine
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
 }

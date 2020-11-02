@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
 @Suppress("TooManyFunctions")
 class CharactersFilterViewModel @ViewModelInject constructor(
     private val navigator: Navigator,
